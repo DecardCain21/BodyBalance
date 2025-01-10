@@ -6,6 +6,7 @@ import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class BodyBalanceApp : Application() {
+
     init {
         instance = this
     }
