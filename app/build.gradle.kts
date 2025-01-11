@@ -95,4 +95,6 @@ dependencies {
 
     // navigation
     implementation(libs.androidx.navigation.compose)
+
+    implementation ("androidx.compose.material:material-icons-extended:1.3.1")
 }

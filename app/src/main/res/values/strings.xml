@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">BodyBalance</string>
+    <string name="sing_in">Войти</string>
+    <string name="password">Пароль</string>
+    <string name="login">Логин</string>
+    <string name="forgot_password">Забыли пароль?</string>
+    <string name="body_balance">Balance</string>
 </resources>
