@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bodybalance.R
 import com.example.bodybalance.core.composables.BasicButton
-import com.example.bodybalance.core.composables.SingInTextField
+import com.example.bodybalance.core.composables.TextField
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import com.example.bodybalance.ui.theme.Grey
 
@@ -50,7 +50,7 @@ fun HomeScreen(
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = "logo"
             )
-            SingInTextField(
+            TextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
@@ -58,7 +58,7 @@ fun HomeScreen(
                 placeHolderText = stringResource(R.string.login),
                 onValueChange = { newText -> loginText = newText }
             )
-            SingInTextField(
+            TextField(
                 modifier = Modifier.fillMaxWidth(),
                 text = passwordText,
                 singleLine = true,

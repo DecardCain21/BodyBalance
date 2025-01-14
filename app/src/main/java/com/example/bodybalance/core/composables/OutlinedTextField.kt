@@ -28,10 +28,9 @@ import androidx.compose.ui.unit.sp
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import com.example.bodybalance.ui.theme.Dark
 import com.example.bodybalance.ui.theme.Grey
-import com.example.bodybalance.ui.theme.LightGrey
 
 @Composable
-fun SingInTextField(
+fun TextField(
     modifier: Modifier = Modifier,
     text: String,
     placeHolderText: String,
@@ -104,9 +103,9 @@ fun PasswordVisibilityToggle(
 
 @Preview(showBackground = true)
 @Composable
-private fun PreviewJustNotesTitleTextField() {
+private fun PreviewTextField() {
     BodyBalanceTheme(dynamicColor = false) {
-        SingInTextField(
+        TextField(
             text = "solaiman57544@gmail.com",
             placeHolderText = "Title",
             onValueChange = {}

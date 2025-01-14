@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.example.bodybalance"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.bodybalance"
@@ -44,7 +44,8 @@ android {
     }
     composeCompiler {
         reportsDestination = layout.buildDirectory.dir("compose_compiler")
-        stabilityConfigurationFile = rootProject.layout.projectDirectory.file("stability_config.conf")
+        stabilityConfigurationFile =
+            rootProject.layout.projectDirectory.file("stability_config.conf")
     }
     packaging {
         resources {
@@ -55,6 +56,7 @@ android {
 
 dependencies {
 
+    // Core AndroidX
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -64,37 +66,49 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.support.annotations)
+
+    // Material Icons
+    implementation(libs.androidx.material.icons.extended)
+
+    // Dependency Injection (Hilt)
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+
+    // Network (Retrofit, Gson)
+    implementation(libs.retrofit)
+    implementation(libs.logging.interceptor)
+    implementation(libs.converter.gson)
+
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.android)
+
+    // Image Loading (Glide)
+    implementation(libs.glide)
+    ksp(libs.ksp)
+
+    // Database (Room)
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+
+    // Navigation
+    implementation(libs.androidx.navigation.compose)
+
+    // Media Playback (ExoPlayer)
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.ui)
+    implementation(libs.androidx.media3.session)
+
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+
+    // Debugging
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    // di (Hilt)
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
-
-    // network (Retrofit, Gson)
-    implementation(libs.retrofit)
-    implementation(libs.logging.interceptor)
-    implementation(libs.converter.gson)
-
-    // coroutines
-    implementation(libs.kotlinx.coroutines.android)
-
-    // glide
-    implementation(libs.glide)
-    ksp(libs.ksp)
-
-    // db (Room)
-    implementation(libs.androidx.room.runtime)
-    ksp(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.ktx)
-
-    // navigation
-    implementation(libs.androidx.navigation.compose)
-
-    implementation ("androidx.compose.material:material-icons-extended:1.3.1")
 }
