@@ -35,6 +35,6 @@ class VideoPlayerViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        player.release()
+        // player.release()
     }
 }

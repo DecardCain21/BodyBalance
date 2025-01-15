@@ -7,7 +7,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.bodybalance.home.presenation.navigation.HOME_SCREEN_ROUTE
 import com.example.bodybalance.home.presenation.navigation.homeScreen
 import com.example.bodybalance.introduction.presentation.navigation.introductionScreen
+import com.example.bodybalance.introduction.presentation.navigation.navToTest
 import com.example.bodybalance.introduction.presentation.navigation.navigateToIntroductionScreen
+import com.example.bodybalance.introduction.presentation.navigation.test
 
 @Composable
 fun Navigation() {
@@ -17,6 +19,8 @@ fun Navigation() {
 
         homeScreen { navController.navigateToIntroductionScreen() }
 
-        introductionScreen()
+        introductionScreen { navController.navToTest() }
+
+        test()
     }
 }
