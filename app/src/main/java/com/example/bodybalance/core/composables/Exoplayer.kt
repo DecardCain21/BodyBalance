@@ -4,34 +4,50 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.media3.common.MediaItem
+import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
-import com.example.bodybalance.videoplayer.presentation.VideoPlayerViewModel
 
 @Composable
 fun ExoPlayer(
     modifier: Modifier = Modifier,
-    url: String = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-    viewModel: VideoPlayerViewModel = hiltViewModel()
+    url: String = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
 ) {
+
+    val localContext = LocalContext.current
+
+    var currentPosition by rememberSaveable { mutableLongStateOf(0L) }
 
     val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
 
-    LaunchedEffect(url) {
-        viewModel.prepare(url)
+    val exoPlayer = remember {
+        ExoPlayer.Builder(localContext).build().also {
+            it.prepare()
+            val mediaItem = MediaItem.fromUri(url)
+            it.setMediaItem(mediaItem)
+            it.playWhenReady = true
+            it.seekTo(currentPosition)
+        }
     }
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
-                Lifecycle.Event.ON_PAUSE -> viewModel.savePlayerState()
+                Lifecycle.Event.ON_PAUSE -> {
+                    currentPosition = exoPlayer.currentPosition
+                }
 
-                Lifecycle.Event.ON_RESUME -> viewModel.player.playWhenReady = true
+                Lifecycle.Event.ON_RESUME -> exoPlayer.playWhenReady = true
 
                 else -> Unit
             }
@@ -49,11 +65,11 @@ fun ExoPlayer(
             .aspectRatio(16 / 9f),
         factory = { context ->
             PlayerView(context).also {
-                it.player = viewModel.player
+                it.player = exoPlayer
             }
         },
         update = {
-            it.player = viewModel.player
+            it.player = exoPlayer
         },
     )
 }
