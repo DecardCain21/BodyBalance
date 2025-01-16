@@ -2,7 +2,6 @@ package com.example.bodybalance.core.composables
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -43,6 +42,10 @@ fun BasicButton(
 @Composable
 private fun BasicButtonPreview() {
     BodyBalanceTheme(dynamicColor = false) {
-        BasicButton(modifier = Modifier.fillMaxWidth(), text = "Кнопка", onClick = { })
+        BasicButton(
+            modifier = Modifier.fillMaxWidth(),
+            text = "Кнопка",
+            onClick = { }
+        )
     }
 }

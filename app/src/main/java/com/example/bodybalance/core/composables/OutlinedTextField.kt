@@ -26,8 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
-import com.example.bodybalance.ui.theme.Dark
-import com.example.bodybalance.ui.theme.Grey
 
 @Composable
 fun TextField(
@@ -35,8 +33,8 @@ fun TextField(
     text: String,
     placeHolderText: String,
     singleLine: Boolean = false,
-    placeholderTextColor: Color = Grey,
-    textColor: Color = Dark,
+    placeholderTextColor: Color = MaterialTheme.colorScheme.onSecondary,
+    textColor: Color = MaterialTheme.colorScheme.onSurface,
     disabledBorderColor: Color = MaterialTheme.colorScheme.onPrimary,
     unfocusedBorderColor: Color = MaterialTheme.colorScheme.onPrimary,
     focusedBorderColor: Color = MaterialTheme.colorScheme.primary,
@@ -73,8 +71,8 @@ fun TextField(
             }
         },
         colors = OutlinedTextFieldDefaults.colors(
-            unfocusedContainerColor = MaterialTheme.colorScheme.onPrimary,
-            focusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+            focusedContainerColor = MaterialTheme.colorScheme.surface,
             disabledBorderColor = disabledBorderColor,
             unfocusedBorderColor = unfocusedBorderColor,
             focusedBorderColor = focusedBorderColor

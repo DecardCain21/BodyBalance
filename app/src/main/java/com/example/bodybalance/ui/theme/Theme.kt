@@ -17,22 +17,54 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    // Основной цвет приложения
+    // (Обычно используется для главных элементов интерфейса, таких как AppBar, кнопки и т. д.)
+    primary = Blue,
+
+    // Вспомогательный цвет
+    // (Используется для менее важных элементов интерфейса, например, индикаторов)
+    secondary = Black,
+
+    // Часто применяется для специальных акцентов, выделений или поддерживающих декоративных элементов
+    tertiary = Color.White,
+
+    // Цвет фона приложения
+    background = Black,
+
+    // Применяется для фона отдельных компонентов, таких как карточки (Card),
+    // модальные окна и т. д.
+    // Отличается от background, поскольку представляет фоновую поверхность "над" основным фоном.
+    surface = Color.White,
+
+    // Цвет текста и иконок, которые отображаются поверх элемента с primary цветом
+    onPrimary = Color.White,
+
+    // Цвет текста и иконок поверх secondary
+    onSecondary = Grey,
+
+    // Цвет текста и иконок поверх tertiary
+    onTertiary = Color.White,
+
+    // Цвет текста и иконок поверх background
+    // (Используется для текста, отображаемого на основном фоне приложения)
+    onBackground = Color.White,
+
+    // Цвет текста и иконок поверх surface
+    // (Применяется для текста на карточках, диалоговых окнах и других подобных поверхностях)
+    onSurface = Black,
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = Blue,
-    secondary = Dark,
-    tertiary = Color.White,
-    background = Color(0xFF1A1B22),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
+    secondary = Black,
+    tertiary = Black,
+    background = Color.White,
+    surface = LightGrey,
+    onPrimary = LightGrey,
+    onSecondary = Grey,
     onTertiary = Color.White,
-    onBackground = Color.White,
-    onSurface = Color.White,
+    onBackground = Black,
+    onSurface = Black,
 )
 
 @Composable
@@ -42,38 +74,27 @@ fun BodyBalanceTheme(
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
-//    val colorScheme = when {
-//        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-//            val context = LocalContext.current
-//            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-//        }
-//
-//        darkTheme -> LightColorScheme
-//        else -> LightColorScheme
-//    }
-//    val view = LocalView.current
-//    if (!view.isInEditMode) {
-//        SideEffect {
-//            val window = (view.context as Activity).window
-//            window.statusBarColor = colorScheme.primary.toArgb()
-//            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
-//        }
-//    }
-//
-//    MaterialTheme(
-//        colorScheme = colorScheme,
-//        typography = Typography,
-//        content = content
-//    )
+    val colorScheme = when {
+        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+            val context = LocalContext.current
+            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        }
 
-    val colors = if (!darkTheme) {
-        LightColorScheme
-    } else {
-        LightColorScheme
+        darkTheme -> DarkColorScheme
+        else -> LightColorScheme
+    }
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = (view.context as Activity).window
+            window.statusBarColor = colorScheme.primary.toArgb()
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+        }
     }
 
     MaterialTheme(
-        colorScheme = colors,
+        colorScheme = colorScheme,
+        typography = Typography,
         content = content
     )
 }
