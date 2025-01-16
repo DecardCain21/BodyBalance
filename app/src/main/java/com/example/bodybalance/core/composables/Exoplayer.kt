@@ -1,5 +1,6 @@
 package com.example.bodybalance.core.composables
 
+import android.content.Context
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
@@ -26,22 +27,14 @@ fun ExoPlayer(
 
     val localContext = LocalContext.current
 
-    var currentPosition by rememberSaveable { mutableLongStateOf(0L) }
-
     val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
 
-    val exoPlayer = remember {
-        ExoPlayer.Builder(localContext).build().also {
-            it.prepare()
-            val mediaItem = MediaItem.fromUri(url)
-            it.setMediaItem(mediaItem)
-            it.playWhenReady = true
-            it.seekTo(currentPosition)
-        }
-    }
+    var currentPosition by rememberSaveable { mutableLongStateOf(0L) }
+
+    val exoPlayer = remember { createConfiguredExoPlayer(localContext, url, currentPosition) }
 
     DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
+        val lifecycleObserver = LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_PAUSE -> {
                     currentPosition = exoPlayer.currentPosition
@@ -52,10 +45,11 @@ fun ExoPlayer(
                 else -> Unit
             }
         }
-        lifecycleOwner.lifecycle.addObserver(observer)
+        lifecycleOwner.lifecycle.addObserver(lifecycleObserver)
 
         onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
+            lifecycleOwner.lifecycle.removeObserver(lifecycleObserver)
+            exoPlayer.release()
         }
     }
 
@@ -72,4 +66,18 @@ fun ExoPlayer(
             it.player = exoPlayer
         },
     )
+}
+
+private fun createConfiguredExoPlayer(
+    context: Context,
+    url: String,
+    startPosition: Long
+): ExoPlayer {
+    return ExoPlayer.Builder(context).build().apply {
+        val mediaItem = MediaItem.fromUri(url)
+        setMediaItem(mediaItem)
+        playWhenReady = true
+        seekTo(startPosition)
+        prepare()
+    }
 }

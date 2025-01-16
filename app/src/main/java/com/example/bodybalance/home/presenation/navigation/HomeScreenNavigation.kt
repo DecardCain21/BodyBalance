@@ -5,10 +5,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.bodybalance.home.presenation.HomeScreen
 
-const val HOME_SCREEN_ROUTE = "home_screen"
+const val HOME_ROUTE = "home"
 
-fun NavController.navigateToHomeScreen() = navigate(HOME_SCREEN_ROUTE) {
-    popUpTo(HOME_SCREEN_ROUTE) {
+fun NavController.navigateToHomeScreen() = navigate(HOME_ROUTE) {
+    popUpTo(HOME_ROUTE) {
         inclusive = true
     }
 }
@@ -16,7 +16,7 @@ fun NavController.navigateToHomeScreen() = navigate(HOME_SCREEN_ROUTE) {
 fun NavGraphBuilder.homeScreen(
     navigateToIntroductionScreen: () -> Unit,
 ) {
-    composable(route = HOME_SCREEN_ROUTE) {
+    composable(route = HOME_ROUTE) {
         HomeScreen(onSignInClick = navigateToIntroductionScreen)
     }
 }
