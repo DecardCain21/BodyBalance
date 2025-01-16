@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
+import com.example.bodybalance.core.composables.SetSystemBarsColor
 import com.example.bodybalance.navigation.Navigation
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,6 +27,7 @@ class MainActivity : ComponentActivity() {
                     Navigation()
                 }
             }
+            SetSystemBarsColor()
         }
     }
 }

@@ -1,6 +1,6 @@
 [versions]
 activityCompose = "1.9.3"
-agp = "8.5.2"
+agp = "8.6.0"
 hiltNavigationCompose = "1.2.0"
 kotlin = "2.1.0"
 google-ksp = "2.1.0-1.0.29"

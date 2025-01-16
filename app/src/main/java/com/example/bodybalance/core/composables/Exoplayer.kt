@@ -2,6 +2,7 @@ package com.example.bodybalance.core.composables
 
 import android.content.Context
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -56,7 +57,8 @@ fun ExoPlayer(
     AndroidView(
         modifier = modifier
             .fillMaxWidth()
-            .aspectRatio(16 / 9f),
+            .aspectRatio(3 / 4f)
+                ,
         factory = { context ->
             PlayerView(context).also {
                 it.player = exoPlayer
@@ -67,7 +69,11 @@ fun ExoPlayer(
         },
     )
 }
-
+/* Соотношения сторон */
+// 9:16 -  Полноэкранное вертикальное видео
+// 3:4 - Более компактное вертикальное видео
+// 1:1 - Квадратное видео
+// 16:9 -  Горизонтальное видео
 private fun createConfiguredExoPlayer(
     context: Context,
     url: String,

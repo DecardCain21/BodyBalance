@@ -34,8 +34,8 @@ import androidx.media3.ui.PlayerView
 fun Player(
     video: String,
     playingIndex: State<Int>,
-    //onVideoChange: (Int) -> Unit,
-    //isVideoEnded: (Boolean) -> Unit,
+    onVideoChange: (Int) -> Unit,
+    isVideoEnded: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     // Get the current context
