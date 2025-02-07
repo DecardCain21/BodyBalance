@@ -1,9 +1,9 @@
-package com.example.bodybalance.home.presenation.navigation
+package com.example.bodybalance.home.presentation.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.example.bodybalance.home.presenation.HomeScreen
+import com.example.bodybalance.home.presentation.HomeScreen
 
 const val HOME_ROUTE = "home"
 

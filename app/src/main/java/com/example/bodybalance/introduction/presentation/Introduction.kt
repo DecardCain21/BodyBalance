@@ -5,6 +5,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.example.bodybalance.core.composables.BasicButton
 import com.example.bodybalance.core.composables.ExoPlayer
 
-@OptIn(ExperimentalAnimationApi::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun Introduction(
     modifier: Modifier = Modifier,
@@ -29,7 +30,8 @@ fun Introduction(
 ) {
     val isPreview = LocalInspectionMode.current  // Проверка на режим Preview
 
-    Column(modifier = modifier) {
+    Column(modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally) {
         if (isPreview) {
             // Заглушка вместо ExoPlayer в Preview
             Box(

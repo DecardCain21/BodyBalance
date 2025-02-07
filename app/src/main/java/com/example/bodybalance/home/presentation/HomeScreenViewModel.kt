@@ -1,4 +1,4 @@
-package com.example.bodybalance.home.presenation
+package com.example.bodybalance.home.presentation
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
