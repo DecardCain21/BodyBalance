@@ -7,6 +7,7 @@ import com.example.bodybalance.introduction.presentation.Introduction
 
 const val INTRODUCTION_ROUTE = "introduction"
 
+// Функция для навконтроллера , кладёт в граф/стек навигации
 fun NavController.navigateToIntroductionScreen() {
     navigate(
         route = INTRODUCTION_ROUTE,
@@ -15,10 +16,15 @@ fun NavController.navigateToIntroductionScreen() {
     }
 }
 
+// Создание экземляра экрана, самой функции Compose
 fun NavGraphBuilder.introductionScreen(
-    navToTest: () -> Unit,
+    // Вложение функции для перехода на следующий экран
+    navToPlaylist: () -> Unit,
+    navToHomeScreen: () -> Unit
 ) {
+    // Создание самой функции/экземпляра экрана
     composable(route = INTRODUCTION_ROUTE) {
-        Introduction(test = navToTest)
+        // Вложение функции перехода в следующий экран в экземпляр Introduction
+        Introduction(navToPlaylist = navToPlaylist, navToHomeScreen = navToHomeScreen)
     }
 }

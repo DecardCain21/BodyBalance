@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.bodybalance.home.presentation.navigation.HOME_ROUTE
 import com.example.bodybalance.home.presentation.navigation.homeScreen
+import com.example.bodybalance.home.presentation.navigation.navigateToHomeScreen
 import com.example.bodybalance.introduction.presentation.navigation.introductionScreen
 import com.example.bodybalance.introduction.presentation.navigation.navigateToIntroductionScreen
 import com.example.bodybalance.playlist.presentation.navigation.navigateToPlaylist
@@ -20,7 +21,10 @@ fun Navigation() {
 
         homeScreen { navController.navigateToIntroductionScreen() }
 
-        introductionScreen { navController.navigateToPlaylist() }
+        introductionScreen(
+            navToHomeScreen = { navController.navigateToHomeScreen() },
+            navToPlaylist = { navController.navigateToPlaylist() }
+        )
 
         playlistScreen()
     }

@@ -1,12 +1,10 @@
 package com.example.bodybalance.introduction.presentation
 
 import android.util.Log
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,6 +23,8 @@ import com.example.bodybalance.core.composables.ExoPlayer
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun Introduction(
+    navToPlaylist: () -> Unit = {},
+    navToHomeScreen: () -> Unit = {},
     modifier: Modifier = Modifier,
     test: () -> Unit = {}
 ) {
@@ -49,7 +49,7 @@ fun Introduction(
         }
 
         BasicButton(
-            text = "Done!", onClick = { test() }, modifier = Modifier
+            text = "Done!", onClick = { navToPlaylist() }, modifier = Modifier
                 .padding(50.dp)
                 .align(Alignment.CenterHorizontally)
         )
@@ -70,6 +70,6 @@ fun Introduction(
 fun IntroductionPreview() {
     Introduction(
         modifier = Modifier.fillMaxSize(),
-        test = { Log.d("Preview", "Test button clicked") }
+        navToPlaylist = { Log.d("Preview", "Test button clicked") }
     )
 }
