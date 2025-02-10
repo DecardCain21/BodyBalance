@@ -91,7 +91,7 @@ fun ExoPlayer(
             .aspectRatio(16 / 9f),
         factory = { context ->
             PlayerView(context).apply {
-                setControllerOnFullScreenModeChangedListener {
+                setFullscreenButtonClickListener {
                     isLandscape = !isLandscape
                 }
                 resizeMode = RESIZE_MODE_ZOOM

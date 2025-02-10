@@ -30,8 +30,10 @@ fun Introduction(
 ) {
     val isPreview = LocalInspectionMode.current  // Проверка на режим Preview
 
-    Column(modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         if (isPreview) {
             // Заглушка вместо ExoPlayer в Preview
             Box(
@@ -54,15 +56,6 @@ fun Introduction(
                 .align(Alignment.CenterHorizontally)
         )
     }
-
-//    Column {
-//        ExoPlayer()
-////        Player(
-////            video = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-////            playingIndex = remember { mutableIntStateOf(0) }
-////        )
-//        BasicButton(text = "to test", onClick = { test() })
-//    }
 }
 
 @Preview(showBackground = true)
