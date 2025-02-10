@@ -2,7 +2,6 @@ package com.example.bodybalance.core.composables
 
 import android.app.Activity
 import android.content.Context
-import android.content.ContextWrapper
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import androidx.annotation.OptIn
@@ -66,16 +65,18 @@ fun ExoPlayer(
         }
     }
 
-    /*DisposableEffect(isLandscape) {
+    DisposableEffect(isLandscape) {
         val windowInsetsController =
             WindowCompat.getInsetsController(activity.window, activity.window.decorView)
 
         if (isLandscape) {
+            activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
             WindowCompat.setDecorFitsSystemWindows(activity.window, false)
             windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
             windowInsetsController.systemBarsBehavior =
                 WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         } else {
+            activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
             WindowCompat.setDecorFitsSystemWindows(activity.window, true)
             windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
         }
@@ -83,25 +84,15 @@ fun ExoPlayer(
         onDispose {
             windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
         }
-    }*/
+    }
 
     AndroidView(
         modifier = Modifier
             .aspectRatio(16 / 9f),
         factory = { context ->
             PlayerView(context).apply {
-                setFullscreenButtonClickListener { isFullScreen ->
-                    with(context) {
-                        if (isFullScreen) {
-                            val windowInsetsController =
-                                WindowCompat.getInsetsController(activity.window, activity.window.decorView)
-                            windowInsetsController.systemBarsBehavior =
-                                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-                            setScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
-                        } else {
-                            setScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-                        }
-                    }
+                setControllerOnFullScreenModeChangedListener {
+                    isLandscape = !isLandscape
                 }
                 resizeMode = RESIZE_MODE_ZOOM
                 player = exoPlayer
@@ -110,43 +101,6 @@ fun ExoPlayer(
         update = { it.player = exoPlayer }
     )
 
-}
-
-fun Context.findActivity(): Activity? = when (this) {
-    is Activity -> this
-    is ContextWrapper -> baseContext.findActivity()
-    else -> null
-}
-
-fun Context.setScreenOrientation(orientation: Int) {
-    val activity = this.findActivity() ?: return
-    activity.requestedOrientation = orientation
-    if (orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-        hideSystemUi()
-    } else {
-        showSystemUi()
-    }
-}
-
-fun Context.hideSystemUi() {
-    val activity = this.findActivity() ?: return
-    val window = activity.window ?: return
-    WindowCompat.setDecorFitsSystemWindows(window, false)
-    WindowInsetsControllerCompat(window, window.decorView).let { controller ->
-        controller.hide(WindowInsetsCompat.Type.systemBars())
-        controller.systemBarsBehavior =
-            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-    }
-}
-
-fun Context.showSystemUi() {
-    val activity = this.findActivity() ?: return
-    val window = activity.window ?: return
-    WindowCompat.setDecorFitsSystemWindows(window, true)
-    WindowInsetsControllerCompat(
-        window,
-        window.decorView
-    ).show(WindowInsetsCompat.Type.systemBars())
 }
 
 private fun createConfiguredExoPlayer(
