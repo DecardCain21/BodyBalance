@@ -7,9 +7,9 @@ import com.example.bodybalance.playlist.presentation.Playlist
 
 const val PLAYLIST_ROUTE = "playlist"
 
-fun NavGraphBuilder.playlistScreen() {
+fun NavGraphBuilder.playlistScreen(navigateToVideoPlayerScreen: () -> Unit) {
     composable(route = PLAYLIST_ROUTE) {
-        Playlist()
+        Playlist(navigateToVideoPlayerScreen = navigateToVideoPlayerScreen)
     }
 }
 

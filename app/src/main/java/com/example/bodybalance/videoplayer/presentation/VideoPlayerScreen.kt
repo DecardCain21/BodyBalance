@@ -1,6 +1,5 @@
-package com.example.bodybalance.introduction.presentation
+package com.example.bodybalance.videoplayer.presentation
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,8 +21,7 @@ import com.example.bodybalance.core.composables.ExoPlayer
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun Introduction(
-    navToPlaylist: () -> Unit = {},
+fun VideoPlayerScreen(
     modifier: Modifier = Modifier,
 ) {
     val isPreview = LocalInspectionMode.current  // Проверка на режим Preview
@@ -49,7 +47,7 @@ fun Introduction(
         }
 
         BasicButton(
-            text = "Done!", onClick = { navToPlaylist() }, modifier = Modifier
+            text = "Done!", onClick = { }, modifier = Modifier
                 .padding(50.dp)
                 .align(Alignment.CenterHorizontally)
         )
@@ -59,8 +57,7 @@ fun Introduction(
 @Preview(showBackground = true)
 @Composable
 fun IntroductionPreview() {
-    Introduction(
+    VideoPlayerScreen (
         modifier = Modifier.fillMaxSize(),
-        navToPlaylist = { Log.d("Preview", "Test button clicked") }
     )
 }

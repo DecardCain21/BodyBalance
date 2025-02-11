@@ -22,7 +22,8 @@ import com.example.bodybalance.ui.theme.BodyBalanceTheme
 @Composable
 fun Playlist(
     modifier: Modifier = Modifier,
-    playlistViewModel: PlaylistViewModel = hiltViewModel()
+    playlistViewModel: PlaylistViewModel = hiltViewModel(),
+    navigateToVideoPlayerScreen: () -> Unit
 ) {
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
@@ -33,7 +34,9 @@ fun Playlist(
         items(playlistViewModel.setContent()) {
             //Spacer(modifier = Modifier.height(20.dp))
             Button(
-                onClick = {}, shape = RectangleShape, modifier = Modifier
+                onClick = { navigateToVideoPlayerScreen() },
+                shape = RectangleShape,
+                modifier = Modifier
                     .width(250.dp)
                     .height(100.dp)
             ) {
@@ -48,9 +51,22 @@ fun Playlist(
 @Composable
 private fun PreviewPlaylist(
     modifier: Modifier = Modifier,
-    playlistViewModel: PlaylistViewModel = hiltViewModel()
 ) {
     BodyBalanceTheme(dynamicColor = false) {
-        Playlist()
+        LazyColumn(
+            modifier = modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(20.dp),
+        ) {
+            items(listOf("123", "321")) {
+                Button(
+                    onClick = {}, shape = RectangleShape, modifier = Modifier
+                        .width(250.dp)
+                        .height(100.dp)
+                ) {
+                    Text(text = it)
+                }
+            }
+        }
     }
 }
