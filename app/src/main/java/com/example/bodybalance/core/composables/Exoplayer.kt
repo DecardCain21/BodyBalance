@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import androidx.annotation.OptIn
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -26,21 +25,26 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_ZOOM
 import androidx.media3.ui.PlayerView
+import com.example.bodybalance.core.util.ExoPlayerCache
 
-@ExperimentalLayoutApi
 @OptIn(UnstableApi::class)
 @Composable
 fun ExoPlayer(
     modifier: Modifier = Modifier,
-    url: String = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    url: String = " https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
 ) {
+
     val localContext = LocalContext.current
     val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
     var currentPosition by rememberSaveable { mutableLongStateOf(0L) }
-    val exoPlayer = remember { createConfiguredExoPlayer(localContext, url, currentPosition) }
+
+    val cacheDataSourceFactory = remember { ExoPlayerCache.getCacheDataSourceFactory(localContext) }
+    val exoPlayer = remember { createConfiguredExoPlayer(localContext, url, currentPosition, cacheDataSourceFactory) }
 
     val configuration = LocalConfiguration.current
     var isLandscape by remember { mutableStateOf(configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) }
@@ -65,9 +69,28 @@ fun ExoPlayer(
         }
     }
 
+    HandleFullscreenMode(activity, isLandscape)
+
+    AndroidView(
+        modifier = modifier
+            .aspectRatio(16 / 9f),
+        factory = { context ->
+            PlayerView(context).apply {
+                setFullscreenButtonClickListener {
+                    isLandscape = !isLandscape
+                }
+                resizeMode = RESIZE_MODE_ZOOM
+                player = exoPlayer
+            }
+        },
+        update = { it.player = exoPlayer }
+    )
+}
+
+@Composable
+private fun HandleFullscreenMode(activity: Activity, isLandscape: Boolean) {
     DisposableEffect(isLandscape) {
-        val windowInsetsController =
-            WindowCompat.getInsetsController(activity.window, activity.window.decorView)
+        val windowInsetsController = WindowCompat.getInsetsController(activity.window, activity.window.decorView)
 
         if (isLandscape) {
             activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -85,34 +108,22 @@ fun ExoPlayer(
             windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
         }
     }
-
-    AndroidView(
-        modifier = Modifier
-            .aspectRatio(16 / 9f),
-        factory = { context ->
-            PlayerView(context).apply {
-                setFullscreenButtonClickListener {
-                    isLandscape = !isLandscape
-                }
-                resizeMode = RESIZE_MODE_ZOOM
-                player = exoPlayer
-            }
-        },
-        update = { it.player = exoPlayer }
-    )
-
 }
 
+@OptIn(UnstableApi::class)
 private fun createConfiguredExoPlayer(
     context: Context,
     url: String,
-    startPosition: Long
+    startPosition: Long,
+    cacheDataSourceFactory: CacheDataSource.Factory
 ): ExoPlayer {
-    return ExoPlayer.Builder(context).build().apply {
-        val mediaItem = MediaItem.fromUri(url)
-        setMediaItem(mediaItem)
-        playWhenReady = true
-        seekTo(startPosition)
-        prepare()
-    }
+    return ExoPlayer.Builder(context)
+        .setMediaSourceFactory(DefaultMediaSourceFactory(cacheDataSourceFactory))
+        .build().apply {
+            val mediaItem = MediaItem.fromUri(url)
+            setMediaItem(mediaItem)
+            playWhenReady = true
+            seekTo(startPosition)
+            prepare()
+        }
 }

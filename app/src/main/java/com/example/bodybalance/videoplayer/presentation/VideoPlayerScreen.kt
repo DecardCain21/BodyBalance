@@ -3,7 +3,6 @@ package com.example.bodybalance.videoplayer.presentation
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import com.example.bodybalance.core.composables.BasicButton
 import com.example.bodybalance.core.composables.ExoPlayer
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun VideoPlayerScreen(
     modifier: Modifier = Modifier,
@@ -43,7 +41,7 @@ fun VideoPlayerScreen(
             }
         } else {
             // Основной ExoPlayer для реального запуска
-            ExoPlayer()
+            ExoPlayer(url = "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
         }
 
         BasicButton(
