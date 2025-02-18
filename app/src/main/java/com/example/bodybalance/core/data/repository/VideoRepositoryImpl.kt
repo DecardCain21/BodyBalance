@@ -1,16 +1,18 @@
 package com.example.bodybalance.core.data.repository
 
+import com.example.bodybalance.core.data.dto.VideoResponse
 import com.example.bodybalance.core.data.network.VideoNetworkClient
 import com.example.bodybalance.core.domain.api.VideoRepository
 import com.example.bodybalance.core.domain.models.Account
 import com.example.bodybalance.core.domain.models.AccountTypeTherapy
 import javax.inject.Inject
 
-class VideoRepositoryImpl @Inject constructor(videoNetworkClient: VideoNetworkClient) : VideoRepository {
+class VideoRepositoryImpl @Inject constructor(private val videoNetworkClient: VideoNetworkClient) : VideoRepository {
 
 
-    override fun getVideo(account: Account, category: Int, prevId: Int): String {
-        return requestServer(account, category, prevId)
+    override suspend fun getVideo(account: Account, category: Int, prevId: Int):Result<VideoResponse> {
+        return videoNetworkClient.doRequest()
+       /* return requestServer(account, category, prevId)*/
     }
 
     private fun requestServer(account: Account, category: Int, prevId: Int): String {
