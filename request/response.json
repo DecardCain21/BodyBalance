@@ -1,0 +1,31 @@
+{
+  "id": 1,
+  "name": "Шея",
+  "count": 4,
+  "items": [
+    {
+      "id": 101,
+      "url": "https://example.com/item1",
+      "name": "Item One",
+      "description": "Description of Item One"
+    },
+    {
+      "id": 102,
+      "url": "https://example.com/item2",
+      "name": "Item Two",
+      "description": "Description of Item Two"
+    },
+    {
+      "id": 103,
+      "url": "https://example.com/item3",
+      "name": "Item Three",
+      "description": "Description of Item Three"
+    },
+    {
+      "id": 104,
+      "url": "https://example.com/item4",
+      "name": "Item Four",
+      "description": "Description of Item Four"
+    }
+  ]
+}
