@@ -2,12 +2,12 @@ package com.example.bodybalance.core.util
 
 import android.content.Context
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.DefaultDataSource
+import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor
 import androidx.media3.datasource.cache.SimpleCache
-import androidx.media3.datasource.DefaultDataSource
-import androidx.media3.datasource.DefaultHttpDataSource
 import java.io.File
 
 @UnstableApi
@@ -30,5 +30,6 @@ object ExoPlayerCache {
         return CacheDataSource.Factory()
             .setCache(getCache(context))
             .setUpstreamDataSourceFactory(defaultDataSourceFactory)
+
     }
 }
