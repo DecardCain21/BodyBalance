@@ -7,12 +7,17 @@ import com.example.bodybalance.core.domain.models.Account
 import com.example.bodybalance.core.domain.models.AccountTypeTherapy
 import javax.inject.Inject
 
-class VideoRepositoryImpl @Inject constructor(private val videoNetworkClient: VideoNetworkClient) : VideoRepository {
+class VideoRepositoryImpl @Inject constructor(
+    private val videoNetworkClient: VideoNetworkClient
+) : VideoRepository {
 
-
-    override suspend fun getVideo(account: Account, category: Int, prevId: Int):Result<VideoResponse> {
+    override suspend fun getVideo(
+        account: Account,
+        category: Int,
+        prevId: Int
+    ): Result<VideoResponse> {
         return videoNetworkClient.doRequest()
-       /* return requestServer(account, category, prevId)*/
+        /* return requestServer(account, category, prevId)*/
     }
 
     private fun requestServer(account: Account, category: Int, prevId: Int): String {
