@@ -36,7 +36,7 @@ import com.example.bodybalance.core.util.ExoPlayerCache
 @Composable
 fun ExoPlayer(
     modifier: Modifier = Modifier,
-    url: String = " https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
+    url: String = "https://github.com/DecardCain21/BodyBalance/raw/refs/heads/dev/request/videoEscapes.mp4"
 ) {
 
     val localContext = LocalContext.current
