@@ -30,6 +30,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_ZOOM
 import androidx.media3.ui.PlayerView
+import com.example.bodybalance.core.data.storage.FileDownloader
 import com.example.bodybalance.core.util.ExoPlayerCache
 
 @OptIn(UnstableApi::class)
@@ -44,7 +45,19 @@ fun ExoPlayer(
     var currentPosition by rememberSaveable { mutableLongStateOf(0L) }
 
     val cacheDataSourceFactory = remember { ExoPlayerCache.getCacheDataSourceFactory(localContext) }
-    val exoPlayer = remember { createConfiguredExoPlayer(localContext, url, currentPosition, cacheDataSourceFactory) }
+    val downloader = FileDownloader(localContext)
+    downloader.downloadFile(
+        "https://github.com/DecardCain21/BodyBalance/raw/refs/heads/dev/request/videoEscapes.mp4",
+        "videoSaved"
+    )
+    val exoPlayer = remember {
+        createConfiguredExoPlayer(
+            localContext,
+            url,
+            currentPosition,
+            cacheDataSourceFactory
+        )
+    }
 
     val configuration = LocalConfiguration.current
     var isLandscape by remember { mutableStateOf(configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) }
@@ -90,7 +103,8 @@ fun ExoPlayer(
 @Composable
 private fun HandleFullscreenMode(activity: Activity, isLandscape: Boolean) {
     DisposableEffect(isLandscape) {
-        val windowInsetsController = WindowCompat.getInsetsController(activity.window, activity.window.decorView)
+        val windowInsetsController =
+            WindowCompat.getInsetsController(activity.window, activity.window.decorView)
 
         if (isLandscape) {
             activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE

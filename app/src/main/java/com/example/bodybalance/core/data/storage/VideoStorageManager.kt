@@ -1,4 +1,4 @@
-package com.example.bodybalance.core.data
+package com.example.bodybalance.core.data.storage
 
 import android.app.DownloadManager
 import android.content.Context
@@ -9,7 +9,7 @@ import com.example.bodybalance.app.BodyBalanceApp
 import com.example.bodybalance.core.longcache.VideoDownload
 
 @UnstableApi
-class VideoStorage {
+class VideoStorageManager {
     //Реализовать хранилище
     //Реализовать запрос
     //Test

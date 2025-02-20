@@ -12,11 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.bodybalance.core.composables.BasicButton
 import com.example.bodybalance.core.composables.ExoPlayer
+import com.example.bodybalance.core.data.storage.FileDownloader
 
 @Composable
 fun VideoPlayerScreen(
@@ -41,6 +43,11 @@ fun VideoPlayerScreen(
             }
         } else {
             // Основной ExoPlayer для реального запуска
+            val downloader = FileDownloader(LocalContext.current)
+            downloader.downloadFile(
+                "https://github.com/DecardCain21/BodyBalance/raw/refs/heads/dev/request/videoEscapes.mp4",
+                "videoEscapes.mp4"
+            )
             ExoPlayer(url = "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
         }
 
@@ -55,7 +62,7 @@ fun VideoPlayerScreen(
 @Preview(showBackground = true)
 @Composable
 fun IntroductionPreview() {
-    VideoPlayerScreen (
+    VideoPlayerScreen(
         modifier = Modifier.fillMaxSize(),
     )
 }
