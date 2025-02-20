@@ -12,11 +12,11 @@ class VideoRepositoryImpl @Inject constructor(
 ) : VideoRepository {
 
     override suspend fun getVideo(
-        account: Account,
-        category: Int,
-        prevId: Int
+//        account: Account,
+//        category: Int,
+//        prevId: Int
     ): Result<VideoResponse> {
-        return videoNetworkClient.doRequest()
+        return videoNetworkClient.execute()
         /* return requestServer(account, category, prevId)*/
     }
 

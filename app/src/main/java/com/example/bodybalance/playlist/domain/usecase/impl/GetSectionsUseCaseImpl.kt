@@ -1,6 +1,6 @@
 package com.example.bodybalance.playlist.domain.usecase.impl
 
-import com.example.bodybalance.playlist.domain.GetSectionsUseCase
+import com.example.bodybalance.playlist.domain.usecase.GetSectionsUseCase
 import javax.inject.Inject
 
 class GetSectionsUseCaseImpl @Inject constructor() : GetSectionsUseCase {
