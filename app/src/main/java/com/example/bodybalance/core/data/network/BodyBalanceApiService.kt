@@ -4,6 +4,6 @@ import com.example.bodybalance.core.data.dto.VideoResponse
 import retrofit2.http.GET
 
 interface BodyBalanceApiService {
-    @GET("/request/response.json")
+    @GET("request/textEscapes.json")
     suspend fun doRequest(): VideoResponse
 }

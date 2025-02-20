@@ -1,5 +1,6 @@
 package com.example.bodybalance.videoplayer.presentation
 
+import androidx.annotation.OptIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -7,55 +8,103 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.exoplayer.ExoPlayer
 import com.example.bodybalance.core.composables.BasicButton
 import com.example.bodybalance.core.composables.ExoPlayer
+import com.example.bodybalance.core.composables.NavItem
+import com.example.bodybalance.core.data.dto.ItemDto
 
+@OptIn(UnstableApi::class)
 @Composable
 fun VideoPlayerScreen(
     modifier: Modifier = Modifier,
+    viewModel: VideoPlayerViewModel = hiltViewModel()
 ) {
-    val isPreview = LocalInspectionMode.current  // Проверка на режим Preview
 
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val currentState = uiState
+
+    LaunchedEffect(Unit) {
+        viewModel.getVideo()
+    }
+
+    val isPreview = LocalInspectionMode.current
+
+    if (isPreview) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(3 / 4f)
+                .background(Color.Gray),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("ExoPlayer Placeholder", color = Color.White)
+        }
+    } else {
+        when (currentState) {
+            is VideoPlayerState.Content -> {
+                val exoPlayer = viewModel.exoPlayer
+                viewModel.playVideo(currentState.videoUrl)
+                VideoPlayerScreenContent(
+                    modifier = modifier,
+                    exoplayer = exoPlayer,
+                    videoList = currentState.videoList,
+                    onItemSelected = { viewModel.selectVideo(it) }
+                )
+            }
+
+            is VideoPlayerState.Loading -> VideoPlayerScreenLoading()
+            is VideoPlayerState.Empty -> Unit
+        }
+    }
+}
+
+@Composable
+fun VideoPlayerScreenContent(
+    modifier: Modifier = Modifier,
+    exoplayer: ExoPlayer,
+    videoList: List<ItemDto>,
+    onItemSelected: (String) -> Unit
+) {
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (isPreview) {
-            // Заглушка вместо ExoPlayer в Preview
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(3 / 4f)
-                    .background(Color.Gray),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("ExoPlayer Placeholder", color = Color.White)
-            }
-        } else {
-            // Основной ExoPlayer для реального запуска
-            ExoPlayer(url = "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
-        }
-
+        ExoPlayer(exoPlayer = exoplayer)
         BasicButton(
             text = "Done!", onClick = { }, modifier = Modifier
                 .padding(50.dp)
                 .align(Alignment.CenterHorizontally)
         )
+        NavItem(videoList = videoList, onItemSelected = { onItemSelected(it) })
+    }
+}
+
+@Composable
+private fun VideoPlayerScreenLoading(modifier: Modifier = Modifier) {
+    Box(modifier = modifier.fillMaxSize()) {
+        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun IntroductionPreview() {
-    VideoPlayerScreen (
+    VideoPlayerScreen(
         modifier = Modifier.fillMaxSize(),
     )
 }

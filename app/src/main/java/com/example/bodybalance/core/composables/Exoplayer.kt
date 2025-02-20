@@ -1,7 +1,6 @@
 package com.example.bodybalance.core.composables
 
 import android.app.Activity
-import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import androidx.annotation.OptIn
@@ -23,31 +22,23 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_ZOOM
 import androidx.media3.ui.PlayerView
-import com.example.bodybalance.core.util.ExoPlayerCache
 
 @OptIn(UnstableApi::class)
 @Composable
 fun ExoPlayer(
     modifier: Modifier = Modifier,
-    url: String = "https://github.com/DecardCain21/BodyBalance/raw/refs/heads/dev/request/videoEscapes.mp4"
+    exoPlayer: ExoPlayer
 ) {
-
     val localContext = LocalContext.current
     val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
     var currentPosition by rememberSaveable { mutableLongStateOf(0L) }
 
-    val cacheDataSourceFactory = remember { ExoPlayerCache.getCacheDataSourceFactory(localContext) }
-    val exoPlayer = remember { createConfiguredExoPlayer(localContext, url, currentPosition, cacheDataSourceFactory) }
-
     val configuration = LocalConfiguration.current
-    var isLandscape by remember { mutableStateOf(configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) }
+    var isLandscape by rememberSaveable { mutableStateOf(configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) }
     val activity = localContext as Activity
 
     DisposableEffect(lifecycleOwner) {
@@ -57,7 +48,10 @@ fun ExoPlayer(
                     currentPosition = exoPlayer.currentPosition
                 }
 
-                Lifecycle.Event.ON_RESUME -> exoPlayer.playWhenReady = true
+                Lifecycle.Event.ON_RESUME -> {
+                    // exoPlayer.playWhenReady = true
+                }
+
                 else -> Unit
             }
         }
@@ -65,15 +59,13 @@ fun ExoPlayer(
 
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(lifecycleObserver)
-            exoPlayer.release()
         }
     }
 
     HandleFullscreenMode(activity, isLandscape)
 
     AndroidView(
-        modifier = modifier
-            .aspectRatio(16 / 9f),
+        modifier = modifier.aspectRatio(16 / 9f),
         factory = { context ->
             PlayerView(context).apply {
                 setFullscreenButtonClickListener {
@@ -90,7 +82,8 @@ fun ExoPlayer(
 @Composable
 private fun HandleFullscreenMode(activity: Activity, isLandscape: Boolean) {
     DisposableEffect(isLandscape) {
-        val windowInsetsController = WindowCompat.getInsetsController(activity.window, activity.window.decorView)
+        val windowInsetsController =
+            WindowCompat.getInsetsController(activity.window, activity.window.decorView)
 
         if (isLandscape) {
             activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -108,22 +101,4 @@ private fun HandleFullscreenMode(activity: Activity, isLandscape: Boolean) {
             windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
         }
     }
-}
-
-@OptIn(UnstableApi::class)
-private fun createConfiguredExoPlayer(
-    context: Context,
-    url: String,
-    startPosition: Long,
-    cacheDataSourceFactory: CacheDataSource.Factory
-): ExoPlayer {
-    return ExoPlayer.Builder(context)
-        .setMediaSourceFactory(DefaultMediaSourceFactory(cacheDataSourceFactory))
-        .build().apply {
-            val mediaItem = MediaItem.fromUri(url)
-            setMediaItem(mediaItem)
-            playWhenReady = true
-            seekTo(startPosition)
-            prepare()
-        }
 }
