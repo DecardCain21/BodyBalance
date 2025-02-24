@@ -1,8 +1,8 @@
 package com.example.bodybalance.core.data.dto
 
 class ItemDto(
-    val description: String,
-    val id: Int,
+    val id: Double,
+    val url: String,
     val name: String,
-    val url: String
+    val description: String
 )

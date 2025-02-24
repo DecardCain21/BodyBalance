@@ -13,7 +13,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
-const val BODY_BALANCE_BASE_URL = "https://raw.githubusercontent.com/DecardCain21/BodyBalance/refs/heads/dev/"
+const val BODY_BALANCE_BASE_URL = "https://body-balance-backend.onrender.com/"
 
 @Module
 @InstallIn(SingletonComponent::class)

@@ -46,8 +46,8 @@ class VideoPlayerViewModel @Inject constructor(
 
                 else -> result.getOrNull()?.let {
                     VideoPlayerState.Content(
-                        videoUrl = it.items.map { video -> video.url }.first(),
-                        videoList = it.items
+                        videoUrl = it.videoItems.map { video -> video.url }.first(),
+                        videoList = it.videoItems
                     )
                 } ?: VideoPlayerState.Empty
             }
