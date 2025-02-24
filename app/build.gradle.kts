@@ -79,6 +79,7 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.logging.interceptor)
     implementation(libs.converter.gson)
+    implementation ("com.squareup.okhttp3:okhttp:4.12.0")
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)

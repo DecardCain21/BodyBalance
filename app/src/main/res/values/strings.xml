@@ -5,4 +5,6 @@
     <string name="login">Логин</string>
     <string name="forgot_password">Забыли пароль?</string>
     <string name="body_balance">Balance</string>
+    <string name="download_channel_name">download_channel_name</string>
+    <string name="download_channel_description">download_channel_description</string>
 </resources>

@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,6 +28,8 @@ import com.example.bodybalance.core.composables.BasicButton
 import com.example.bodybalance.core.composables.ExoPlayer
 import com.example.bodybalance.core.composables.NavItem
 import com.example.bodybalance.core.data.dto.ItemDto
+import com.example.bodybalance.core.data.storage.FileDownloader
+import java.io.File
 
 @OptIn(UnstableApi::class)
 @Composable
@@ -99,6 +102,29 @@ private fun VideoPlayerScreenLoading(modifier: Modifier = Modifier) {
     Box(modifier = modifier.fillMaxSize()) {
         CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
     }
+}
+
+@OptIn(UnstableApi::class)
+@Composable
+private fun fileExist(viewModel : VideoPlayerViewModel) {
+    //"/data/data/com.example.bodybalance/files/videoSaved"
+    val fileName = "videoSaved"
+    val filePath = "${LocalContext.current.filesDir.path}/$fileName.mp4"
+    val file = File(filePath)
+    if (file.exists()) {
+        ExoPlayer(exoPlayer = viewModel.exoPlayer)
+    } else {
+        println("Файл не найден: $filePath")
+    }
+}
+
+@Composable
+private fun downloadVideo(url: String, fileName: String) {
+    val downloader = FileDownloader(LocalContext.current)
+    downloader.downloadFile(
+        url = url,
+        fileName = fileName
+    )
 }
 
 @Preview(showBackground = true)
