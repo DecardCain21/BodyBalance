@@ -2,8 +2,13 @@ package com.example.bodybalance.core.data.network
 
 import com.example.bodybalance.core.data.dto.VideoResponse
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 interface BodyBalanceApiService {
-    @GET("request/textEscapes.json")
-    suspend fun doRequest(): VideoResponse
+
+    @GET("/video")
+    suspend fun doRequest(
+        @Query("type") type: String,
+        @Query("category") category: String,
+        ): VideoResponse
 }
