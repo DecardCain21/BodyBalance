@@ -45,7 +45,10 @@ fun Introduction(
             }
         } else {
             // Основной ExoPlayer для реального запуска
-            ExoPlayer()
+            ExoPlayer(
+                modifier,
+                "https://github.com/DecardCain21/BodyBalance/raw/refs/heads/dev/request/videoEscapes.mp4"
+            )
         }
 
         BasicButton(

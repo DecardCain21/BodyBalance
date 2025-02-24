@@ -19,10 +19,12 @@ import androidx.compose.ui.unit.dp
 import com.example.bodybalance.core.composables.BasicButton
 import com.example.bodybalance.core.composables.ExoPlayer
 import com.example.bodybalance.core.data.storage.FileDownloader
+import java.io.File
 
 @Composable
 fun VideoPlayerScreen(
     modifier: Modifier = Modifier,
+    url: String = ""
 ) {
     val isPreview = LocalInspectionMode.current  // Проверка на режим Preview
 
@@ -42,13 +44,12 @@ fun VideoPlayerScreen(
                 Text("ExoPlayer Placeholder", color = Color.White)
             }
         } else {
-            // Основной ExoPlayer для реального запуска
-            val downloader = FileDownloader(LocalContext.current)
-            downloader.downloadFile(
-                "https://github.com/DecardCain21/BodyBalance/raw/refs/heads/dev/request/videoEscapes.mp4",
-                "videoEscapes.mp4"
+            downloadVideo(
+                "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+                "videoSaved.mp4"
             )
-            ExoPlayer(url = "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
+            // Основной ExoPlayer для реального запуска
+            fileExist()
         }
 
         BasicButton(
@@ -57,6 +58,28 @@ fun VideoPlayerScreen(
                 .align(Alignment.CenterHorizontally)
         )
     }
+}
+
+@Composable
+private fun fileExist() {
+    //"/data/data/com.example.bodybalance/files/videoSaved"
+    val fileName = "videoSaved"
+    val filePath = "${LocalContext.current.filesDir.path}/$fileName.mp4"
+    val file = File(filePath)
+    if (file.exists()) {
+        ExoPlayer(url = filePath)
+    } else {
+        println("Файл не найден: $filePath")
+    }
+}
+
+@Composable
+private fun downloadVideo(url: String, fileName: String) {
+    val downloader = FileDownloader(LocalContext.current)
+    downloader.downloadFile(
+        url = url,
+        fileName = fileName
+    )
 }
 
 @Preview(showBackground = true)

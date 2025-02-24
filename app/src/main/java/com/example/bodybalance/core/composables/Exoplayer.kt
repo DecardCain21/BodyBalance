@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
+import android.net.Uri
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.runtime.Composable
@@ -32,12 +33,13 @@ import androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_ZOOM
 import androidx.media3.ui.PlayerView
 import com.example.bodybalance.core.data.storage.FileDownloader
 import com.example.bodybalance.core.util.ExoPlayerCache
+import java.io.File
 
 @OptIn(UnstableApi::class)
 @Composable
 fun ExoPlayer(
     modifier: Modifier = Modifier,
-    url: String = "https://github.com/DecardCain21/BodyBalance/raw/refs/heads/dev/request/videoEscapes.mp4"
+    url: String
 ) {
 
     val localContext = LocalContext.current
@@ -45,11 +47,6 @@ fun ExoPlayer(
     var currentPosition by rememberSaveable { mutableLongStateOf(0L) }
 
     val cacheDataSourceFactory = remember { ExoPlayerCache.getCacheDataSourceFactory(localContext) }
-    val downloader = FileDownloader(localContext)
-    downloader.downloadFile(
-        "https://github.com/DecardCain21/BodyBalance/raw/refs/heads/dev/request/videoEscapes.mp4",
-        "videoSaved"
-    )
     val exoPlayer = remember {
         createConfiguredExoPlayer(
             localContext,
@@ -129,12 +126,13 @@ private fun createConfiguredExoPlayer(
     context: Context,
     url: String,
     startPosition: Long,
-    cacheDataSourceFactory: CacheDataSource.Factory
+    cacheDataSourceFactory: CacheDataSource.Factory,
 ): ExoPlayer {
     return ExoPlayer.Builder(context)
         .setMediaSourceFactory(DefaultMediaSourceFactory(cacheDataSourceFactory))
         .build().apply {
-            val mediaItem = MediaItem.fromUri(url)
+            val fileUri = Uri.fromFile(File("/data/data/com.example.bodybalance/files/videoSaved.mp4")) // URI скачанного файла
+            val mediaItem = MediaItem.fromUri(fileUri)
             setMediaItem(mediaItem)
             playWhenReady = true
             seekTo(startPosition)

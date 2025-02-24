@@ -3,7 +3,6 @@ package com.example.bodybalance.videoplayer.presentation.navigation
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.example.bodybalance.playlist.presentation.navigation.PLAYLIST_ROUTE
 import com.example.bodybalance.videoplayer.presentation.VideoPlayerScreen
 
 

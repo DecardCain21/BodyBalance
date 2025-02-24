@@ -18,7 +18,7 @@ object ExoPlayerCache {
     private fun getCache(context: Context): Cache {
         if (cache == null) {
             val cacheDir = File(context.cacheDir, "video_cache")
-            val size = LeastRecentlyUsedCacheEvictor(1000 * 1024 * 1024) // 1000MB кеш
+            val size = LeastRecentlyUsedCacheEvictor(150L * 1024 * 1024) // 1000MB кеш
             cache = SimpleCache(cacheDir, size)
         }
         return cache!!
