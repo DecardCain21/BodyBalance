@@ -1,7 +1,7 @@
 package com.example.bodybalance.playlist.presentation
 
 import androidx.lifecycle.ViewModel
-import com.example.bodybalance.playlist.domain.GetSectionsUseCase
+import com.example.bodybalance.playlist.domain.usecase.GetSectionsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

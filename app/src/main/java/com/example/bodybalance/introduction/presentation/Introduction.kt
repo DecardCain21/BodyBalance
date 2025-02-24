@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,23 +16,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.media3.common.util.UnstableApi
 import com.example.bodybalance.core.composables.BasicButton
 import com.example.bodybalance.core.composables.ExoPlayer
+import com.example.bodybalance.videoplayer.presentation.VideoPlayerViewModel
 
-@OptIn(ExperimentalLayoutApi::class)
+@androidx.annotation.OptIn(UnstableApi::class)
 @Composable
 fun Introduction(
-    navToPlaylist: () -> Unit = {},
     modifier: Modifier = Modifier,
+    navToPlaylist: () -> Unit = {},
+    viewModel: VideoPlayerViewModel = hiltViewModel()
 ) {
-    val isPreview = LocalInspectionMode.current  // Проверка на режим Preview
+    val isPreview = LocalInspectionMode.current
 
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (isPreview) {
-            // Заглушка вместо ExoPlayer в Preview
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -44,11 +46,8 @@ fun Introduction(
                 Text("ExoPlayer Placeholder", color = Color.White)
             }
         } else {
-            // Основной ExoPlayer для реального запуска
-            ExoPlayer(
-                modifier,
-                "https://github.com/DecardCain21/BodyBalance/raw/refs/heads/dev/request/videoEscapes.mp4"
-            )
+            viewModel.playVideo("https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
+            ExoPlayer(exoPlayer = viewModel.exoPlayer)
         }
 
         BasicButton(
