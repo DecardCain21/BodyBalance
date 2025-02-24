@@ -104,14 +104,15 @@ private fun VideoPlayerScreenLoading(modifier: Modifier = Modifier) {
     }
 }
 
+@OptIn(UnstableApi::class)
 @Composable
-private fun fileExist() {
+private fun fileExist(viewModel : VideoPlayerViewModel) {
     //"/data/data/com.example.bodybalance/files/videoSaved"
     val fileName = "videoSaved"
     val filePath = "${LocalContext.current.filesDir.path}/$fileName.mp4"
     val file = File(filePath)
     if (file.exists()) {
-        ExoPlayer(url = filePath)
+        ExoPlayer(exoPlayer = viewModel.exoPlayer)
     } else {
         println("Файл не найден: $filePath")
     }
