@@ -4,7 +4,7 @@ import com.example.bodybalance.core.data.dto.VideoResponse
 import com.example.bodybalance.core.domain.models.Account
 
 interface VideoRepository {
-    suspend fun getVideo(
+    suspend fun getVideo(category: String
         //account: Account, category: Int, prevId: Int
     ): Result<VideoResponse>
 }

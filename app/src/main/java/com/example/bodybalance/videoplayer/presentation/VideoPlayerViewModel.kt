@@ -8,7 +8,6 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
-import com.example.bodybalance.core.data.dto.VideoResponse
 import com.example.bodybalance.core.data.network.NetworkError
 import com.example.bodybalance.core.util.ExoPlayerCache
 import com.example.bodybalance.videoplayer.domain.usecase.GetVideoUseCase
@@ -33,12 +32,12 @@ class VideoPlayerViewModel @Inject constructor(
 
     private var isInitialized = false
 
-    fun getVideo() {
+    fun getVideo(category: String) {
         if (isInitialized) return
         isInitialized = true
 
         viewModelScope.launch {
-            val result: Result<VideoResponse> = getVideoUseCase()
+            val result = getVideoUseCase(category)
             val newState = when (result.exceptionOrNull()) {
                 is NetworkError.ServerError,
                 is NetworkError.NoData,
