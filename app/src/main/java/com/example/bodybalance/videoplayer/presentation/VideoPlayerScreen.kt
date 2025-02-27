@@ -35,15 +35,14 @@ import java.io.File
 @Composable
 fun VideoPlayerScreen(
     modifier: Modifier = Modifier,
-    viewModel: VideoPlayerViewModel = hiltViewModel()
+    viewModel: VideoPlayerViewModel = hiltViewModel(),
+    category: String
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val currentState = uiState
 
-    LaunchedEffect(Unit) {
-        viewModel.getVideo()
-    }
+    LaunchedEffect(Unit) { viewModel.getVideo(category) }
 
     val isPreview = LocalInspectionMode.current
 
@@ -132,5 +131,6 @@ private fun downloadVideo(url: String, fileName: String) {
 fun IntroductionPreview() {
     VideoPlayerScreen(
         modifier = Modifier.fillMaxSize(),
+        category = "Шея"
     )
 }

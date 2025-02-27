@@ -23,7 +23,7 @@ import com.example.bodybalance.ui.theme.BodyBalanceTheme
 fun Playlist(
     modifier: Modifier = Modifier,
     playlistViewModel: PlaylistViewModel = hiltViewModel(),
-    navigateToVideoPlayerScreen: () -> Unit
+    navigateToVideoPlayerScreen: (String) -> Unit
 ) {
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
@@ -34,7 +34,7 @@ fun Playlist(
         items(playlistViewModel.setContent()) {
             //Spacer(modifier = Modifier.height(20.dp))
             Button(
-                onClick = { navigateToVideoPlayerScreen() },
+                onClick = { navigateToVideoPlayerScreen(it) },
                 shape = RectangleShape,
                 modifier = Modifier
                     .width(250.dp)

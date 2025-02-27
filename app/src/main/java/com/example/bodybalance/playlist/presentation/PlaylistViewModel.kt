@@ -10,9 +10,5 @@ class PlaylistViewModel @Inject constructor(
     private val getSectionsUseCase: GetSectionsUseCase
 ) : ViewModel() {
 
-    fun setContent() : List<String>{
-        val temp = getSectionsUseCase.invoke()
-        return temp
-    }
-
+    fun setContent(): List<String> = getSectionsUseCase()
 }

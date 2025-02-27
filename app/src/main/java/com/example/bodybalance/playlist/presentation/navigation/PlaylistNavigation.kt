@@ -7,16 +7,16 @@ import com.example.bodybalance.playlist.presentation.Playlist
 
 const val PLAYLIST_ROUTE = "playlist"
 
-fun NavGraphBuilder.playlistScreen(navigateToVideoPlayerScreen: () -> Unit) {
+fun NavGraphBuilder.playlistScreen(
+    navigateToVideoPlayerScreen: (String) -> Unit
+) {
     composable(route = PLAYLIST_ROUTE) {
         Playlist(navigateToVideoPlayerScreen = navigateToVideoPlayerScreen)
     }
 }
 
 fun NavController.navigateToPlaylist() {
-    navigate(
-        route = PLAYLIST_ROUTE
-    ) {
+    navigate(route = PLAYLIST_ROUTE) {
         launchSingleTop
     }
 }

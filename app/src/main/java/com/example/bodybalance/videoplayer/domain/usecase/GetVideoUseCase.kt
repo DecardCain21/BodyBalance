@@ -4,5 +4,5 @@ import com.example.bodybalance.core.data.dto.VideoResponse
 
 interface GetVideoUseCase {
 
-    suspend operator fun invoke(): Result<VideoResponse>
+    suspend operator fun invoke(category: String): Result<VideoResponse>
 }

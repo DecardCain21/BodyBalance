@@ -10,5 +10,5 @@ interface BodyBalanceApiService {
     suspend fun doRequest(
         @Query("type") type: String,
         @Query("category") category: String,
-        ): VideoResponse
+    ): VideoResponse
 }
