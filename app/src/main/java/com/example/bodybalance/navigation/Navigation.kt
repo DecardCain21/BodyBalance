@@ -24,9 +24,8 @@ fun Navigation() {
 
         introductionScreen { navController.navigateToPlaylist() }
 
-        playlistScreen { navController.navigateToVideoPlayerScreen() }
+        playlistScreen { navController.navigateToVideoPlayerScreen(it) }
 
         videoPlayerScreen()
-
     }
 }

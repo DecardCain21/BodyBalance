@@ -11,13 +11,9 @@ class VideoRepositoryImpl @Inject constructor(
     private val videoNetworkClient: VideoNetworkClient
 ) : VideoRepository {
 
-    override suspend fun getVideo(
-//        account: Account,
-//        category: Int,
-//        prevId: Int
-    ): Result<VideoResponse> {
-        return videoNetworkClient.getVideo()
-        /* return requestServer(account, category, prevId)*/
+    // account: Account,
+    override suspend fun getVideo(category: String): Result<VideoResponse> {
+        return videoNetworkClient.getVideo(category = category)
     }
 
     private fun requestServer(account: Account, category: Int, prevId: Int): String {

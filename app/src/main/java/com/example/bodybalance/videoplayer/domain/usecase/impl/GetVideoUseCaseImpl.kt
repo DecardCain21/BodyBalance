@@ -9,7 +9,6 @@ class GetVideoUseCaseImpl @Inject constructor(
     private val videoRepository: VideoRepository
 ) : GetVideoUseCase {
 
-    override suspend fun invoke(): Result<VideoResponse> {
-        return videoRepository.getVideo()
-    }
+    override suspend fun invoke(category: String): Result<VideoResponse> =
+        videoRepository.getVideo(category)
 }

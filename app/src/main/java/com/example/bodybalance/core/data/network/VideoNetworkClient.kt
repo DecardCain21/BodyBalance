@@ -6,7 +6,7 @@ class VideoNetworkClient(
     private val apiService: BodyBalanceApiService
 ) : RetrofitNetworkClient() {
 
-    suspend fun getVideo(): Result<VideoResponse> {
-        return super.doRequest { apiService.doRequest(type = "", category = "Шея") }
+    suspend fun getVideo(category: String): Result<VideoResponse> {
+        return super.doRequest { apiService.doRequest(type = "", category = category) }
     }
 }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,6 +23,8 @@ import com.example.bodybalance.core.composables.BasicButton
 import com.example.bodybalance.core.composables.ExoPlayer
 import com.example.bodybalance.videoplayer.presentation.VideoPlayerViewModel
 
+const val INTRODUCTION = "Introduction"
+
 @androidx.annotation.OptIn(UnstableApi::class)
 @Composable
 fun Introduction(
@@ -30,6 +33,8 @@ fun Introduction(
     viewModel: VideoPlayerViewModel = hiltViewModel()
 ) {
     val isPreview = LocalInspectionMode.current
+
+    LaunchedEffect(Unit) { viewModel.getVideo(INTRODUCTION) }
 
     Column(
         modifier = modifier.fillMaxSize(),
