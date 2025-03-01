@@ -51,8 +51,7 @@ fun Introduction(
                 Text("ExoPlayer Placeholder", color = Color.White)
             }
         } else {
-            viewModel.playVideo("https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
-            ExoPlayer(exoPlayer = viewModel.exoPlayer)
+            ExoPlayer(url = "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
         }
 
         BasicButton(
