@@ -23,10 +23,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.exoplayer.ExoPlayer
-import com.example.bodybalance.core.composables.BasicButton
-import com.example.bodybalance.core.composables.ExoPlayer
-import com.example.bodybalance.core.composables.NavItem
+import com.example.bodybalance.core.composable.BasicButton
+import com.example.bodybalance.player.composable.ExoPlayer
+import com.example.bodybalance.core.composable.NavItem
 import com.example.bodybalance.core.data.dto.ItemDto
 import com.example.bodybalance.core.data.storage.FileDownloader
 import java.io.File

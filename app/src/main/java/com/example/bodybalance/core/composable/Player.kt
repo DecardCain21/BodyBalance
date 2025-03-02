@@ -1,4 +1,4 @@
-package com.example.bodybalance.core.composables
+package com.example.bodybalance.core.composable
 
 import android.annotation.SuppressLint
 import android.view.ViewGroup

@@ -24,8 +24,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bodybalance.R
-import com.example.bodybalance.core.composables.BasicButton
-import com.example.bodybalance.core.composables.TextField
+import com.example.bodybalance.core.composable.BasicButton
+import com.example.bodybalance.core.composable.TextField
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import com.example.bodybalance.ui.theme.Grey
 

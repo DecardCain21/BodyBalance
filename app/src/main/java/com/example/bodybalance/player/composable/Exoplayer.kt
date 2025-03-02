@@ -1,4 +1,4 @@
-package com.example.bodybalance.core.composables
+package com.example.bodybalance.player.composable
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
@@ -10,7 +10,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -27,7 +26,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_ZOOM
 import androidx.media3.ui.PlayerView
-import com.example.bodybalance.PlayerViewModel
+import com.example.bodybalance.player.presentation.PlayerViewModel
 
 @OptIn(UnstableApi::class)
 @Composable
@@ -38,10 +37,8 @@ fun ExoPlayer(
 ) {
     val localContext = LocalContext.current
     val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
-    var currentPosition by rememberSaveable { mutableLongStateOf(0L) }
 
-    val exoPlayer by viewModel.player.collectAsState()
-    //val exoPlayer = remember { buildExoPlayer(localContext) }
+    val exoPlayer by viewModel.playerFlow.collectAsState()
 
     val configuration = LocalConfiguration.current
     var isLandscape by rememberSaveable { mutableStateOf(configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) }
@@ -71,16 +68,6 @@ fun ExoPlayer(
     }
 
     HandleFullscreenMode(activity, isLandscape)
-
-//    with(exoPlayer) {
-//        val currentMediaUrl = currentMediaItem?.localConfiguration?.uri.toString()
-//        if (currentMediaUrl != url) {
-//            playWhenReady = false
-//            val mediaItem = MediaItem.fromUri(url)
-//            setMediaItem(mediaItem)
-//            prepare()
-//        }
-//    }
 
     AndroidView(
         modifier = modifier.aspectRatio(16 / 9f),

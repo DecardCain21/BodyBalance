@@ -19,8 +19,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.media3.common.util.UnstableApi
-import com.example.bodybalance.core.composables.BasicButton
-import com.example.bodybalance.core.composables.ExoPlayer
+import com.example.bodybalance.core.composable.BasicButton
+import com.example.bodybalance.player.composable.ExoPlayer
 import com.example.bodybalance.videoplayer.presentation.VideoPlayerViewModel
 
 const val INTRODUCTION = "Introduction"

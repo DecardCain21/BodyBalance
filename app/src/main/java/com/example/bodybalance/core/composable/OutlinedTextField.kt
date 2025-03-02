@@ -1,4 +1,4 @@
-package com.example.bodybalance.core.composables
+package com.example.bodybalance.core.composable
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
