@@ -1,4 +1,4 @@
-package com.example.bodybalance.core.composables
+package com.example.bodybalance.core.composable
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth

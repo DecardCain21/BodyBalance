@@ -23,10 +23,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.exoplayer.ExoPlayer
-import com.example.bodybalance.core.composables.BasicButton
-import com.example.bodybalance.core.composables.ExoPlayer
-import com.example.bodybalance.core.composables.NavItem
+import com.example.bodybalance.core.composable.BasicButton
+import com.example.bodybalance.player.composable.ExoPlayer
+import com.example.bodybalance.core.composable.NavItem
 import com.example.bodybalance.core.data.dto.ItemDto
 import com.example.bodybalance.core.data.storage.FileDownloader
 import java.io.File
@@ -59,11 +58,9 @@ fun VideoPlayerScreen(
     } else {
         when (currentState) {
             is VideoPlayerState.Content -> {
-                val exoPlayer = viewModel.exoPlayer
-                viewModel.playVideo(currentState.videoUrl)
                 VideoPlayerScreenContent(
                     modifier = modifier,
-                    exoplayer = exoPlayer,
+                    url = currentState.videoUrl,
                     videoList = currentState.videoList,
                     onItemSelected = { viewModel.selectVideo(it) }
                 )
@@ -78,7 +75,7 @@ fun VideoPlayerScreen(
 @Composable
 fun VideoPlayerScreenContent(
     modifier: Modifier = Modifier,
-    exoplayer: ExoPlayer,
+    url: String,
     videoList: List<ItemDto>,
     onItemSelected: (String) -> Unit
 ) {
@@ -86,7 +83,7 @@ fun VideoPlayerScreenContent(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ExoPlayer(exoPlayer = exoplayer)
+        ExoPlayer(url = url)
         BasicButton(
             text = "Done!", onClick = { }, modifier = Modifier
                 .padding(50.dp)
@@ -111,7 +108,7 @@ private fun fileExist(viewModel : VideoPlayerViewModel) {
     val filePath = "${LocalContext.current.filesDir.path}/$fileName.mp4"
     val file = File(filePath)
     if (file.exists()) {
-        ExoPlayer(exoPlayer = viewModel.exoPlayer)
+        // ExoPlayer(exoPlayer = viewModel.exoPlayer)
     } else {
         println("Файл не найден: $filePath")
     }
