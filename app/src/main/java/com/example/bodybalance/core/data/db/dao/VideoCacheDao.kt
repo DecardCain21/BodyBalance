@@ -20,11 +20,11 @@ interface VideoCacheDao {
 
     // Удаление записи по id
     @Query("DELETE FROM saved_video WHERE id = :id")
-    suspend fun deleteById(id: Int)
+    suspend fun deleteById(id: Double)
 
     // Поиск записи по id
     @Query("SELECT * FROM saved_video WHERE id = :id")
-    suspend fun getById(id: Int): SavedVideo?
+    suspend fun getById(id: Double): SavedVideo?
 
     // Получение всех записей
     @Query("SELECT * FROM saved_video")

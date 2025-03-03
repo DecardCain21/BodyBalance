@@ -24,10 +24,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
 import com.example.bodybalance.core.composable.BasicButton
-import com.example.bodybalance.player.composable.ExoPlayer
 import com.example.bodybalance.core.composable.NavItem
-import com.example.bodybalance.core.data.dto.ItemDto
 import com.example.bodybalance.core.data.storage.FileDownloader
+import com.example.bodybalance.core.domain.models.Video
+import com.example.bodybalance.player.composable.ExoPlayer
 import java.io.File
 
 @OptIn(UnstableApi::class)
@@ -60,7 +60,7 @@ fun VideoPlayerScreen(
             is VideoPlayerState.Content -> {
                 VideoPlayerScreenContent(
                     modifier = modifier,
-                    url = currentState.videoUrl,
+                    url = currentState.currentVideoUrl,
                     videoList = currentState.videoList,
                     onItemSelected = { viewModel.selectVideo(it) }
                 )
@@ -76,7 +76,7 @@ fun VideoPlayerScreen(
 fun VideoPlayerScreenContent(
     modifier: Modifier = Modifier,
     url: String,
-    videoList: List<ItemDto>,
+    videoList: List<Video>,
     onItemSelected: (String) -> Unit
 ) {
     Column(
@@ -102,7 +102,7 @@ private fun VideoPlayerScreenLoading(modifier: Modifier = Modifier) {
 
 @OptIn(UnstableApi::class)
 @Composable
-private fun fileExist(viewModel : VideoPlayerViewModel) {
+private fun fileExist(viewModel: VideoPlayerViewModel) {
     //"/data/data/com.example.bodybalance/files/videoSaved"
     val fileName = "videoSaved"
     val filePath = "${LocalContext.current.filesDir.path}/$fileName.mp4"

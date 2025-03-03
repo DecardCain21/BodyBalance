@@ -35,14 +35,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.bodybalance.core.data.dto.ItemDto
+import com.example.bodybalance.core.data.dto.VideoDto
+import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun NavItem(
     modifier: Modifier = Modifier,
-    videoList: List<ItemDto>,
+    videoList: List<Video>,
     onItemSelected: (String) -> Unit
 ) {
 

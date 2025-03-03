@@ -1,10 +1,11 @@
 package com.example.bodybalance.core.data.repository
 
-import com.example.bodybalance.core.data.dto.VideoResponse
+import com.example.bodybalance.core.data.convertor.convertToCategory
 import com.example.bodybalance.core.data.network.VideoNetworkClient
 import com.example.bodybalance.core.domain.api.VideoRepository
 import com.example.bodybalance.core.domain.models.Account
 import com.example.bodybalance.core.domain.models.AccountTypeTherapy
+import com.example.bodybalance.core.domain.models.Category
 import javax.inject.Inject
 
 class VideoRepositoryImpl @Inject constructor(
@@ -12,8 +13,9 @@ class VideoRepositoryImpl @Inject constructor(
 ) : VideoRepository {
 
     // account: Account,
-    override suspend fun getVideo(category: String): Result<VideoResponse> {
+    override suspend fun getVideo(category: String): Result<Category> {
         return videoNetworkClient.getVideo(category = category)
+            .map { it.convertToCategory() }
     }
 
     private fun requestServer(account: Account, category: Int, prevId: Int): String {

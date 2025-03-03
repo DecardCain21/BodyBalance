@@ -37,7 +37,7 @@ class VideoPlayerViewModel @Inject constructor(
 
                 else -> result.getOrNull()?.let {
                     VideoPlayerState.Content(
-                        videoUrl = it.videoItems.map { video -> video.url }.first(),
+                        currentVideoUrl = it.videoItems.map { video -> video.url }.first(),
                         videoList = it.videoItems
                     )
                 } ?: VideoPlayerState.Empty
@@ -49,7 +49,7 @@ class VideoPlayerViewModel @Inject constructor(
 
     fun selectVideo(url: String) {
         _uiState.update {
-            (it as VideoPlayerState.Content).copy(videoUrl = url)
+            (it as VideoPlayerState.Content).copy(currentVideoUrl = url)
         }
     }
 }
