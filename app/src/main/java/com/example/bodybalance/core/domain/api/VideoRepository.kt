@@ -1,10 +1,10 @@
 package com.example.bodybalance.core.domain.api
 
-import com.example.bodybalance.core.data.dto.VideoResponse
-import com.example.bodybalance.core.domain.models.Account
+import com.example.bodybalance.core.domain.models.Category
 
 interface VideoRepository {
-    suspend fun getVideo(category: String
+    suspend fun getVideo(
+        category: String
         //account: Account, category: Int, prevId: Int
-    ): Result<VideoResponse>
+    ): Result<Category>
 }

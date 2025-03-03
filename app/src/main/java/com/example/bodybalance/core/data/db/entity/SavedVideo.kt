@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "saved_video")
 data class SavedVideo(
     @PrimaryKey
-    val id: Int,
+    val id: Double,
     val videoUrl: String,
-    val category: String
+    val category: String? = ""
 )

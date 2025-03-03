@@ -1,6 +1,6 @@
 package com.example.bodybalance.videoplayer.domain.usecase.impl
 
-import com.example.bodybalance.core.data.db.convertor.convertToSavedVideo
+import com.example.bodybalance.core.data.convertor.convertToSavedVideo
 import com.example.bodybalance.core.data.db.dao.VideoCacheDao
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.videoplayer.domain.usecase.SaveVideoInCacheUseCase
