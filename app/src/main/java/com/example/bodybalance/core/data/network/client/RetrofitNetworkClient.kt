@@ -1,5 +1,7 @@
-package com.example.bodybalance.core.data.network
+package com.example.bodybalance.core.data.network.client
 
+import com.example.bodybalance.core.data.network.NetworkClient
+import com.example.bodybalance.core.data.network.NetworkError
 import com.example.bodybalance.core.util.getConnected
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

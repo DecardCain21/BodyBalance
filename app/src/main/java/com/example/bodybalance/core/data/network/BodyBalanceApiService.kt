@@ -7,8 +7,11 @@ import retrofit2.http.Query
 interface BodyBalanceApiService {
 
     @GET("/video")
-    suspend fun doRequest(
+    suspend fun getCategoryVideo(
         @Query("type") type: String,
         @Query("category") category: String,
     ): CategoryResponse
+
+    @GET("/category")
+    suspend fun getCategory(): List<String>
 }

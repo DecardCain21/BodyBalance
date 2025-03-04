@@ -1,8 +1,11 @@
 package com.example.bodybalance.core.data.di
 
 import com.example.bodybalance.core.data.network.BodyBalanceApiService
-import com.example.bodybalance.core.data.network.VideoNetworkClient
+import com.example.bodybalance.core.data.network.client.CategoryNetworkClient
+import com.example.bodybalance.core.data.network.client.VideoNetworkClient
+import com.example.bodybalance.core.data.repository.CategoryRepositoryImpl
 import com.example.bodybalance.core.data.repository.VideoRepositoryImpl
+import com.example.bodybalance.core.domain.api.CategoryRepository
 import com.example.bodybalance.core.domain.api.VideoRepository
 import dagger.Binds
 import dagger.Module
@@ -35,13 +38,27 @@ object NetworkModuleProvider {
     ): VideoNetworkClient {
         return VideoNetworkClient(binListApiService)
     }
+
+    @Provides
+    @Singleton
+    fun provideCategoryNetworkClient(
+        binListApiService: BodyBalanceApiService
+    ): CategoryNetworkClient {
+        return CategoryNetworkClient(binListApiService)
+    }
 }
 
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class NetworkModuleBinder {
+
     @Binds
     abstract fun bindVideoRepository(
         videoRepositoryImpl: VideoRepositoryImpl
     ): VideoRepository
+
+    @Binds
+    abstract fun bindCategoryRepository(
+        categoryRepositoryImpl: CategoryRepositoryImpl
+    ): CategoryRepository
 }
