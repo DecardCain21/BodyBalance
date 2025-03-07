@@ -33,11 +33,13 @@ class IntroductionViewModel @Inject constructor(
                 is NetworkError.NoInternet -> IntroductionState.Empty
 
                 else -> result.getOrNull()?.let {
+                    println(it.videoItems.map { video -> video.url }.first())
                     IntroductionState.Content(
-                        videoUrl = it.videoItems.map { video ->  video.url}.first()
+                        videoUrl = it.videoItems.map { video -> video.url }.first()
                     )
-                }
+                } ?: IntroductionState.Empty
             }
+            _uiState.value = newState
         }
     }
 }
