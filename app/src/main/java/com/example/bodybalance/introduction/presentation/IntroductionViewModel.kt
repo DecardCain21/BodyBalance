@@ -16,6 +16,7 @@ import javax.inject.Inject
 class IntroductionViewModel @Inject constructor(
     private val getVideoUseCase: GetVideoUseCase
 ) : ViewModel() {
+
     private val _uiState = MutableStateFlow<IntroductionState>(IntroductionState.Loading)
     val uiState: StateFlow<IntroductionState> = _uiState.asStateFlow()
 
