@@ -19,11 +19,11 @@ import androidx.core.view.WindowCompat
 private val DarkColorScheme = darkColorScheme(
     // Основной цвет приложения
     // (Обычно используется для главных элементов интерфейса, таких как AppBar, кнопки и т. д.)
-    primary = Blue,
+    primary = White,
 
     // Вспомогательный цвет
     // (Используется для менее важных элементов интерфейса, например, индикаторов)
-    secondary = Black,
+    secondary = LightGrey,
 
     // Часто применяется для специальных акцентов, выделений или поддерживающих декоративных элементов
     tertiary = Color.White,
@@ -34,10 +34,12 @@ private val DarkColorScheme = darkColorScheme(
     // Применяется для фона отдельных компонентов, таких как карточки (Card),
     // модальные окна и т. д.
     // Отличается от background, поскольку представляет фоновую поверхность "над" основным фоном.
-    surface = Color.White,
+    surface = Grey,
+    onSurfaceVariant = LightGrey,
 
     // Цвет текста и иконок, которые отображаются поверх элемента с primary цветом
-    onPrimary = Color.White,
+    onPrimary = Color.Black,
+
 
     // Цвет текста и иконок поверх secondary
     onSecondary = Grey,

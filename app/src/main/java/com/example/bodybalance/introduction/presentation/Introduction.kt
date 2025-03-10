@@ -23,7 +23,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
 import com.example.bodybalance.core.composable.BasicButton
-import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.player.composable.ExoPlayer
 
 const val INTRODUCTION = "Introduction"
@@ -33,7 +32,7 @@ const val INTRODUCTION = "Introduction"
 fun Introduction(
     modifier: Modifier = Modifier,
     navToPlaylist: () -> Unit = {},
-    viewModel: /*VideoPlayerViewModel*/IntroductionViewModel = hiltViewModel()
+    viewModel: IntroductionViewModel = hiltViewModel()
 ) {
     val isPreview = LocalInspectionMode.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -68,7 +67,6 @@ fun Introduction(
                 IntroductionState.Empty -> Unit
                 IntroductionState.Loading -> IntroductionScreenLoading()
             }
-
         }
     }
 }
