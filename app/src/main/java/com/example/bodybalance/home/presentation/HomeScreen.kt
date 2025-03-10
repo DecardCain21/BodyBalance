@@ -10,9 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,6 +18,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.bodybalance.R
 import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.core.composable.CustomTextField
@@ -30,10 +29,12 @@ import com.example.bodybalance.ui.theme.BodyBalanceTheme
 fun HomeScreen(
     modifier: Modifier = Modifier,
     onForgotPasswordClick: () -> Unit = {},
-    onSignInClick: () -> Unit = {}
+    onSignInClick: () -> Unit = {},
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
-    var loginText by rememberSaveable { mutableStateOf("") }
-    var passwordText by rememberSaveable { mutableStateOf("") }
+
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val currentState = uiState
 
     Box(
         modifier = modifier
@@ -49,12 +50,17 @@ fun HomeScreen(
                 contentDescription = "Logo",
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
             )
-            CustomTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-                onValueChange = {}
-            )
+            with(currentState) {
+                CustomTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    value = inputValue,
+                    isError = inputError,
+                    supportingText = supportText.message,
+                    onValueChange = { viewModel.handleEvent(HomeScreenUiEvent.InputLogin(it)) },
+                )
+            }
         }
         Column(modifier = Modifier.align(Alignment.BottomCenter)) {
             BasicButton(

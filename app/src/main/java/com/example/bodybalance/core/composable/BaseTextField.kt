@@ -1,5 +1,7 @@
 package com.example.bodybalance.core.composable
 
+import androidx.compose.foundation.interaction.FocusInteraction
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -12,9 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,22 +31,34 @@ import com.example.bodybalance.ui.theme.BodyBalanceTheme
 @Composable
 fun CustomTextField(
     modifier: Modifier = Modifier,
+    value: String = "",
     label: String = "",
     isError: Boolean = false,
     supportingText: String = "",
-    isSupportTextVisible: Boolean = false,
     onValueChange: (String) -> Unit
 ) {
 
-    var text by rememberSaveable { mutableStateOf("") }
+    var isFocused by remember { mutableStateOf(false) }
+    val interactionSource = remember { MutableInteractionSource() }
+
+    LaunchedEffect(interactionSource) {
+        interactionSource.interactions.collect { interaction ->
+            when (interaction) {
+                is FocusInteraction.Focus -> isFocused = true
+                is FocusInteraction.Unfocus -> isFocused = false
+            }
+        }
+    }
 
     TextField(
         modifier = modifier,
-        value = text,
+        value = value,
         onValueChange = { newValue ->
-            text = newValue
-            onValueChange(newValue)
+            if (newValue.length <= 20) {
+                onValueChange(newValue)
+            }
         },
+        interactionSource = interactionSource,
         singleLine = true,
         textStyle = TextStyle(
             color = MaterialTheme.colorScheme.primary,
@@ -58,14 +73,13 @@ fun CustomTextField(
             keyboardType = KeyboardType.Password
         ),
         trailingIcon = {
-            LabelIcon(
-                isError = isError,
-                isEmpty = text.isEmpty()
-            )
+            if (value.isNotEmpty() && isFocused) {
+                LabelIcon(isError = isError)
+            }
         },
         supportingText = {
             ShowSupportingText(
-                isVisible = isSupportTextVisible,
+                isVisible = isError && isFocused, // Убираем подсказку
                 supportingText = supportingText
             )
         },
@@ -87,22 +101,18 @@ private fun ShowSupportingText(
 private fun LabelIcon(
     modifier: Modifier = Modifier,
     isError: Boolean,
-    isEmpty: Boolean
 ) {
 
     val icon = when {
-        isEmpty -> null
         isError -> Icons.Default.Error
         else -> Icons.Default.HighlightOff
     }
 
-    if (icon != null) {
-        IconButton(modifier = modifier, onClick = {}) {
-            Icon(
-                imageVector = icon,
-                contentDescription = "Label Icon"
-            )
-        }
+    IconButton(modifier = modifier, onClick = {}) {
+        Icon(
+            imageVector = icon,
+            contentDescription = "Label Icon"
+        )
     }
 }
 
@@ -112,7 +122,6 @@ private fun PreviewCustomTextField() {
     BodyBalanceTheme {
         CustomTextField(
             onValueChange = {},
-            isSupportTextVisible = true,
             supportingText = "Используйте только буквы и цифры",
             label = "Логин",
             isError = true,
