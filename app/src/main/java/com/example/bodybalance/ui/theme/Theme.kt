@@ -38,7 +38,7 @@ private val DarkColorScheme = darkColorScheme(
     onSurfaceVariant = LightGrey,
 
     // Цвет текста и иконок, которые отображаются поверх элемента с primary цветом
-    onPrimary = Color.White,
+    onPrimary = Color.Black,
 
 
     // Цвет текста и иконок поверх secondary

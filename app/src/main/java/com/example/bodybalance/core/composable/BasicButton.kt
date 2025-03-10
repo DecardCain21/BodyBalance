@@ -23,16 +23,22 @@ fun BasicButton(
     buttonColor: Color = MaterialTheme.colorScheme.primary,
     textColor: Color = MaterialTheme.colorScheme.onPrimary,
 ) {
+
     Button(
         modifier = modifier,
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(containerColor = buttonColor),
-        shape = RoundedCornerShape(14.dp),
+        enabled = true,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = buttonColor,
+            // disabledContainerColor = OnSurfaceOpacity12,
+            //disabledContentColor = disabledContentColor
+        ),
+        shape = RoundedCornerShape(12.dp),
         contentPadding = PaddingValues(top = 18.dp, bottom = 18.dp)
     ) {
         Text(
             text = text,
-            fontSize = 18.sp,
+            fontSize = 14.sp,
             color = textColor
         )
     }
