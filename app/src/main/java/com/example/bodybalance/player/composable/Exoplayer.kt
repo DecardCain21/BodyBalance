@@ -23,6 +23,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_ZOOM
 import androidx.media3.ui.PlayerView
@@ -33,7 +34,8 @@ import com.example.bodybalance.player.presentation.PlayerViewModel
 fun ExoPlayer(
     modifier: Modifier = Modifier,
     viewModel: PlayerViewModel = hiltViewModel(),
-    url: String
+    url: String,
+    listener: Player.Listener? = null
 ) {
     val localContext = LocalContext.current
     val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
@@ -43,6 +45,10 @@ fun ExoPlayer(
     val configuration = LocalConfiguration.current
     var isLandscape by rememberSaveable { mutableStateOf(configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) }
     val activity = localContext as Activity
+
+    if (listener != null) {
+        exoPlayer?.addListener(listener)
+    }
 
     LaunchedEffect(url) {
         viewModel.setVideoUrl(url)
@@ -106,4 +112,8 @@ private fun HandleFullscreenMode(activity: Activity, isLandscape: Boolean) {
             windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
         }
     }
+}
+
+interface ExoplayerListener {
+    fun setListener(listener: () -> Unit)
 }
