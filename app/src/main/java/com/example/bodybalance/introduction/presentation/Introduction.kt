@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,6 +26,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.player.composable.ExoPlayer
+import com.example.bodybalance.player.composable.rememberExoPlayer
 
 const val INTRODUCTION = "Introduction"
 
@@ -92,7 +94,13 @@ fun IntroductionScreenContent(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ExoPlayer(url = videoUrl, listener = listener)
+        //ExoPlayer(url = videoUrl, listener = listener)
+        rememberExoPlayer(
+            context = LocalContext.current,
+            modifier = modifier,
+            videoUrl = videoUrl,
+            listener = listener
+        )
         BasicButton(
             text = "Done!", onClick = { navToPlaylist() }, modifier = Modifier
                 .padding(50.dp)
