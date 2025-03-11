@@ -73,28 +73,15 @@ fun CustomTextField(
             keyboardType = KeyboardType.Password
         ),
         trailingIcon = {
-            if (value.isNotEmpty() && isFocused) {
+            if (isFocused && value.isNotEmpty() || isError) {
                 LabelIcon(isError = isError)
             }
         },
         supportingText = {
-            ShowSupportingText(
-                isVisible = isError && isFocused, // Убираем подсказку
-                supportingText = supportingText
-            )
+            if (isError) Text(text = supportingText)
         },
         label = { Text(text = label) },
     )
-}
-
-@Composable
-private fun ShowSupportingText(
-    modifier: Modifier = Modifier,
-    isVisible: Boolean,
-    supportingText: String
-) {
-
-    if (isVisible) Text(modifier = modifier, text = supportingText)
 }
 
 @Composable

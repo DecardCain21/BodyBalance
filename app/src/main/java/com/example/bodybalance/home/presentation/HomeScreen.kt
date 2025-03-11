@@ -1,5 +1,6 @@
 package com.example.bodybalance.home.presentation
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -9,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,16 +28,23 @@ import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.core.composable.CustomTextField
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 
+@SuppressLint("OpaqueUnitKey")
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     onForgotPasswordClick: () -> Unit = {},
-    onSignInClick: () -> Unit = {},
+    navigateToIntroductionScreen: () -> Unit = {},
     viewModel: HomeViewModel = hiltViewModel()
 ) {
 
+    val navEvent by viewModel.navigationEvent.collectAsState(initial = null)
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val currentState = uiState
+
+    LaunchedEffect(navEvent) {
+        navEvent?.let {
+            navigateToIntroductionScreen()
+        }
+    }
 
     Box(
         modifier = modifier
@@ -45,17 +55,18 @@ fun HomeScreen(
             Image(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .padding(top = 50.dp, bottom = 30.dp),
+                    .padding(top = 144.dp, bottom = 60.dp),
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = "Logo",
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
             )
-            with(currentState) {
+            with(uiState) {
                 CustomTextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp),
                     value = inputValue,
+                    label = stringResource(id = R.string.login),
                     isError = inputError,
                     supportingText = supportText.message,
                     onValueChange = { viewModel.handleEvent(HomeScreenUiEvent.InputLogin(it)) },
@@ -68,7 +79,7 @@ fun HomeScreen(
                     .fillMaxWidth()
                     .padding(bottom = 6.dp),
                 text = stringResource(R.string.sing_in),
-                onClick = { onSignInClick() }
+                onClick = { viewModel.handleEvent(HomeScreenUiEvent.Enter) }
             )
             BasicButton(
                 modifier = Modifier
@@ -77,7 +88,7 @@ fun HomeScreen(
                 text = stringResource(R.string.get_login),
                 buttonColor = Color.Transparent,
                 textColor = MaterialTheme.colorScheme.primary,
-                onClick = { onSignInClick() }
+                onClick = { }
             )
         }
     }

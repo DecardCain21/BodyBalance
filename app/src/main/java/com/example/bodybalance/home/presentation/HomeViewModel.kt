@@ -1,10 +1,14 @@
 package com.example.bodybalance.home.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -12,14 +16,17 @@ class HomeViewModel @Inject constructor(
 
 ) : ViewModel() {
 
+    private val _navigationEvent = MutableSharedFlow<Unit>()
+    val navigationEvent = _navigationEvent.asSharedFlow()
+
     private val _uiState = MutableStateFlow(HomeScreenState())
     val uiState: StateFlow<HomeScreenState> = _uiState.asStateFlow()
 
     fun handleEvent(event: HomeScreenUiEvent) {
         when (event) {
             is HomeScreenUiEvent.InputLogin -> inputLoginManagement(event.text)
-            is HomeScreenUiEvent.Enter -> {}
-            is HomeScreenUiEvent.GetLogin -> {}
+            is HomeScreenUiEvent.Enter -> onLoginAttempt()
+            is HomeScreenUiEvent.GetLogin -> requestLogin()
         }
     }
 
@@ -43,4 +50,17 @@ class HomeViewModel @Inject constructor(
         _uiState.value =
             uiState.value.copy(inputValue = text, inputError = isError, supportText = supportText)
     }
+
+    private fun onLoginAttempt() {
+        if (uiState.value.inputValue.isEmpty()) {
+            _uiState.value =
+                uiState.value.copy(inputError = true, supportText = SupportTextHome.ENTER_LOGIN)
+        } else {
+            viewModelScope.launch {
+                _navigationEvent.emit(Unit)
+            }
+        }
+    }
+
+    private fun requestLogin() { }
 }
