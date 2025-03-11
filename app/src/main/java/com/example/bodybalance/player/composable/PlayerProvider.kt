@@ -37,7 +37,7 @@ fun rememberExoPlayer(
     context: Context,
     modifier: Modifier,
     videoUrl: String,
-    listener: Player.Listener
+    listener: Player.Listener? = null
 ): ExoPlayer {
     val exoPlayer = remember {
         ExoPlayer.Builder(context).build().apply {
@@ -45,7 +45,9 @@ fun rememberExoPlayer(
             setMediaItem(mediaItem)
             prepare()
             playWhenReady = true
-            addListener(listener) // а вот и твой листенер будет
+            if (listener != null) {
+                addListener(listener)
+            } // а вот и твой листенер будет
         }
     }
     var currentPosition by rememberSaveable { mutableLongStateOf(0L) }
@@ -71,6 +73,7 @@ fun rememberExoPlayer(
 
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose {
+            exoPlayer.release()
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }

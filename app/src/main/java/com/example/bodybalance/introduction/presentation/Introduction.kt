@@ -25,7 +25,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import com.example.bodybalance.core.composable.BasicButton
-import com.example.bodybalance.player.composable.ExoPlayer
 import com.example.bodybalance.player.composable.rememberExoPlayer
 
 const val INTRODUCTION = "Introduction"
@@ -94,7 +93,6 @@ fun IntroductionScreenContent(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        //ExoPlayer(url = videoUrl, listener = listener)
         rememberExoPlayer(
             context = LocalContext.current,
             modifier = modifier,
