@@ -27,7 +27,7 @@ import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.core.composable.NavItem
 import com.example.bodybalance.core.data.storage.FileDownloader
 import com.example.bodybalance.core.domain.models.Video
-import com.example.bodybalance.player.composable.ExoPlayer
+import com.example.bodybalance.player.composable.rememberExoPlayer
 import java.io.File
 
 @OptIn(UnstableApi::class)
@@ -77,13 +77,17 @@ fun VideoPlayerScreenContent(
     modifier: Modifier = Modifier,
     url: String,
     videoList: List<Video>,
-    onItemSelected: (String) -> Unit
+    onItemSelected: (String) -> Unit,
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ExoPlayer(url = url)
+        rememberExoPlayer(
+            context = LocalContext.current,
+            modifier = modifier,
+            videoUrl = url
+        )
         BasicButton(
             text = "Done!", onClick = { }, modifier = Modifier
                 .padding(50.dp)

@@ -16,14 +16,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import com.example.bodybalance.core.composable.BasicButton
-import com.example.bodybalance.player.composable.ExoPlayer
+import com.example.bodybalance.player.composable.rememberExoPlayer
 
 const val INTRODUCTION = "Introduction"
 
@@ -77,11 +79,26 @@ fun IntroductionScreenContent(
     videoUrl: String,
     navToPlaylist: () -> Unit,
 ) {
+    val listener = object : Player.Listener {
+        override fun onPlaybackStateChanged(playbackState: Int) {
+            when (playbackState) {
+                Player.STATE_ENDED -> println("Video ended")
+                Player.STATE_READY -> println("Video is ready")
+                Player.STATE_BUFFERING -> println("Buffering...")
+                Player.STATE_IDLE -> println("Idle")
+            }
+        }
+    }
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ExoPlayer(url = videoUrl)
+        rememberExoPlayer(
+            context = LocalContext.current,
+            modifier = modifier,
+            videoUrl = videoUrl,
+            listener = listener
+        )
         BasicButton(
             text = "Done!", onClick = { navToPlaylist() }, modifier = Modifier
                 .padding(50.dp)
