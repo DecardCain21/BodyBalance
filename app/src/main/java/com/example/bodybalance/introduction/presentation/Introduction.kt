@@ -33,7 +33,7 @@ const val INTRODUCTION = "Introduction"
 fun Introduction(
     modifier: Modifier = Modifier,
     navToPlaylist: () -> Unit = {},
-    viewModel: /*VideoPlayerViewModel*/IntroductionViewModel = hiltViewModel()
+    viewModel: IntroductionViewModel = hiltViewModel()
 ) {
     val isPreview = LocalInspectionMode.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -68,7 +68,6 @@ fun Introduction(
                 IntroductionState.Empty -> Unit
                 IntroductionState.Loading -> IntroductionScreenLoading()
             }
-
         }
     }
 }
