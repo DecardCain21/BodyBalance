@@ -27,6 +27,7 @@ class HomeViewModel @Inject constructor(
             is HomeScreenUiEvent.InputLogin -> inputLoginManagement(event.text)
             is HomeScreenUiEvent.Enter -> onLoginAttempt()
             is HomeScreenUiEvent.GetLogin -> requestLogin()
+            is HomeScreenUiEvent.ClearAll -> clearAll()
         }
     }
 
@@ -63,4 +64,8 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun requestLogin() { }
+
+    private fun clearAll() {
+        _uiState.value = uiState.value.copy(inputValue = "")
+    }
 }

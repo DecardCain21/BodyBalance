@@ -70,6 +70,7 @@ fun HomeScreen(
                     isError = inputError,
                     supportingText = supportText.message,
                     onValueChange = { viewModel.handleEvent(HomeScreenUiEvent.InputLogin(it)) },
+                    clearAll = { viewModel.handleEvent(HomeScreenUiEvent.ClearAll)}
                 )
             }
         }
