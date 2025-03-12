@@ -17,6 +17,6 @@ fun NavGraphBuilder.homeScreen(
     navigateToIntroductionScreen: () -> Unit,
 ) {
     composable(route = HOME_ROUTE) {
-        HomeScreen(onSignInClick = navigateToIntroductionScreen)
+        HomeScreen(navigateToIntroductionScreen = navigateToIntroductionScreen)
     }
 }

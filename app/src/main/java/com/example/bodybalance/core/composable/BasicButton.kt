@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
+import com.example.bodybalance.ui.theme.OnSurfaceOpacity12
 
 @Composable
 fun BasicButton(
@@ -30,8 +31,8 @@ fun BasicButton(
         enabled = true,
         colors = ButtonDefaults.buttonColors(
             containerColor = buttonColor,
-            // disabledContainerColor = OnSurfaceOpacity12,
-            //disabledContentColor = disabledContentColor
+            disabledContainerColor = OnSurfaceOpacity12,
+            disabledContentColor = OnSurfaceOpacity12
         ),
         shape = RoundedCornerShape(12.dp),
         contentPadding = PaddingValues(top = 18.dp, bottom = 18.dp)
