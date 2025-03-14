@@ -22,16 +22,17 @@ fun BasicButton(
     onClick: () -> Unit,
     buttonColor: Color = MaterialTheme.colorScheme.primary,
     textColor: Color = MaterialTheme.colorScheme.onPrimary,
+    isEnabled:Boolean = true
 ) {
 
     Button(
         modifier = modifier,
         onClick = onClick,
-        enabled = true,
+        enabled = isEnabled,
         colors = ButtonDefaults.buttonColors(
             containerColor = buttonColor,
-            // disabledContainerColor = OnSurfaceOpacity12,
-            //disabledContentColor = disabledContentColor
+             disabledContainerColor = Color.Blue,
+            disabledContentColor = Color.Blue
         ),
         shape = RoundedCornerShape(12.dp),
         contentPadding = PaddingValues(top = 18.dp, bottom = 18.dp)

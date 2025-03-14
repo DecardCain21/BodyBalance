@@ -1,5 +1,6 @@
 package com.example.bodybalance.core.composable
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -38,7 +39,7 @@ fun CustomTextField(
     var text by rememberSaveable { mutableStateOf("") }
 
     TextField(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         value = text,
         onValueChange = { newValue ->
             text = newValue
