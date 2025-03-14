@@ -38,7 +38,7 @@ fun CustomTextField(
     isError: Boolean = false,
     supportingText: String = "",
     onValueChange: (String) -> Unit,
-    clearAll: () -> Unit
+    clearAll: () -> Unit = {}
 ) {
 
     var isFocused by remember { mutableStateOf(false) }
@@ -93,7 +93,7 @@ fun CustomTextField(
 @Composable
 private fun LabelIcon(
     isError: Boolean,
-    clearAll: () -> Unit
+    clearAll: () -> Unit,
 ) {
     if (isError) {
         Icon(

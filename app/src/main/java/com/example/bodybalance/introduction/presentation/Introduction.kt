@@ -1,6 +1,6 @@
 package com.example.bodybalance.introduction.presentation
 
-import android.util.Log
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,11 +32,13 @@ import androidx.media3.common.util.UnstableApi
 import com.example.bodybalance.R
 import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.core.composable.CustomTextField
+import com.example.bodybalance.introduction.presentation.IntroductionScreenState.*
 import com.example.bodybalance.player.composable.rememberExoPlayer
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 
 const val INTRODUCTION = "Introduction"
 
+@SuppressLint("OpaqueUnitKey")
 @androidx.annotation.OptIn(UnstableApi::class)
 @Composable
 fun Introduction(
@@ -48,7 +50,9 @@ fun Introduction(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val currentState = uiState
 
-    LaunchedEffect(Unit) { viewModel.getVideo(INTRODUCTION) }
+    LaunchedEffect(Unit) {
+        viewModel.getVideo(INTRODUCTION)
+    }
 
     Column(
         modifier = modifier.fillMaxSize(),
@@ -65,17 +69,28 @@ fun Introduction(
                 Text("ExoPlayer Placeholder", color = Color.White)
             }
         } else {
-            when (currentState) {
-                is IntroductionState.Content -> {
+            when (currentState.videoState) {
+                is IntroductionPlayerState.Content -> {
+                    var input: String =
+                        when (currentState.inputValue) {
+                            Input.Empty -> ""
+                            is Input.Text -> currentState.inputValue.value
+                        }
                     IntroductionScreenContent(
                         modifier = modifier,
-                        videoUrl = currentState.videoUrl,
-                        navToPlaylist = navToPlaylist
+                        videoUrl = currentState.videoState.videoUrl,
+                        navToPlaylist = navToPlaylist,
+                        input = input,
+                        inputCodeWord = {
+                            viewModel.handleEvent(IntroductionScreenUiEvent.InputLogin(it))
+                        },
+                        isEnabledButton = currentState.buttonIsEnabled
+
                     )
                 }
 
-                IntroductionState.Empty -> Unit
-                IntroductionState.Loading -> IntroductionScreenLoading()
+                IntroductionPlayerState.Empty -> Unit
+                IntroductionPlayerState.Loading -> IntroductionScreenLoading()
             }
         }
     }
@@ -86,6 +101,9 @@ fun IntroductionScreenContent(
     modifier: Modifier = Modifier,
     videoUrl: String,
     navToPlaylist: () -> Unit,
+    input: String,
+    inputCodeWord: (String) -> Unit,
+    isEnabledButton: Boolean
 ) {
     val listener = object : Player.Listener {
         override fun onPlaybackStateChanged(playbackState: Int) {
@@ -97,20 +115,69 @@ fun IntroductionScreenContent(
             }
         }
     }
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp)
+            .background(MaterialTheme.colorScheme.background)
     ) {
-        rememberExoPlayer(
-            context = LocalContext.current,
-            modifier = modifier,
-            videoUrl = videoUrl,
-            listener = listener
-        )
+
+        Column(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            rememberExoPlayer(
+                context = LocalContext.current,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(16 / 9f),
+                videoUrl = videoUrl,
+                listener = listener
+            )
+            Text(
+                modifier = Modifier
+                    .align(Alignment.Start)
+                    .padding(top = 16.dp),
+                text = stringResource(R.string.introduction),
+                textAlign = TextAlign.Start,
+                fontSize = 22.sp,
+                color = colorResource(R.color.white)
+            )
+            Text(
+                modifier = Modifier
+                    .align(Alignment.Start)
+                    .padding(top = 16.dp),
+                text = "Это видео поможет вам быстро разобраться, как всё работает\n" +
+                        "\n" +
+                        "После просмотра введите кодовое слово из видео, чтобы продолжить",
+                textAlign = TextAlign.Start,
+                fontSize = 14.sp,
+                color = colorResource(R.color.white)
+            )
+            CustomTextField(
+                modifier = Modifier
+                    .align(Alignment.Start)
+                    .padding(top = 24.dp),
+                label = "Кодовое слово",
+                value = input,
+                onValueChange = { inputCodeWord(it) },
+                isError = !isEnabledButton
+            )
+        }
+
         BasicButton(
-            text = "Done!", onClick = { navToPlaylist() }, modifier = Modifier
-                .padding(50.dp)
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .padding(bottom = 24.dp),
+            text = "Продолжить",
+            buttonColor = Color.Transparent,
+            textColor = MaterialTheme.colorScheme.primary,
+            onClick = { navToPlaylist() },
+            isEnabled = isEnabledButton
         )
+
+
     }
 }
 
@@ -191,8 +258,6 @@ fun IntroductionPreview() {
                 textColor = MaterialTheme.colorScheme.primary,
                 onClick = { }
             )
-
-
         }
     }
 }
