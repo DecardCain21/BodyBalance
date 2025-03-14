@@ -9,4 +9,6 @@
     <string name="download_channel_description">download_channel_description</string>
     <string name="get_login">Получить логин</string>
     <string name="introduction">Введение</string>
+    <string name="error">Ошибка</string>
+    <string name="clear">Очистить</string>
 </resources>
