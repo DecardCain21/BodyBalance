@@ -4,7 +4,8 @@ package com.example.bodybalance.introduction.presentation
 data class IntroductionScreenState(
     val inputValue: Input,
     val videoState: IntroductionPlayerState,
-    val buttonIsEnabled: Boolean = false
+    val buttonIsEnabled: Boolean = false,
+    val supportText : String = SupportTextIntroduction.ENTER_LOGIN.message
 ) {
     sealed interface Input {
         data object Empty : Input
@@ -20,7 +21,7 @@ data class IntroductionScreenState(
     }
 }
 
-enum class SupportTextHome(val message: String) {
+enum class SupportTextIntroduction(val message: String) {
     INVALID_LOGIN("Неверное кодовое слово"),
     ENTER_LOGIN("Введите кодовое слово")
 }

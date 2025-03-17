@@ -84,7 +84,8 @@ fun Introduction(
                         inputCodeWord = {
                             viewModel.handleEvent(IntroductionScreenUiEvent.InputLogin(it))
                         },
-                        isEnabledButton = currentState.buttonIsEnabled
+                        isEnabledButton = currentState.buttonIsEnabled,
+                        currentState.supportText
 
                     )
                 }
@@ -103,7 +104,8 @@ fun IntroductionScreenContent(
     navToPlaylist: () -> Unit,
     input: String,
     inputCodeWord: (String) -> Unit,
-    isEnabledButton: Boolean
+    isEnabledButton: Boolean,
+    supportText: String
 ) {
     val listener = object : Player.Listener {
         override fun onPlaybackStateChanged(playbackState: Int) {
@@ -118,12 +120,11 @@ fun IntroductionScreenContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp)
             .background(MaterialTheme.colorScheme.background)
     ) {
 
         Column(
-            modifier = Modifier.padding(horizontal = 16.dp),
+            modifier = Modifier,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             rememberExoPlayer(
@@ -137,6 +138,7 @@ fun IntroductionScreenContent(
             Text(
                 modifier = Modifier
                     .align(Alignment.Start)
+                    .padding(horizontal = 16.dp)
                     .padding(top = 16.dp),
                 text = stringResource(R.string.introduction),
                 textAlign = TextAlign.Start,
@@ -146,6 +148,7 @@ fun IntroductionScreenContent(
             Text(
                 modifier = Modifier
                     .align(Alignment.Start)
+                    .padding(horizontal = 16.dp)
                     .padding(top = 16.dp),
                 text = "Это видео поможет вам быстро разобраться, как всё работает\n" +
                         "\n" +
@@ -157,11 +160,13 @@ fun IntroductionScreenContent(
             CustomTextField(
                 modifier = Modifier
                     .align(Alignment.Start)
+                    .padding(horizontal = 16.dp)
                     .padding(top = 24.dp),
                 label = "Кодовое слово",
                 value = input,
                 onValueChange = { inputCodeWord(it) },
-                isError = !isEnabledButton
+                isError = !isEnabledButton,
+                supportingText = supportText
             )
         }
 

@@ -22,7 +22,7 @@ class IntroductionViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(
         IntroductionScreenState(
             inputValue = Input.Empty,
-            videoState = IntroductionPlayerState.Loading
+            videoState = IntroductionPlayerState.Loading,
         )
     )
     val uiState: StateFlow<IntroductionScreenState>
@@ -70,7 +70,8 @@ class IntroductionViewModel @Inject constructor(
     }
 
     private fun enterCodeWord(input: String) {
-        var isEnabled: Boolean =
+        var supportText: String = SupportTextIntroduction.ENTER_LOGIN.message
+        val isEnabled: Boolean =
             when (input) {
                 "Marat" -> {
                     true
@@ -84,12 +85,22 @@ class IntroductionViewModel @Inject constructor(
                     true
                 }
 
+                "" -> {
+                    supportText = SupportTextIntroduction.ENTER_LOGIN.message
+                    false
+                }
+
                 else -> {
+                    supportText = SupportTextIntroduction.INVALID_LOGIN.message
                     false
                 }
             }
         _uiState.value =
-            uiState.value.copy(inputValue = Input.Text(input), buttonIsEnabled = isEnabled)
+            uiState.value.copy(
+                inputValue = Input.Text(input),
+                buttonIsEnabled = isEnabled,
+                supportText = supportText
+            )
     }
 
 }
