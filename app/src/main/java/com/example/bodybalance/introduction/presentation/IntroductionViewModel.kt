@@ -32,10 +32,7 @@ class IntroductionViewModel @Inject constructor(
 
     fun handleEvent(event: IntroductionScreenUiEvent) {
         when (event) {
-            IntroductionScreenUiEvent.Continue -> {
-
-            }
-
+            is IntroductionScreenUiEvent.Continue -> {}
             is IntroductionScreenUiEvent.InputLogin -> enterCodeWord(event.text)
         }
     }
@@ -55,9 +52,8 @@ class IntroductionViewModel @Inject constructor(
                 )
 
                 else -> result.getOrNull()?.let {
-                    //println(it.videoItems.map { video -> video.url }.first())
                     IntroductionScreenState(
-                        inputValue = Input.Text(""), IntroductionPlayerState.Content(
+                        inputValue = Input.Empty, IntroductionPlayerState.Content(
                             videoUrl = it.videoItems.map { video -> video.url }.first()
                         )
                     )
@@ -71,30 +67,20 @@ class IntroductionViewModel @Inject constructor(
 
     private fun enterCodeWord(input: String) {
         var supportText: String = SupportTextIntroduction.ENTER_LOGIN.message
-        val isEnabled: Boolean =
-            when (input) {
-                "Marat" -> {
-                    true
-                }
-
-                "Nikita" -> {
-                    true
-                }
-
-                "Anastasia" -> {
-                    true
-                }
-
-                "" -> {
-                    supportText = SupportTextIntroduction.ENTER_LOGIN.message
-                    false
-                }
-
-                else -> {
-                    supportText = SupportTextIntroduction.INVALID_LOGIN.message
-                    false
-                }
+        val isEnabled: Boolean = when (input) {
+            "Marat" -> true
+            "Nikita" -> true
+            "Anastasia" -> true
+            "" -> {
+                supportText = SupportTextIntroduction.ENTER_LOGIN.message
+                false
             }
+
+            else -> {
+                supportText = SupportTextIntroduction.INVALID_LOGIN.message
+                false
+            }
+        }
         _uiState.value =
             uiState.value.copy(
                 inputValue = Input.Text(input),
@@ -102,16 +88,4 @@ class IntroductionViewModel @Inject constructor(
                 supportText = supportText
             )
     }
-
 }
-
-/*private fun onLoginAttempt() {
-    if (uiState.value.inputValue.isEmpty()) {
-        _uiState.value =
-            uiState.value.copy(inputError = true, supportText = SupportTextHome.ENTER_LOGIN)
-    } else {
-        viewModelScope.launch {
-            _navigationEvent.emit(Unit)
-        }
-    }
-}*/

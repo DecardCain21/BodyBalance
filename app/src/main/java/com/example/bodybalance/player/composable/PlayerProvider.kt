@@ -34,8 +34,8 @@ import androidx.media3.ui.PlayerView
 @OptIn(UnstableApi::class)
 @Composable
 fun rememberExoPlayer(
-    context: Context,
     modifier: Modifier,
+    context: Context,
     videoUrl: String,
     listener: Player.Listener? = null
 ): ExoPlayer {

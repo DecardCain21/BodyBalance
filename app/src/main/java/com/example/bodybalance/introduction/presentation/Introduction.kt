@@ -71,13 +71,12 @@ fun Introduction(
         } else {
             when (currentState.videoState) {
                 is IntroductionPlayerState.Content -> {
-                    var input: String =
+                    val input: String =
                         when (currentState.inputValue) {
                             Input.Empty -> ""
                             is Input.Text -> currentState.inputValue.value
                         }
                     IntroductionScreenContent(
-                        modifier = modifier,
                         videoUrl = currentState.videoState.videoUrl,
                         navToPlaylist = navToPlaylist,
                         input = input,
@@ -85,13 +84,13 @@ fun Introduction(
                             viewModel.handleEvent(IntroductionScreenUiEvent.InputLogin(it))
                         },
                         isEnabledButton = currentState.buttonIsEnabled,
-                        currentState.supportText
+                        supportText = currentState.supportText
 
                     )
                 }
 
-                IntroductionPlayerState.Empty -> Unit
-                IntroductionPlayerState.Loading -> IntroductionScreenLoading()
+                is IntroductionPlayerState.Empty -> Unit
+                is IntroductionPlayerState.Loading -> IntroductionScreenLoading()
             }
         }
     }
@@ -118,20 +117,19 @@ fun IntroductionScreenContent(
         }
     }
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-
         Column(
             modifier = Modifier,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             rememberExoPlayer(
-                context = LocalContext.current,
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(16 / 9f),
+                context = LocalContext.current,
                 videoUrl = videoUrl,
                 listener = listener
             )
@@ -159,30 +157,28 @@ fun IntroductionScreenContent(
             )
             CustomTextField(
                 modifier = Modifier
+                    .fillMaxWidth()
                     .align(Alignment.Start)
                     .padding(horizontal = 16.dp)
                     .padding(top = 24.dp),
-                label = "Кодовое слово",
+                label = stringResource(R.string.code_word),
                 value = input,
                 onValueChange = { inputCodeWord(it) },
                 isError = !isEnabledButton,
                 supportingText = supportText
             )
         }
-
         BasicButton(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
                 .padding(bottom = 24.dp),
-            text = "Продолжить",
+            text = stringResource(R.string.continue_button),
             buttonColor = Color.Transparent,
             textColor = MaterialTheme.colorScheme.primary,
             onClick = { navToPlaylist() },
             isEnabled = isEnabledButton
         )
-
-
     }
 }
 

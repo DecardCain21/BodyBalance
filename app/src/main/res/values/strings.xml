@@ -11,4 +11,6 @@
     <string name="introduction">Введение</string>
     <string name="error">Ошибка</string>
     <string name="clear">Очистить</string>
+    <string name="code_word">Кодовое слово</string>
+    <string name="continue_button">Продолжить</string>
 </resources>
