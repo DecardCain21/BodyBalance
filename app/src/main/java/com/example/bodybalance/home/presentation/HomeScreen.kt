@@ -88,7 +88,7 @@ fun HomeScreen(
                     .padding(bottom = 6.dp),
                 text = stringResource(R.string.get_login),
                 buttonColor = Color.Transparent,
-                textColor = MaterialTheme.colorScheme.primary,
+                enabledTextColor = MaterialTheme.colorScheme.primary,
                 onClick = { }
             )
         }

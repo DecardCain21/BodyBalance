@@ -172,10 +172,12 @@ fun IntroductionScreenContent(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
+                .padding(horizontal = 16.dp)
                 .padding(bottom = 24.dp),
             text = stringResource(R.string.continue_button),
-            buttonColor = Color.Transparent,
-            textColor = MaterialTheme.colorScheme.primary,
+            buttonColor = MaterialTheme.colorScheme.primary,
+            enabledTextColor = MaterialTheme.colorScheme.onPrimary,
+            disabledTextColor = MaterialTheme.colorScheme.primary,
             onClick = { navToPlaylist() },
             isEnabled = isEnabledButton
         )
@@ -256,7 +258,7 @@ fun IntroductionPreview() {
                     .padding(bottom = 24.dp),
                 text = "Продолжить",
                 buttonColor = Color.Transparent,
-                textColor = MaterialTheme.colorScheme.primary,
+                enabledTextColor = MaterialTheme.colorScheme.primary,
                 onClick = { }
             )
         }
