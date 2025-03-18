@@ -8,6 +8,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.example.bodybalance.ui.theme.OnSurfaceOpacity12
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,8 +22,9 @@ fun BasicButton(
     text: String,
     onClick: () -> Unit,
     buttonColor: Color = MaterialTheme.colorScheme.primary,
-    textColor: Color = MaterialTheme.colorScheme.onPrimary,
-    isEnabled:Boolean = true
+    enabledTextColor: Color = MaterialTheme.colorScheme.onPrimary,
+    disabledTextColor: Color = MaterialTheme.colorScheme.primary,
+    isEnabled: Boolean = true
 ) {
 
     Button(
@@ -31,8 +33,8 @@ fun BasicButton(
         enabled = isEnabled,
         colors = ButtonDefaults.buttonColors(
             containerColor = buttonColor,
-             disabledContainerColor = Color.Blue,
-            disabledContentColor = Color.Blue
+            disabledContainerColor = OnSurfaceOpacity12,
+            disabledContentColor = OnSurfaceOpacity12,
         ),
         shape = RoundedCornerShape(12.dp),
         contentPadding = PaddingValues(top = 18.dp, bottom = 18.dp)
@@ -40,7 +42,13 @@ fun BasicButton(
         Text(
             text = text,
             fontSize = 14.sp,
-            color = textColor
+            color =
+            if (isEnabled) {
+                enabledTextColor
+            } else {
+                disabledTextColor
+            }
+
         )
     }
 }
