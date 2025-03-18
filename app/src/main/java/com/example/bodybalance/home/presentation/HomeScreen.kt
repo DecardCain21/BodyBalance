@@ -56,7 +56,7 @@ fun HomeScreen(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(top = 144.dp, bottom = 60.dp),
-                painter = painterResource(id = R.drawable.logo),
+                painter = painterResource(id = R.drawable.logo_),
                 contentDescription = "Logo",
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
             )
