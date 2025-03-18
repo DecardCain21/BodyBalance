@@ -2,10 +2,13 @@ package com.example.bodybalance.core.data.di
 
 import com.example.bodybalance.core.data.network.BodyBalanceApiService
 import com.example.bodybalance.core.data.network.client.CategoryNetworkClient
+import com.example.bodybalance.core.data.network.client.LoginNetworkClient
 import com.example.bodybalance.core.data.network.client.VideoNetworkClient
 import com.example.bodybalance.core.data.repository.CategoryRepositoryImpl
+import com.example.bodybalance.core.data.repository.LoginRepositoryImpl
 import com.example.bodybalance.core.data.repository.VideoRepositoryImpl
 import com.example.bodybalance.core.domain.api.CategoryRepository
+import com.example.bodybalance.core.domain.api.LoginRepository
 import com.example.bodybalance.core.domain.api.VideoRepository
 import dagger.Binds
 import dagger.Module
@@ -46,6 +49,14 @@ object NetworkModuleProvider {
     ): CategoryNetworkClient {
         return CategoryNetworkClient(binListApiService)
     }
+
+    @Provides
+    @Singleton
+    fun provideLoginNetworkClient(
+        binListApiService: BodyBalanceApiService
+    ): LoginNetworkClient {
+        return LoginNetworkClient(binListApiService)
+    }
 }
 
 @Module
@@ -61,4 +72,9 @@ abstract class NetworkModuleBinder {
     abstract fun bindCategoryRepository(
         categoryRepositoryImpl: CategoryRepositoryImpl
     ): CategoryRepository
+
+    @Binds
+    abstract fun bindLoginRepository(
+        loginRepositoryImpl: LoginRepositoryImpl
+    ): LoginRepository
 }

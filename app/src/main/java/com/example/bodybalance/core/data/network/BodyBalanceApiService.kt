@@ -14,4 +14,9 @@ interface BodyBalanceApiService {
 
     @GET("/category")
     suspend fun getCategory(): List<String>
+
+    @GET("/login")
+    suspend fun checkAccount(
+        @Query("type") type: String
+    ): Boolean
 }
