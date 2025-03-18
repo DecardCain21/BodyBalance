@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bodybalance.home.domain.usecase.CheckLoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -60,10 +59,7 @@ class HomeViewModel @Inject constructor(
                 uiState.value.copy(inputError = true, supportText = SupportTextHome.ENTER_LOGIN)
         } else {
             viewModelScope.launch {
-                val deferredResult = async { checkLoginUseCase(uiState.value.inputValue) }
-                val result = deferredResult.await()
-
-                result
+                checkLoginUseCase(uiState.value.inputValue)
                     .onSuccess { isValid ->
                         if (isValid) {
                             _navigationEvent.emit(Unit)
@@ -73,7 +69,7 @@ class HomeViewModel @Inject constructor(
                                 supportText = SupportTextHome.INVALID_LOGIN
                             )
                         }
-                    }.onFailure { } // Проверки на экспешены (нет интернета и тд)
+                    }.onFailure { } // Проверки на эксепшены (нет интернета и тд)
             }
         }
     }
