@@ -2,7 +2,7 @@ package com.example.bodybalance.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-//  val LightGrey = Color(0xFFF5F9FE)
+val OutlineLightGrey = Color(0xFF79747E)
 val Grey = Color(0xFF36343A)
 val Blue = Color(0xFF3461FD)
 val White = Color(0xFFFFFFFF)
