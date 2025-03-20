@@ -8,11 +8,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.BottomSheetDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,13 +30,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.bodybalance.R
 import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.core.composable.CustomTextField
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("OpaqueUnitKey")
 @Composable
 fun HomeScreen(
@@ -36,6 +48,10 @@ fun HomeScreen(
     navigateToIntroductionScreen: () -> Unit = {},
     viewModel: HomeViewModel = hiltViewModel()
 ) {
+
+    val sheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
+    var showBottomSheet by remember { mutableStateOf(false) }
 
     val navEvent by viewModel.navigationEvent.collectAsState(initial = null)
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -70,7 +86,7 @@ fun HomeScreen(
                     isError = inputError,
                     supportingText = supportText.message,
                     onValueChange = { viewModel.handleEvent(HomeScreenUiEvent.InputLogin(it)) },
-                    clearAll = { viewModel.handleEvent(HomeScreenUiEvent.ClearAll)}
+                    clearAll = { viewModel.handleEvent(HomeScreenUiEvent.ClearAll) }
                 )
             }
         }
@@ -89,8 +105,54 @@ fun HomeScreen(
                 text = stringResource(R.string.get_login),
                 buttonColor = Color.Transparent,
                 enabledTextColor = MaterialTheme.colorScheme.primary,
-                onClick = { }
+                onClick = { showBottomSheet = true }
             )
+        }
+        if (showBottomSheet) {
+            ModalBottomSheet(
+                onDismissRequest = { showBottomSheet = false },
+                sheetState = sheetState,
+                dragHandle = {
+                    BottomSheetDefaults.DragHandle(color = MaterialTheme.colorScheme.outline)
+                }
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                ) {
+                    Text(
+                        text = "Получите логин после приёма врача",
+                        fontSize = 22.sp,
+                        letterSpacing = 0.sp,
+                    )
+                    Text(
+                        modifier = Modifier.padding(top = 12.dp, bottom = 14.dp),
+                        text = "Body Balance— это программа спортивной реабилитации в формате ежедневных видео",
+                        fontSize = 14.sp,
+                        letterSpacing = 0.25.sp,
+                    )
+                    Text(
+                        text = "Чтобы получить доступ к программе, запишитесь на приём к врачу",
+                        fontSize = 14.sp,
+                        letterSpacing = 0.25.sp,
+                    )
+                    BasicButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 20.dp),
+                        text = "Записаться на приём",
+                        buttonColor = MaterialTheme.colorScheme.onPrimary,
+                        enabledTextColor = MaterialTheme.colorScheme.primary,
+                        onClick = {
+                            scope.launch { sheetState.hide() }.invokeOnCompletion {
+                                if (!sheetState.isVisible) {
+                                    showBottomSheet = false
+                                }
+                            }
+                        })
+                }
+            }
         }
     }
 }

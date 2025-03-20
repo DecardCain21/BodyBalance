@@ -35,11 +35,18 @@ private val DarkColorScheme = darkColorScheme(
     // модальные окна и т. д.
     // Отличается от background, поскольку представляет фоновую поверхность "над" основным фоном.
     surface = Grey,
+
+    //
+    outline = OutlineLightGrey,
+
+    //
     onSurfaceVariant = LightGrey,
 
     // Цвет текста и иконок, которые отображаются поверх элемента с primary цветом
     onPrimary = Color.Black,
 
+    //
+    surfaceContainerLow = Color.White,
 
     // Цвет текста и иконок поверх secondary
     onSecondary = Grey,
