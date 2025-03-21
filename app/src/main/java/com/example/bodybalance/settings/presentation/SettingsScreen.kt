@@ -19,18 +19,22 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bodybalance.R
+import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,7 +58,8 @@ fun SettingsScreen(
                 IconButton(onClick = { /* do something */ }) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "Localized description"
+                        contentDescription = "Localized description",
+                        tint = Color.White
                     )
                 }
             }
@@ -69,6 +74,7 @@ fun SettingsScreen(
                 modifier = Modifier.size(20.dp),
                 imageVector = Icons.Default.Delete, /*painter = painterResource(id = R.drawable.your_custom_icon)*/
                 contentDescription = "Очистить кэш",
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
@@ -97,13 +103,14 @@ fun SettingsScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(start = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
                 imageVector = Icons.Default.Download,
                 contentDescription = "Скачивать видео только по Wi-Fi",
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(24.dp),
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(
@@ -111,7 +118,18 @@ fun SettingsScreen(
                 color = colorResource(R.color.white),
             )
             Spacer(modifier = Modifier.weight(1f))
-            Switch(checked = false, onCheckedChange = {})
+            Switch(
+                checked = false,
+                onCheckedChange = {},
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = Color.Black, // Цвет "ползунка" в активном состоянии
+                    uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant, // Цвет "ползунка" в неактивном состоянии
+                    checkedTrackColor = Color.White, // Цвет фона в активном состоянии
+                    uncheckedTrackColor = MaterialTheme.colorScheme.surface, //На макете outline? Цвет фона в неактивном состоянии
+                    checkedBorderColor = Color.White, // Цвет обводки в активном состоянии
+                    uncheckedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant // Цвет обводки в неактивном состоянии
+                )
+            )
         }
 
         // Третья строка: О приложении
@@ -125,6 +143,7 @@ fun SettingsScreen(
                 imageVector = Icons.Default.Info,
                 contentDescription = "О приложении",
                 modifier = Modifier.size(24.dp),
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(
@@ -137,6 +156,18 @@ fun SettingsScreen(
                 color = colorResource(R.color.white),
             )
         }
+        Spacer(modifier = Modifier.weight(1f))
+        BasicButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 24.dp),
+            text = "Выйти",
+            buttonColor = Color.Transparent,
+            enabledTextColor = MaterialTheme.colorScheme.primary,
+            onClick = { }
+        )
+
+
     }
 }
 
