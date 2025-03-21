@@ -3,6 +3,8 @@ package com.example.bodybalance.introduction.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bodybalance.core.data.network.NetworkError
+import com.example.bodybalance.core.domain.models.Category
+import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.introduction.presentation.IntroductionScreenState.Input
 import com.example.bodybalance.introduction.presentation.IntroductionScreenState.IntroductionPlayerState
 import com.example.bodybalance.videoplayer.domain.usecase.GetVideoUseCase
@@ -52,17 +54,26 @@ class IntroductionViewModel @Inject constructor(
                 )
 
                 else -> result.getOrNull()?.let {
-                    IntroductionScreenState(
+                    /*IntroductionScreenState(
                         inputValue = Input.Empty, IntroductionPlayerState.Content(
                             videoUrl = it.videoItems.map { video -> video.url }.first()
                         )
-                    )
+                    )*/
+                    hardCode(result.getOrNull()!!.videoItems)
                 } ?: IntroductionScreenState(
                     inputValue = Input.Empty, IntroductionPlayerState.Empty
                 )
             }
             _uiState.value = newState
         }
+    }
+
+    private fun hardCode(result: List<Video>): IntroductionScreenState {
+        return IntroductionScreenState(
+            inputValue = Input.Text("Marat"), IntroductionPlayerState.Content(
+                videoUrl = result.map { video -> video.url }.first()
+            ), buttonIsEnabled = true
+        )
     }
 
     private fun enterCodeWord(input: String) {

@@ -42,6 +42,7 @@ import com.example.bodybalance.ui.theme.BodyBalanceTheme
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
+    navigateToAboutAppScreen: () -> Unit
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
@@ -94,7 +95,9 @@ fun SettingsScreen(
             }
             //Spacer(modifier = Modifier.weight(1f))
             Text(
-                modifier = Modifier.padding(start = 16.dp),
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .align(Alignment.Top),
                 text = "5 Гб",
                 fontSize = 11.sp,
                 color = colorResource(R.color.white),
@@ -172,8 +175,6 @@ fun SettingsScreen(
             enabledTextColor = MaterialTheme.colorScheme.primary,
             onClick = { }
         )
-
-
     }
 }
 
@@ -185,6 +186,6 @@ fun SettingsScreen(
 @Composable
 fun PreviewSettingsScreen() {
     BodyBalanceTheme(dynamicColor = false, darkTheme = true) {
-        SettingsScreen()
+        SettingsScreen(navigateToAboutAppScreen = {})
     }
 }

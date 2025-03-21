@@ -8,10 +8,14 @@ import com.example.bodybalance.category.presentation.Category
 const val PLAYLIST_ROUTE = "playlist"
 
 fun NavGraphBuilder.playlistScreen(
-    navigateToVideoPlayerScreen: (String) -> Unit
+    navigateToVideoPlayerScreen: (String) -> Unit,
+    navigateToSettingsScreen: () -> Unit
 ) {
     composable(route = PLAYLIST_ROUTE) {
-        Category(navigateToVideoPlayerScreen = navigateToVideoPlayerScreen)
+        Category(
+            navigateToVideoPlayerScreen = navigateToVideoPlayerScreen,
+            navigateToSettingsScreen = navigateToSettingsScreen
+        )
     }
 }
 
