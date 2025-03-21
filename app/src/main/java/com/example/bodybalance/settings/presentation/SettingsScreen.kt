@@ -72,7 +72,9 @@ fun SettingsScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                modifier = Modifier.size(20.dp),
+                modifier = Modifier
+                    .size(20.dp)
+                    .align(Alignment.Top),
                 imageVector = Icons.Default.Delete, /*painter = painterResource(id = R.drawable.your_custom_icon)*/
                 contentDescription = "Очистить кэш",
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
