@@ -68,7 +68,7 @@ fun SettingsScreen(
         // Первая строка: Очистить кэш
         Row(
             modifier = Modifier
-                .padding(16.dp),
+                .padding(all = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
@@ -94,7 +94,7 @@ fun SettingsScreen(
             Text(
                 modifier = Modifier.padding(start = 16.dp),
                 text = "5 Гб",
-                fontSize = 16.sp,
+                fontSize = 11.sp,
                 color = colorResource(R.color.white),
                 textAlign = TextAlign.End
             )
@@ -104,7 +104,7 @@ fun SettingsScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp),
+                .padding(all = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
@@ -138,7 +138,7 @@ fun SettingsScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(all = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
