@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -108,13 +109,14 @@ fun SettingsScreen(
         ) {
             Image(
                 imageVector = Icons.Default.Download,
-                contentDescription = "Скачивать видео только по Wi-Fi",
+                contentDescription = stringResource(R.string.download_wi_fi_only),
                 modifier = Modifier.size(24.dp),
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(
-                text = "Скачивать видео только\nпо Wi-Fi", fontSize = 16.sp,
+                text = stringResource(R.string.download_wi_fi_only),
+                fontSize = 16.sp,
                 color = colorResource(R.color.white),
             )
             Spacer(modifier = Modifier.weight(1f))
@@ -141,18 +143,20 @@ fun SettingsScreen(
         ) {
             Image(
                 imageVector = Icons.Default.Info,
-                contentDescription = "О приложении",
+                contentDescription = stringResource(R.string.about_app),
                 modifier = Modifier.size(24.dp),
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(
-                text = "О приложении", fontSize = 16.sp,
+                text = stringResource(R.string.about_app),
+                fontSize = 16.sp,
                 color = colorResource(R.color.white),
             )
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = "Версия 0.0.0", fontSize = 16.sp,
+                text = stringResource(R.string.version_app),
+                fontSize = 16.sp,
                 color = colorResource(R.color.white),
             )
         }
@@ -161,7 +165,7 @@ fun SettingsScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 24.dp),
-            text = "Выйти",
+            text = stringResource(R.string.exit),
             buttonColor = Color.Transparent,
             enabledTextColor = MaterialTheme.colorScheme.primary,
             onClick = { }
