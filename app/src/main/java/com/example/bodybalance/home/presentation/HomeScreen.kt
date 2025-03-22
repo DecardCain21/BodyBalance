@@ -61,7 +61,6 @@ fun HomeScreen(
             navigateToIntroductionScreen()
         }
     }
-
     Box(
         modifier = modifier
             .fillMaxSize()

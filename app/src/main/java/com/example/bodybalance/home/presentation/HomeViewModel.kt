@@ -3,6 +3,7 @@ package com.example.bodybalance.home.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bodybalance.home.domain.usecase.CheckLoginUseCase
+import com.example.bodybalance.home.domain.usecase.SetAuthenticatedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val checkLoginUseCase: CheckLoginUseCase
+    private val checkLoginUseCase: CheckLoginUseCase,
+    private val setAuthenticatedUseCase: SetAuthenticatedUseCase
 ) : ViewModel() {
 
     private val _navigationEvent = MutableSharedFlow<Unit>()
@@ -63,6 +65,7 @@ class HomeViewModel @Inject constructor(
                     .onSuccess { isValid ->
                         if (isValid) {
                             _navigationEvent.emit(Unit)
+                            setAuthenticatedUseCase(true)
                         } else {
                             _uiState.value = uiState.value.copy(
                                 inputError = true,
