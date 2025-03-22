@@ -17,4 +17,7 @@
     <string name="version_app">Версия 0.0.0</string>
     <string name="exit">Выйти</string>
     <string name="download_wi_fi_only">Скачивать видео только\nпо Wi-Fi</string>
+    <string name="settings">Настройки</string>
+    <string name="clear_cashe">Очистить кэш</string>
+    <string name="clear_cashe_description">Освободите память устройства. Видео останутся в приложении, и вы сможете скачать их заново</string>
 </resources>

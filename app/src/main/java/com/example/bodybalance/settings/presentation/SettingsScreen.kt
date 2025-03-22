@@ -26,6 +26,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.colorResource
@@ -45,7 +46,9 @@ fun SettingsScreen(
     navigateToAboutAppScreen: () -> Unit
 ) {
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.Start
     ) {
         TopAppBar(
@@ -54,7 +57,7 @@ fun SettingsScreen(
                 titleContentColor = MaterialTheme.colorScheme.primary,
             ),
             title = {
-                Text("Настройки")
+                Text(stringResource(R.string.settings))
             },
             navigationIcon = {
                 IconButton(onClick = { /* do something */ }) {
@@ -68,27 +71,32 @@ fun SettingsScreen(
         )
         // Первая строка: Очистить кэш
         Row(
-            modifier = Modifier
-                .padding(all = 16.dp),
+            modifier = Modifier.padding(top = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
                 modifier = Modifier
-                    .size(20.dp)
+                    // Почему если поменять padding и size местами, иконка пропадает?
+                    .padding(vertical = 12.dp)
+                    .size(22.dp, 24.dp)
                     .align(Alignment.Top),
                 imageVector = Icons.Default.Delete, /*painter = painterResource(id = R.drawable.your_custom_icon)*/
-                contentDescription = "Очистить кэш",
+                contentDescription = stringResource(R.string.clear_cashe),
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
             )
             Spacer(modifier = Modifier.width(16.dp))
-            Column(modifier = Modifier.weight(1f)) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(vertical = 12.dp)
+            ) {
                 Text(
-                    text = "Очистить кэш",
+                    text = stringResource(R.string.clear_cashe),
                     fontSize = 16.sp,
                     color = colorResource(R.color.white),
                 )
                 Text(
-                    text = "Освободите память устройства. Видео останутся в приложении, и вы сможете скачать их заново",
+                    text = stringResource(R.string.clear_cashe_description),
                     fontSize = 12.sp,
                     color = colorResource(R.color.white),
                 )
@@ -96,6 +104,7 @@ fun SettingsScreen(
             //Spacer(modifier = Modifier.weight(1f))
             Text(
                 modifier = Modifier
+                    .padding(vertical = 12.dp)
                     .padding(start = 16.dp)
                     .align(Alignment.Top),
                 text = "5 Гб",
@@ -108,18 +117,18 @@ fun SettingsScreen(
         // Вторая строка: Скачивать видео только по Wi-Fi
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(all = 16.dp),
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
                 imageVector = Icons.Default.Download,
                 contentDescription = stringResource(R.string.download_wi_fi_only),
-                modifier = Modifier.size(24.dp),
+                modifier = Modifier.size(24.dp, 24.dp),
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(
+                modifier = Modifier.padding(vertical = 8.dp),
                 text = stringResource(R.string.download_wi_fi_only),
                 fontSize = 16.sp,
                 color = colorResource(R.color.white),
@@ -142,24 +151,24 @@ fun SettingsScreen(
         // Третья строка: О приложении
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(all = 16.dp),
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
+                modifier = Modifier.size(28.dp, 26.dp),
                 imageVector = Icons.Default.Info,
                 contentDescription = stringResource(R.string.about_app),
-                modifier = Modifier.size(24.dp),
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
             )
-            Spacer(modifier = Modifier.width(16.dp))
             Text(
+                modifier = Modifier.padding(start = 16.dp),
                 text = stringResource(R.string.about_app),
                 fontSize = 16.sp,
                 color = colorResource(R.color.white),
             )
             Spacer(modifier = Modifier.weight(1f))
             Text(
+                modifier = Modifier.padding(vertical = 16.dp),
                 text = stringResource(R.string.version_app),
                 fontSize = 16.sp,
                 color = colorResource(R.color.white),
@@ -169,7 +178,7 @@ fun SettingsScreen(
         BasicButton(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 24.dp),
+                ,
             text = stringResource(R.string.exit),
             buttonColor = Color.Transparent,
             enabledTextColor = MaterialTheme.colorScheme.primary,
@@ -179,7 +188,6 @@ fun SettingsScreen(
 }
 
 @Preview(
-    showSystemUi = true,
     showBackground = true,
     backgroundColor = 0xFF141218
 )
