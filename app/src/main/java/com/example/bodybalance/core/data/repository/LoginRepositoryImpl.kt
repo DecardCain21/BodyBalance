@@ -1,6 +1,6 @@
 package com.example.bodybalance.core.data.repository
 
-import com.example.bodybalance.core.data.network.client.LoginNetworkClient
+import com.example.bodybalance.core.data.source.network.client.LoginNetworkClient
 import com.example.bodybalance.core.domain.api.LoginRepository
 import javax.inject.Inject
 

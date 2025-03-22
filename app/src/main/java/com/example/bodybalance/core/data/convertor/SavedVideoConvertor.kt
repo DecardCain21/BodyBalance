@@ -1,6 +1,6 @@
 package com.example.bodybalance.core.data.convertor
 
-import com.example.bodybalance.core.data.db.entity.SavedVideo
+import com.example.bodybalance.core.data.source.local.database.entity.SavedVideo
 import com.example.bodybalance.core.domain.models.Video
 
 fun Video.convertToSavedVideo() = SavedVideo(

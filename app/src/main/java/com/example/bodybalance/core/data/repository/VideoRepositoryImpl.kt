@@ -1,7 +1,7 @@
 package com.example.bodybalance.core.data.repository
 
 import com.example.bodybalance.core.data.convertor.convertToCategory
-import com.example.bodybalance.core.data.network.client.VideoNetworkClient
+import com.example.bodybalance.core.data.source.network.client.VideoNetworkClient
 import com.example.bodybalance.core.domain.api.VideoRepository
 import com.example.bodybalance.core.domain.models.Account
 import com.example.bodybalance.core.domain.models.AccountTypeTherapy

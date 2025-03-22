@@ -25,7 +25,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
 import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.core.composable.NavItem
-import com.example.bodybalance.core.data.storage.FileDownloader
+import com.example.bodybalance.core.data.service.FileDownloader
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.player.composable.rememberExoPlayer
 import java.io.File
