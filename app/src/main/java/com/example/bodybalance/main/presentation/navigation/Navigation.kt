@@ -11,6 +11,8 @@ import com.example.bodybalance.home.presentation.navigation.homeScreen
 import com.example.bodybalance.introduction.presentation.navigation.INTRODUCTION_ROUTE
 import com.example.bodybalance.introduction.presentation.navigation.introductionScreen
 import com.example.bodybalance.introduction.presentation.navigation.navigateToIntroductionScreen
+import com.example.bodybalance.settings.about.navigation.aboutAppScreen
+import com.example.bodybalance.settings.about.navigation.navigateToAboutAppScreen
 import com.example.bodybalance.settings.presentation.navigation.navigateToSettingsScreen
 import com.example.bodybalance.settings.presentation.navigation.settingsScreen
 import com.example.bodybalance.videoplayer.presentation.navigation.navigateToVideoPlayerScreen
@@ -32,9 +34,21 @@ fun Navigation(isAuthenticated: Boolean) {
 
         playlistScreen(
             navigateToVideoPlayerScreen = { navController.navigateToVideoPlayerScreen(it) },
-            navigateToSettingsScreen = { navController.navigateToSettingsScreen() })
+            navigateToSettingsScreen = { navController.navigateToSettingsScreen() }
+        )
 
-        settingsScreen { /*navController.navigateToAboutApp*/ }
+        settingsScreen(
+            navigateBackToPlaylistScreen = {
+                navController.popBackStack()
+            },
+            navigateToAboutAppScreen = {
+                navController.navigateToAboutAppScreen()
+            })
+
+        aboutAppScreen(
+            navigateBackToSettings = {
+                navController.popBackStack()
+            })
 
         videoPlayerScreen()
     }

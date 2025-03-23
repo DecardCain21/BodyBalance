@@ -2,7 +2,6 @@ package com.example.bodybalance.settings.presentation.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHost
 import androidx.navigation.compose.composable
 import com.example.bodybalance.settings.presentation.SettingsScreen
 
@@ -25,12 +24,6 @@ object SettingsNavigationHandler : NavigationHandler {
 
 }
 
-//
-fun NavController.navigateBackToSettingsScreen() = navigate(SETTINGS_NAME) {
-    popUpTo(SETTINGS_NAME) {
-        inclusive = true
-    }
-}
 
 fun NavController.navigateToSettingsScreen() {
     navigate(
@@ -41,9 +34,13 @@ fun NavController.navigateToSettingsScreen() {
 }
 
 fun NavGraphBuilder.settingsScreen(
-    navigateToAboutAppScreen: () -> Unit
+    navigateToAboutAppScreen: () -> Unit,
+    navigateBackToPlaylistScreen: () -> Unit
 ) {
     composable(route = SETTINGS_NAME) {
-        SettingsScreen(navigateToAboutAppScreen = navigateToAboutAppScreen)
+        SettingsScreen(
+            navigateToAboutAppScreen = navigateToAboutAppScreen,
+            navigateBackToPlaylistScreen = navigateBackToPlaylistScreen
+        )
     }
 }
