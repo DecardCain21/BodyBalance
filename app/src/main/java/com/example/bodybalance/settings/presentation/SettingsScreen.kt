@@ -1,6 +1,7 @@
 package com.example.bodybalance.settings.presentation
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -43,6 +44,7 @@ import com.example.bodybalance.ui.theme.BodyBalanceTheme
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
+    navigateBackToPlaylistScreen: () -> Unit,
     navigateToAboutAppScreen: () -> Unit
 ) {
     Column(
@@ -60,7 +62,7 @@ fun SettingsScreen(
                 Text(stringResource(R.string.settings))
             },
             navigationIcon = {
-                IconButton(onClick = { /* do something */ }) {
+                IconButton(onClick = { navigateBackToPlaylistScreen() }) {
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = "Localized description",
@@ -151,7 +153,10 @@ fun SettingsScreen(
         // Третья строка: О приложении
         Row(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .clickable {
+                    navigateToAboutAppScreen()
+                },
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
@@ -177,8 +182,7 @@ fun SettingsScreen(
         Spacer(modifier = Modifier.weight(1f))
         BasicButton(
             modifier = Modifier
-                .fillMaxWidth()
-                ,
+                .fillMaxWidth(),
             text = stringResource(R.string.exit),
             buttonColor = Color.Transparent,
             enabledTextColor = MaterialTheme.colorScheme.primary,
@@ -194,6 +198,6 @@ fun SettingsScreen(
 @Composable
 fun PreviewSettingsScreen() {
     BodyBalanceTheme(dynamicColor = false, darkTheme = true) {
-        SettingsScreen(navigateToAboutAppScreen = {})
+        SettingsScreen(navigateToAboutAppScreen = {}, navigateBackToPlaylistScreen = {})
     }
 }

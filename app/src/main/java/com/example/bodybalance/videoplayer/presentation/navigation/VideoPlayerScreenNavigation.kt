@@ -26,25 +26,3 @@ fun NavGraphBuilder.videoPlayerScreen() {
         )
     }
 }
-
-/*
-fun NavController.navigateToIntroductionScreen() {
-    navigate(
-        route = INTRODUCTION_ROUTE,
-    ) {
-        launchSingleTop = true
-    }
-}
-
-// Создание экземляра экрана, самой функции Compose
-fun NavGraphBuilder.introductionScreen(
-    // Вложение функции для перехода на следующий экран
-    navToPlaylist: () -> Unit,
-    navToHomeScreen: () -> Unit
-) {
-    // Создание самой функции/экземпляра экрана
-    composable(route = INTRODUCTION_ROUTE) {
-        // Вложение функции перехода в следующий экран в экземпляр Introduction
-        Introduction(navToPlaylist = navToPlaylist, navToHomeScreen = navToHomeScreen)
-    }
-}*/
