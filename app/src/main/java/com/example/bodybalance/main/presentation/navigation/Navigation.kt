@@ -44,9 +44,6 @@ fun Navigation(isAuthenticated: Boolean) {
             navigateToAboutAppScreen = {
                 navController.navigateToAboutAppScreen()
             })
-        /*{
-            navController.navigateToAboutAppScreen { navController.navigateToPlaylist() }
-        }*/
 
         aboutAppScreen(
             navigateBackToSettings = {
