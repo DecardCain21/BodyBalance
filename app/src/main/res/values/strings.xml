@@ -20,4 +20,7 @@
     <string name="settings">Настройки</string>
     <string name="clear_cashe">Очистить кэш</string>
     <string name="clear_cashe_description">Освободите память устройства. Видео останутся в приложении, и вы сможете скачать их заново</string>
+    <string name="vertion">Версия</string>
+    <string name="tell_about_body_balance">Рассказать о Body Balance</string>
+    <string name="developers">Разработчики</string>
 </resources>

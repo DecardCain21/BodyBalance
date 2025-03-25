@@ -79,7 +79,7 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.logging.interceptor)
     implementation(libs.converter.gson)
-    implementation ("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation (libs.okhttp)
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
@@ -113,6 +113,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // StatusBar
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.30.1")
+    implementation(libs.accompanist.systemuicontroller)
 
 }
