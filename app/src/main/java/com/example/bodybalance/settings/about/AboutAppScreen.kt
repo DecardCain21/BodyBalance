@@ -4,14 +4,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material.icons.filled.ArrowForwardIos
+import androidx.compose.material.icons.automirrored.filled.NavigateBefore
+import androidx.compose.material.icons.automirrored.filled.NavigateNext
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,97 +37,92 @@ fun AboutAppScreen(
     navigateBackToSettings: () -> Unit = {}
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp),
+        modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.Start
     ) {
         TopAppBar(
+            modifier = Modifier.padding(bottom = 16.dp),
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.background,
                 titleContentColor = MaterialTheme.colorScheme.primary,
             ),
             title = {
                 Text(
-                    modifier = Modifier.padding(vertical = 18.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 18.dp),
                     text = stringResource(R.string.about_app)
                 )
             },
             navigationIcon = {
                 IconButton(onClick = { navigateBackToSettings() }) {
                     Icon(
-                        modifier = Modifier.size(24.dp),
-                        imageVector = Icons.Default.ArrowBackIosNew,
-                        contentDescription = "Localized description",
+                        imageVector = Icons.AutoMirrored.Filled.NavigateBefore,
+                        contentDescription = "Button back",
                         tint = Color.White
                     )
                 }
             }
         )
-        // Первая строка: Версия
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp),
+                .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                modifier = Modifier.padding(vertical = 8.dp),
-                text = "Версия",
+                modifier = Modifier.padding(vertical = 16.dp),
+                text = stringResource(R.string.vertion),
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.primary,
             )
-            //Spacer(modifier = Modifier.weight(1f))
             Text(
-                modifier = Modifier
-                    .padding(start = 16.dp),
+                modifier = Modifier.padding(start = 16.dp),
                 text = "0.0.0",
                 fontSize = 11.sp,
-                color = MaterialTheme.colorScheme.primary,
-                textAlign = TextAlign.End
+                fontWeight = FontWeight(500),
+                color = MaterialTheme.colorScheme.primary
             )
         }
 
-        // Вторая строка: Скачивать видео только по Wi-Fi
         Row(
             modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                modifier = Modifier.padding(vertical = 8.dp),
-                text = "Рассказать о Body Balance",
-                fontSize = 16.sp,
+                modifier = Modifier.padding(vertical = 16.dp),
+                text = stringResource(R.string.tell_about_body_balance),
                 color = MaterialTheme.colorScheme.primary,
+                fontSize = 16.sp
             )
-            Spacer(modifier = Modifier.weight(1f))
             Image(
-                imageVector = Icons.Default.ArrowForwardIos,
+                imageVector = Icons.AutoMirrored.Filled.NavigateNext,
                 contentDescription = stringResource(R.string.download_wi_fi_only),
-                modifier = Modifier.size(24.dp, 24.dp),
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurfaceVariant)
             )
         }
 
-        // Третья строка: О приложении
         Row(
             modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                modifier = Modifier.padding(vertical = 8.dp),
-                text = "Разработчики",
-                fontSize = 16.sp,
+                modifier = Modifier.padding(vertical = 16.dp),
+                text = stringResource(R.string.developers),
                 color = MaterialTheme.colorScheme.primary,
+                fontSize = 16.sp
             )
-            Spacer(modifier = Modifier.weight(1f))
             Image(
-                imageVector = Icons.Default.ArrowForwardIos,
+                imageVector = Icons.AutoMirrored.Filled.NavigateNext,
                 contentDescription = stringResource(R.string.download_wi_fi_only),
-                modifier = Modifier.size(24.dp, 24.dp),
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurfaceVariant)
             )
         }
     }
