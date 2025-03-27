@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
@@ -27,7 +26,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.colorResource
@@ -71,26 +69,24 @@ fun SettingsScreen(
                 }
             }
         )
-        // Первая строка: Очистить кэш
         Row(
             modifier = Modifier.padding(top = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
                 modifier = Modifier
-                    // Почему если поменять padding и size местами, иконка пропадает?
                     .padding(vertical = 12.dp)
-                    .size(22.dp, 24.dp)
+                    .size(24.dp)
                     .align(Alignment.Top),
-                imageVector = Icons.Default.Delete, /*painter = painterResource(id = R.drawable.your_custom_icon)*/
+                imageVector = Icons.Default.Delete,
                 contentDescription = stringResource(R.string.clear_cashe),
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
             )
-            Spacer(modifier = Modifier.width(16.dp))
             Column(
                 modifier = Modifier
                     .weight(1f)
                     .padding(vertical = 12.dp)
+                    .padding(horizontal = 16.dp)
             ) {
                 Text(
                     text = stringResource(R.string.clear_cashe),
@@ -103,11 +99,9 @@ fun SettingsScreen(
                     color = colorResource(R.color.white),
                 )
             }
-            //Spacer(modifier = Modifier.weight(1f))
             Text(
                 modifier = Modifier
                     .padding(vertical = 12.dp)
-                    .padding(start = 16.dp)
                     .align(Alignment.Top),
                 text = "5 Гб",
                 fontSize = 11.sp,
@@ -116,19 +110,18 @@ fun SettingsScreen(
             )
         }
 
-        // Вторая строка: Скачивать видео только по Wi-Fi
         Row(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
+                modifier = Modifier
+                    .padding(end = 16.dp)
+                    .size(24.dp),
                 imageVector = Icons.Default.Download,
                 contentDescription = stringResource(R.string.download_wi_fi_only),
-                modifier = Modifier.size(24.dp, 24.dp),
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
             )
-            Spacer(modifier = Modifier.width(16.dp))
             Text(
                 modifier = Modifier.padding(vertical = 8.dp),
                 text = stringResource(R.string.download_wi_fi_only),
@@ -140,27 +133,23 @@ fun SettingsScreen(
                 checked = false,
                 onCheckedChange = {},
                 colors = SwitchDefaults.colors(
-                    checkedThumbColor = Color.Black, // Цвет "ползунка" в активном состоянии
-                    uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant, // Цвет "ползунка" в неактивном состоянии
-                    checkedTrackColor = Color.White, // Цвет фона в активном состоянии
-                    uncheckedTrackColor = MaterialTheme.colorScheme.surface, //На макете outline? Цвет фона в неактивном состоянии
-                    checkedBorderColor = Color.White, // Цвет обводки в активном состоянии
-                    uncheckedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant // Цвет обводки в неактивном состоянии
+                    checkedThumbColor = Color.Black,
+                    uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    checkedTrackColor = Color.White,
+                    uncheckedTrackColor = MaterialTheme.colorScheme.surface,
+                    checkedBorderColor = Color.White,
+                    uncheckedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             )
         }
-
-        // Третья строка: О приложении
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable {
-                    navigateToAboutAppScreen()
-                },
+                .clickable { navigateToAboutAppScreen() },
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                modifier = Modifier.size(28.dp, 26.dp),
+                modifier = Modifier.size(24.dp),
                 imageVector = Icons.Default.Info,
                 contentDescription = stringResource(R.string.about_app),
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
@@ -181,8 +170,7 @@ fun SettingsScreen(
         }
         Spacer(modifier = Modifier.weight(1f))
         BasicButton(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             text = stringResource(R.string.exit),
             buttonColor = Color.Transparent,
             enabledTextColor = MaterialTheme.colorScheme.primary,
