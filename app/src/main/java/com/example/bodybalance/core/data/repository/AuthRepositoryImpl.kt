@@ -8,9 +8,6 @@ class AuthRepositoryImpl @Inject constructor(
     private val preferencesStorage: PreferencesStorage
 ) : AuthRepository {
 
-    override fun isAuthenticated(): Boolean = preferencesStorage.isAuthenticated()
-
-    override fun setAuthenticated(value: Boolean) {
-        preferencesStorage.setAuthenticated(value)
-    }
+    override fun isAuthenticated(): Boolean =
+        preferencesStorage.isAuthenticated()
 }

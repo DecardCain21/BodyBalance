@@ -7,11 +7,13 @@ class PreferencesStorage @Inject constructor(
     private val sharedPreferences: SharedPreferences
 ) {
 
-    fun isAuthenticated(): Boolean {
-        return sharedPreferences.getBoolean("is_authenticated", false)
-    }
+    var login: String
+        get() = sharedPreferences.getString(KEY_IS_AUTHENTICATED, "") ?: ""
+        set(value) = sharedPreferences.edit().putString(KEY_IS_AUTHENTICATED, value).apply()
 
-    fun setAuthenticated(value: Boolean) {
-        sharedPreferences.edit().putBoolean("is_authenticated", value).apply()
+    fun isAuthenticated(): Boolean = login.isNotEmpty()
+
+    companion object {
+        private const val KEY_IS_AUTHENTICATED = "is_authenticated"
     }
 }

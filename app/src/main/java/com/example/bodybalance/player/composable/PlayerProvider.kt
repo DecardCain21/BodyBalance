@@ -39,22 +39,25 @@ fun rememberExoPlayer(
     videoUrl: String,
     listener: Player.Listener? = null
 ): ExoPlayer {
+
     val exoPlayer = remember {
         ExoPlayer.Builder(context).build().apply {
             val mediaItem = MediaItem.fromUri(Uri.parse(videoUrl))
             setMediaItem(mediaItem)
             prepare()
-            playWhenReady = true
+            playWhenReady = false
             if (listener != null) {
                 addListener(listener)
-            } // а вот и твой листенер будет
+            }
         }
     }
     var currentPosition by rememberSaveable { mutableLongStateOf(0L) }
 
     val lifecycleOwner = LocalLifecycleOwner.current
     val configuration = LocalConfiguration.current
-    var isLandscape by rememberSaveable { mutableStateOf(configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) }
+    var isLandscape by rememberSaveable {
+        mutableStateOf(configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+    }
     val activity = context as Activity
 
     DisposableEffect(lifecycleOwner) {
@@ -82,7 +85,7 @@ fun rememberExoPlayer(
 
     AndroidView(
         modifier = modifier.aspectRatio(16 / 9f),
-        factory = { context ->
+        factory = { _ ->
             PlayerView(context).apply {
                 setFullscreenButtonClickListener {
                     isLandscape = !isLandscape

@@ -12,7 +12,7 @@ class LoginRepositoryImpl @Inject constructor(
 
     override suspend fun checkAccount(login: String): Result<Boolean> {
         return loginNetworkClient.checkAccount(login).onSuccess {
-            preferencesStorage.setAuthenticated(true)
+            preferencesStorage.login = login
         }
     }
 }
