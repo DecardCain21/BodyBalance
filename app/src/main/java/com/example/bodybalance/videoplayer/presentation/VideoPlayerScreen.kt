@@ -27,7 +27,7 @@ import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.core.composable.NavItem
 import com.example.bodybalance.core.data.service.FileDownloader
 import com.example.bodybalance.core.domain.models.Video
-import com.example.bodybalance.player.composable.rememberExoPlayer
+import com.example.bodybalance.player.composable.exoPlayer
 import java.io.File
 
 @OptIn(UnstableApi::class)
@@ -83,7 +83,7 @@ fun VideoPlayerScreenContent(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        rememberExoPlayer(
+        exoPlayer(
             context = LocalContext.current,
             modifier = modifier,
             videoUrl = url

@@ -33,7 +33,7 @@ import com.example.bodybalance.R
 import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.core.composable.CustomTextField
 import com.example.bodybalance.introduction.presentation.IntroductionScreenState.*
-import com.example.bodybalance.player.composable.rememberExoPlayer
+import com.example.bodybalance.player.composable.exoPlayer
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 
 const val INTRODUCTION = "Introduction"
@@ -41,7 +41,7 @@ const val INTRODUCTION = "Introduction"
 @SuppressLint("OpaqueUnitKey")
 @androidx.annotation.OptIn(UnstableApi::class)
 @Composable
-fun Introduction(
+fun IntroductionScreen(
     modifier: Modifier = Modifier,
     navToPlaylist: () -> Unit = {},
     viewModel: IntroductionViewModel = hiltViewModel()
@@ -106,6 +106,7 @@ fun IntroductionScreenContent(
     isEnabledButton: Boolean,
     supportText: String
 ) {
+
     val listener = object : Player.Listener {
         override fun onPlaybackStateChanged(playbackState: Int) {
             when (playbackState) {
@@ -125,7 +126,7 @@ fun IntroductionScreenContent(
             modifier = Modifier,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            rememberExoPlayer(
+            exoPlayer(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(16 / 9f),
