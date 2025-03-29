@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -117,64 +119,57 @@ fun IntroductionScreenContent(
             }
         }
     }
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            modifier = Modifier,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            exoPlayer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(16 / 9f),
-                context = LocalContext.current,
-                videoUrl = videoUrl,
-                listener = listener
-            )
-            Text(
-                modifier = Modifier
-                    .align(Alignment.Start)
-                    .padding(horizontal = 16.dp)
-                    .padding(top = 16.dp),
-                text = stringResource(R.string.introduction),
-                textAlign = TextAlign.Start,
-                fontSize = 22.sp,
-                color = colorResource(R.color.white)
-            )
-            Text(
-                modifier = Modifier
-                    .align(Alignment.Start)
-                    .padding(horizontal = 16.dp)
-                    .padding(top = 16.dp),
-                text = "Это видео поможет вам быстро разобраться, как всё работает\n" +
-                        "\n" +
-                        "После просмотра введите кодовое слово из видео, чтобы продолжить",
-                textAlign = TextAlign.Start,
-                fontSize = 14.sp,
-                color = colorResource(R.color.white)
-            )
-            CustomTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.Start)
-                    .padding(horizontal = 16.dp)
-                    .padding(top = 24.dp),
-                label = stringResource(R.string.code_word),
-                value = input,
-                onValueChange = { inputCodeWord(it) },
-                isError = !isEnabledButton,
-                supportingText = supportText
-            )
-        }
+        exoPlayer(
+            context = LocalContext.current,
+            videoUrl = videoUrl,
+            listener = listener
+        )
+        Text(
+            modifier = Modifier
+                .align(Alignment.Start)
+                .padding(horizontal = 16.dp)
+                .padding(top = 16.dp),
+            text = stringResource(R.string.introduction),
+            textAlign = TextAlign.Start,
+            fontSize = 22.sp,
+            color = colorResource(R.color.white)
+        )
+        Text(
+            modifier = Modifier
+                .align(Alignment.Start)
+                .padding(horizontal = 16.dp)
+                .padding(top = 16.dp),
+            text = "Это видео поможет вам быстро разобраться, как всё работает\n" +
+                    "\n" +
+                    "После просмотра введите кодовое слово из видео, чтобы продолжить",
+            textAlign = TextAlign.Start,
+            fontSize = 14.sp,
+            color = colorResource(R.color.white)
+        )
+        CustomTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.Start)
+                .padding(horizontal = 16.dp)
+                .padding(top = 24.dp),
+            label = stringResource(R.string.code_word),
+            value = input,
+            onValueChange = { inputCodeWord(it) },
+            isError = !isEnabledButton,
+            supportingText = supportText
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
+
         BasicButton(
             modifier = Modifier
-                .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 24.dp),
+                .padding(horizontal = 16.dp),
             text = stringResource(R.string.continue_button),
             buttonColor = MaterialTheme.colorScheme.primary,
             enabledTextColor = MaterialTheme.colorScheme.onPrimary,
@@ -196,72 +191,64 @@ private fun IntroductionScreenLoading(modifier: Modifier = Modifier) {
 @Composable
 fun IntroductionPreview() {
     BodyBalanceTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp)
-                .background(MaterialTheme.colorScheme.background)
+
+        Column(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            Column(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                /*rememberExoPlayer(
-                context = LocalContext.current,
-                modifier = Modifier.fillMaxSize(),
-                videoUrl = "videoUrl",
-                listener = null
-            )*/
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(16 / 9f)
-                        .background(Color.Gray),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("ExoPlayer Placeholder", color = Color.White)
-                }
-                Text(
-                    modifier = Modifier
-                        .align(Alignment.Start)
-                        .padding(top = 16.dp),
-                    text = stringResource(R.string.introduction),
-                    textAlign = TextAlign.Start,
-                    fontSize = 22.sp,
-                    color = colorResource(R.color.white)
-                )
-                Text(
-                    modifier = Modifier
-                        .align(Alignment.Start)
-                        .padding(top = 16.dp),
-                    text = "Это видео поможет вам быстро разобраться, как всё работает\n" +
-                            "\n" +
-                            "После просмотра введите кодовое слово из видео, чтобы продолжить",
-                    textAlign = TextAlign.Start,
-                    fontSize = 14.sp,
-                    color = colorResource(R.color.white)
-                )
-                CustomTextField(
-                    modifier = Modifier
-                        .align(Alignment.Start)
-                        .padding(top = 24.dp),
-                    label = "Кодовое слово",
-                    onValueChange = {},
-                    clearAll = {}
-                )
-            }
-
-            BasicButton(
+            /*rememberExoPlayer(
+            context = LocalContext.current,
+            modifier = Modifier.fillMaxSize(),
+            videoUrl = "videoUrl",
+            listener = null
+        )*/
+            Box(
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
                     .fillMaxWidth()
-                    .padding(bottom = 24.dp),
+                    .aspectRatio(16 / 9f)
+                    .background(Color.Gray),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("ExoPlayer Placeholder", color = Color.White)
+            }
+            Text(
+                modifier = Modifier
+                    .align(Alignment.Start)
+                    .padding(top = 16.dp),
+                text = stringResource(R.string.introduction),
+                textAlign = TextAlign.Start,
+                fontSize = 22.sp,
+                color = colorResource(R.color.white)
+            )
+            Text(
+                modifier = Modifier
+                    .align(Alignment.Start)
+                    .padding(top = 16.dp),
+                text = "Это видео поможет вам быстро разобраться, как всё работает\n" +
+                        "\n" +
+                        "После просмотра введите кодовое слово из видео, чтобы продолжить",
+                textAlign = TextAlign.Start,
+                fontSize = 14.sp,
+                color = colorResource(R.color.white)
+            )
+            CustomTextField(
+                modifier = Modifier
+                    .align(Alignment.Start)
+                    .padding(top = 24.dp),
+                label = "Кодовое слово",
+                onValueChange = {},
+                clearAll = {}
+            )
+            Spacer(modifier = Modifier.fillMaxWidth(1f))
+            BasicButton(
+                modifier = Modifier.fillMaxWidth(),
                 text = "Продолжить",
                 buttonColor = Color.Transparent,
                 enabledTextColor = MaterialTheme.colorScheme.primary,
                 onClick = { }
             )
         }
+
+
     }
 }

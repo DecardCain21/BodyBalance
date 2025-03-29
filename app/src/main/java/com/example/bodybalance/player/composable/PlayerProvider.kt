@@ -9,8 +9,6 @@ import android.view.View
 import android.view.WindowManager
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -30,14 +28,13 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT
 import androidx.media3.ui.PlayerView
 
 @OptIn(UnstableApi::class)
 @Composable
 fun exoPlayer(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     context: Context,
     videoUrl: String,
     listener: Player.Listener? = null
@@ -87,9 +84,7 @@ fun exoPlayer(
     HandleFullscreenMode(activity, isLandscape)
 
     AndroidView(
-        modifier = if (isLandscape) modifier.fillMaxSize() else modifier
-            .fillMaxWidth()
-            .aspectRatio(16 / 9f),
+        modifier = modifier.aspectRatio(16 / 9f),
         factory = { _ ->
             PlayerView(context).apply {
                 setFullscreenButtonClickListener {
