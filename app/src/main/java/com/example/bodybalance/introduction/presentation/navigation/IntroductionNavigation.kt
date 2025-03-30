@@ -3,7 +3,7 @@ package com.example.bodybalance.introduction.presentation.navigation
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.example.bodybalance.introduction.presentation.IntroductionScreen
+import com.example.bodybalance.introduction.presentation.IntroductionScreenRoute
 
 const val INTRODUCTION_ROUTE = "introduction"
 
@@ -24,6 +24,6 @@ fun NavGraphBuilder.introductionScreen(
     // Создание самой функции/экземпляра экрана
     composable(route = INTRODUCTION_ROUTE) {
         // Вложение функции перехода в следующий экран в экземпляр Introduction
-        IntroductionScreen(navToPlaylist = navToPlaylist)
+        IntroductionScreenRoute(navToPlaylist = navToPlaylist)
     }
 }

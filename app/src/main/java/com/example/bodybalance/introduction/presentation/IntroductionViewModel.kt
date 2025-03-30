@@ -3,7 +3,6 @@ package com.example.bodybalance.introduction.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bodybalance.core.data.source.network.NetworkError
-import com.example.bodybalance.core.domain.models.Category
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.introduction.presentation.IntroductionScreenState.Input
 import com.example.bodybalance.introduction.presentation.IntroductionScreenState.IntroductionPlayerState

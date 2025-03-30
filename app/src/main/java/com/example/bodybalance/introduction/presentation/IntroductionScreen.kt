@@ -34,8 +34,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import com.example.bodybalance.R
@@ -53,56 +51,39 @@ const val INTRODUCTION = "Introduction"
 @Composable
 fun IntroductionScreen(
     modifier: Modifier = Modifier,
-    navToPlaylist: () -> Unit = {},
-    viewModel: IntroductionViewModel = hiltViewModel()
+    uiState: IntroductionScreenState,
+    inputCodeWord: (String) -> Unit,
+    getVideo: (String) -> Unit,
+    navToPlaylist: () -> Unit
 ) {
 
-    val isPreview = LocalInspectionMode.current
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val currentState = uiState
-
-    LaunchedEffect(Unit) {
-        viewModel.getVideo(INTRODUCTION)
-    }
+    LaunchedEffect(Unit) { getVideo(INTRODUCTION) }
 
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (isPreview) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(3 / 4f)
-                    .background(Color.Gray),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("ExoPlayer Placeholder", color = Color.White)
-            }
-        } else {
-            when (currentState.videoState) {
-                is IntroductionPlayerState.Content -> {
-                    val input: String =
-                        when (currentState.inputValue) {
-                            Input.Empty -> ""
-                            is Input.Text -> currentState.inputValue.value
-                        }
-                    IntroductionScreenContent(
-                        videoUrl = currentState.videoState.videoUrl,
-                        navToPlaylist = navToPlaylist,
-                        input = input,
-                        inputCodeWord = {
-                            viewModel.handleEvent(IntroductionScreenUiEvent.InputLogin(it))
-                        },
-                        isEnabledButton = currentState.buttonIsEnabled,
-                        supportText = currentState.supportText
 
-                    )
-                }
+        when (uiState.videoState) {
+            is IntroductionPlayerState.Content -> {
+                val input: String =
+                    when (uiState.inputValue) {
+                        Input.Empty -> ""
+                        is Input.Text -> uiState.inputValue.value
+                    }
+                IntroductionScreenContent(
+                    videoUrl = uiState.videoState.videoUrl,
+                    navToPlaylist = navToPlaylist,
+                    inputValue = input,
+                    inputCodeWord = { inputCodeWord(it) },
+                    isEnabledButton = uiState.buttonIsEnabled,
+                    supportText = uiState.supportText
 
-                is IntroductionPlayerState.Empty -> Unit
-                is IntroductionPlayerState.Loading -> IntroductionScreenLoading()
+                )
             }
+
+            is IntroductionPlayerState.Empty -> Unit
+            is IntroductionPlayerState.Loading -> IntroductionScreenLoading()
         }
     }
 }
@@ -112,11 +93,13 @@ fun IntroductionScreenContent(
     modifier: Modifier = Modifier,
     videoUrl: String,
     navToPlaylist: () -> Unit,
-    input: String,
+    inputValue: String,
     inputCodeWord: (String) -> Unit,
     isEnabledButton: Boolean,
     supportText: String
 ) {
+
+    val isPreview = LocalInspectionMode.current
     var isFocused by remember { mutableStateOf(false) }
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -144,11 +127,23 @@ fun IntroductionScreenContent(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        exoPlayer(
-            context = LocalContext.current,
-            videoUrl = videoUrl,
-            listener = listener
-        )
+        if (isPreview) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(16 / 9f)
+                    .background(Color.Gray),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("ExoPlayer Placeholder", color = Color.White)
+            }
+        } else {
+            exoPlayer(
+                context = LocalContext.current,
+                videoUrl = videoUrl,
+                listener = listener
+            )
+        }
         Text(
             modifier = Modifier
                 .align(Alignment.Start)
@@ -178,7 +173,7 @@ fun IntroductionScreenContent(
                 .padding(horizontal = 16.dp)
                 .padding(top = 24.dp),
             label = stringResource(R.string.code_word),
-            value = input,
+            value = inputValue,
             onValueChange = { inputCodeWord(it) },
             isError = !isEnabledButton,
             supportingText = supportText,
@@ -215,67 +210,17 @@ private fun IntroductionScreenLoading(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(backgroundColor = 0xFF141218, showBackground = true)
 @Composable
 fun IntroductionPreview() {
     BodyBalanceTheme {
-
-        Column(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            /*rememberExoPlayer(
-            context = LocalContext.current,
-            modifier = Modifier.fillMaxSize(),
-            videoUrl = "videoUrl",
-            listener = null
-        )*/
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(16 / 9f)
-                    .background(Color.Gray),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("ExoPlayer Placeholder", color = Color.White)
-            }
-            Text(
-                modifier = Modifier
-                    .align(Alignment.Start)
-                    .padding(top = 16.dp),
-                text = stringResource(R.string.introduction),
-                textAlign = TextAlign.Start,
-                fontSize = 22.sp,
-                color = colorResource(R.color.white)
-            )
-            Text(
-                modifier = Modifier
-                    .align(Alignment.Start)
-                    .padding(top = 16.dp),
-                text = "Это видео поможет вам быстро разобраться, как всё работает\n" +
-                        "\n" +
-                        "После просмотра введите кодовое слово из видео, чтобы продолжить",
-                textAlign = TextAlign.Start,
-                fontSize = 14.sp,
-                color = colorResource(R.color.white)
-            )
-            CustomTextField(
-                modifier = Modifier
-                    .align(Alignment.Start)
-                    .padding(top = 24.dp),
-                label = "Кодовое слово",
-                onValueChange = {},
-            )
-            Spacer(modifier = Modifier.fillMaxWidth(1f))
-            BasicButton(
-                modifier = Modifier.fillMaxWidth(),
-                text = "Продолжить",
-                buttonColor = Color.Transparent,
-                enabledTextColor = MaterialTheme.colorScheme.primary,
-                onClick = { }
-            )
-        }
-
-
+        IntroductionScreenContent(
+            videoUrl = "",
+            navToPlaylist = { },
+            inputValue = "",
+            inputCodeWord = { },
+            isEnabledButton = true,
+            supportText = "Неверное кодовое слово"
+        )
     }
 }
