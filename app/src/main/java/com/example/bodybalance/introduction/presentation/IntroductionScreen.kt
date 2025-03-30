@@ -2,20 +2,27 @@ package com.example.bodybalance.introduction.presentation
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.FocusInteraction
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,7 +41,8 @@ import androidx.media3.common.util.UnstableApi
 import com.example.bodybalance.R
 import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.core.composable.CustomTextField
-import com.example.bodybalance.introduction.presentation.IntroductionScreenState.*
+import com.example.bodybalance.introduction.presentation.IntroductionScreenState.Input
+import com.example.bodybalance.introduction.presentation.IntroductionScreenState.IntroductionPlayerState
 import com.example.bodybalance.player.composable.exoPlayer
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 
@@ -48,6 +56,7 @@ fun IntroductionScreen(
     navToPlaylist: () -> Unit = {},
     viewModel: IntroductionViewModel = hiltViewModel()
 ) {
+
     val isPreview = LocalInspectionMode.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val currentState = uiState
@@ -108,6 +117,17 @@ fun IntroductionScreenContent(
     isEnabledButton: Boolean,
     supportText: String
 ) {
+    var isFocused by remember { mutableStateOf(false) }
+    val interactionSource = remember { MutableInteractionSource() }
+
+    LaunchedEffect(interactionSource) {
+        interactionSource.interactions.collect { interaction ->
+            when (interaction) {
+                is FocusInteraction.Focus -> isFocused = true
+                is FocusInteraction.Unfocus -> isFocused = false
+            }
+        }
+    }
 
     val listener = object : Player.Listener {
         override fun onPlaybackStateChanged(playbackState: Int) {
@@ -121,7 +141,7 @@ fun IntroductionScreenContent(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         exoPlayer(
@@ -161,7 +181,15 @@ fun IntroductionScreenContent(
             value = input,
             onValueChange = { inputCodeWord(it) },
             isError = !isEnabledButton,
-            supportingText = supportText
+            supportingText = supportText,
+            trailingIcon = {
+                if (!isEnabledButton) {
+                    Icon(
+                        imageVector = Icons.Default.Error,
+                        contentDescription = stringResource(R.string.error),
+                    )
+                }
+            }
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -237,7 +265,6 @@ fun IntroductionPreview() {
                     .padding(top = 24.dp),
                 label = "Кодовое слово",
                 onValueChange = {},
-                clearAll = {}
             )
             Spacer(modifier = Modifier.fillMaxWidth(1f))
             BasicButton(

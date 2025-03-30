@@ -3,13 +3,20 @@ package com.example.bodybalance.home.presentation
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.FocusInteraction
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.HighlightOff
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -48,6 +55,8 @@ fun HomeScreen(
     navigateToIntroductionScreen: () -> Unit = {},
     viewModel: HomeViewModel = hiltViewModel()
 ) {
+    var isFocused by remember { mutableStateOf(false) }
+    val interactionSource = remember { MutableInteractionSource() }
 
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
@@ -55,6 +64,15 @@ fun HomeScreen(
 
     val navEvent by viewModel.navigationEvent.collectAsState(initial = null)
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(interactionSource) {
+        interactionSource.interactions.collect { interaction ->
+            when (interaction) {
+                is FocusInteraction.Focus -> isFocused = true
+                is FocusInteraction.Unfocus -> isFocused = false
+            }
+        }
+    }
 
     LaunchedEffect(navEvent) {
         navEvent?.let {
@@ -81,11 +99,19 @@ fun HomeScreen(
                         .fillMaxWidth()
                         .padding(bottom = 16.dp),
                     value = inputValue,
-                    label = stringResource(id = R.string.login),
                     isError = inputError,
+                    label = stringResource(id = R.string.login),
                     supportingText = supportText.message,
+                    interactionSource = interactionSource,
                     onValueChange = { viewModel.handleEvent(HomeScreenUiEvent.InputLogin(it)) },
-                    clearAll = { viewModel.handleEvent(HomeScreenUiEvent.ClearAll) }
+                    trailingIcon = {
+                        if (isFocused && inputValue.isNotEmpty() || inputError) {
+                            LabelIcon(
+                                clearAll = { viewModel.handleEvent(HomeScreenUiEvent.ClearAll) },
+                                isError = inputError
+                            )
+                        }
+                    }
                 )
             }
         }
@@ -107,6 +133,7 @@ fun HomeScreen(
                 onClick = { showBottomSheet = true }
             )
         }
+
         if (showBottomSheet) {
             ModalBottomSheet(
                 onDismissRequest = { showBottomSheet = false },
@@ -152,6 +179,26 @@ fun HomeScreen(
                         })
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun LabelIcon(
+    isError: Boolean,
+    clearAll: () -> Unit,
+) {
+    if (isError) {
+        Icon(
+            imageVector = Icons.Default.Error,
+            contentDescription = stringResource(R.string.error),
+        )
+    } else {
+        IconButton(onClick = clearAll) {
+            Icon(
+                imageVector = Icons.Default.HighlightOff,
+                contentDescription = stringResource(R.string.clear)
+            )
         }
     }
 }
