@@ -10,4 +10,6 @@ class AuthRepositoryImpl @Inject constructor(
 
     override fun isAuthenticated(): Boolean =
         preferencesStorage.isAuthenticated()
+
+    override fun logout() = preferencesStorage.logout()
 }

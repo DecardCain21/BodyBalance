@@ -1,4 +1,4 @@
-package com.example.bodybalance.settings.presentation
+package com.example.bodybalance.settings.presentation.settings
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -14,6 +14,8 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -21,9 +23,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,6 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bodybalance.R
 import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
@@ -43,12 +51,16 @@ import com.example.bodybalance.ui.theme.BodyBalanceTheme
 fun SettingsScreen(
     modifier: Modifier = Modifier,
     navigateBackToPlaylistScreen: () -> Unit,
-    navigateToAboutAppScreen: () -> Unit
+    navigateToAboutAppScreen: () -> Unit,
+    navigateToHomeScreen: () -> Unit,
+    viewModel: SettingsViewModel = hiltViewModel()
 ) {
+
+    var showDialog by remember { mutableStateOf(false) }
+
+
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp),
+        modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.Start
     ) {
         TopAppBar(
@@ -70,7 +82,7 @@ fun SettingsScreen(
             }
         )
         Row(
-            modifier = Modifier.padding(top = 16.dp),
+            modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
@@ -111,7 +123,9 @@ fun SettingsScreen(
         }
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
@@ -145,6 +159,7 @@ fun SettingsScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(horizontal = 16.dp)
                 .clickable { navigateToAboutAppScreen() },
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -174,7 +189,41 @@ fun SettingsScreen(
             text = stringResource(R.string.exit),
             buttonColor = Color.Transparent,
             enabledTextColor = MaterialTheme.colorScheme.primary,
-            onClick = { }
+            onClick = { showDialog = true }
+        )
+    }
+    LogoutDialog(
+        showDialog = showDialog,
+        onDismiss = { showDialog = false },
+        onConfirm = {
+            viewModel.signOut()
+            navigateToHomeScreen()
+            showDialog = false
+        }
+    )
+}
+
+@Composable
+fun LogoutDialog(showDialog: Boolean, onDismiss: () -> Unit, onConfirm: () -> Unit) {
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { onDismiss() },
+            title = {
+                Text(
+                    text = stringResource(R.string.logout_of_account),
+                    color = MaterialTheme.colorScheme.primary
+                )
+            },
+            confirmButton = {
+                Button(onClick = { onConfirm() }) {
+                    Text(text = stringResource(R.string.logout))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { onDismiss() }) {
+                    Text(stringResource(R.string.cansel))
+                }
+            }
         )
     }
 }
@@ -186,6 +235,10 @@ fun SettingsScreen(
 @Composable
 fun PreviewSettingsScreen() {
     BodyBalanceTheme(dynamicColor = false, darkTheme = true) {
-        SettingsScreen(navigateToAboutAppScreen = {}, navigateBackToPlaylistScreen = {})
+        SettingsScreen(
+            navigateToAboutAppScreen = {},
+            navigateBackToPlaylistScreen = {},
+            navigateToHomeScreen = {}
+        )
     }
 }

@@ -1,13 +1,13 @@
-package com.example.bodybalance.settings.presentation.navigation
+package com.example.bodybalance.settings.presentation.settings.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.example.bodybalance.settings.presentation.SettingsScreen
+import com.example.bodybalance.settings.presentation.settings.SettingsScreen
 
 const val SETTINGS_NAME = "settings"
 
-object SettingsNavigationHandler : NavigationHandler {
+/*object SettingsNavigationHandler : NavigationHandler {
     override fun getNavigationFunction(): NavController.() -> Unit {
         return {
             navigateToSettingsScreen()
@@ -21,9 +21,7 @@ object SettingsNavigationHandler : NavigationHandler {
             launchSingleTop
         }
     }
-
-}
-
+}*/
 
 fun NavController.navigateToSettingsScreen() {
     navigate(
@@ -35,12 +33,14 @@ fun NavController.navigateToSettingsScreen() {
 
 fun NavGraphBuilder.settingsScreen(
     navigateToAboutAppScreen: () -> Unit,
-    navigateBackToPlaylistScreen: () -> Unit
+    navigateBackToPlaylistScreen: () -> Unit,
+    navigateToHomeScreen: () -> Unit
 ) {
     composable(route = SETTINGS_NAME) {
         SettingsScreen(
             navigateToAboutAppScreen = navigateToAboutAppScreen,
-            navigateBackToPlaylistScreen = navigateBackToPlaylistScreen
+            navigateBackToPlaylistScreen = navigateBackToPlaylistScreen,
+            navigateToHomeScreen = navigateToHomeScreen
         )
     }
 }

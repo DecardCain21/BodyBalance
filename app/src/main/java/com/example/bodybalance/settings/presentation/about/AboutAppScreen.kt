@@ -1,4 +1,4 @@
-package com.example.bodybalance.settings.about
+package com.example.bodybalance.settings.presentation.about
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

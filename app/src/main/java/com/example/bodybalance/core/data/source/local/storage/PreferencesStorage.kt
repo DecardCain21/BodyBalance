@@ -13,6 +13,8 @@ class PreferencesStorage @Inject constructor(
 
     fun isAuthenticated(): Boolean = login.isNotEmpty()
 
+    fun logout() = sharedPreferences.edit().remove(KEY_IS_AUTHENTICATED).apply()
+
     companion object {
         private const val KEY_IS_AUTHENTICATED = "is_authenticated"
     }

@@ -1,9 +1,9 @@
-package com.example.bodybalance.settings.about.navigation
+package com.example.bodybalance.settings.presentation.about.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.example.bodybalance.settings.about.AboutAppScreen
+import com.example.bodybalance.settings.presentation.about.AboutAppScreen
 
 const val ABOUT_APP_NAME = "aboutapp"
 
