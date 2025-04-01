@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    checkAuthUseCase: CheckAuthUseCase,
+    checkAuthUseCase: CheckAuthUseCase
 ) : ViewModel() {
 
     private val _isAuthenticated = MutableStateFlow(false)

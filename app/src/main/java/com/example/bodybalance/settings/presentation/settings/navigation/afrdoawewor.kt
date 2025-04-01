@@ -1,4 +1,4 @@
-package com.example.bodybalance.settings.presentation.navigation
+package com.example.bodybalance.settings.presentation.settings.navigation
 
 import androidx.navigation.NavController
 

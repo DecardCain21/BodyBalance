@@ -23,4 +23,7 @@
     <string name="vertion">Версия</string>
     <string name="tell_about_body_balance">Рассказать о Body Balance</string>
     <string name="developers">Разработчики</string>
+    <string name="cansel">Отмена</string>
+    <string name="logout">Выйти</string>
+    <string name="logout_of_account">Выйти из аккаунта?</string>
 </resources>
