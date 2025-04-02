@@ -26,4 +26,6 @@
     <string name="cansel">Отмена</string>
     <string name="logout">Выйти</string>
     <string name="logout_of_account">Выйти из аккаунта?</string>
+    <string name="develop">Разработка</string>
+    <string name="interface_design">Проектирование интерфейса</string>
 </resources>

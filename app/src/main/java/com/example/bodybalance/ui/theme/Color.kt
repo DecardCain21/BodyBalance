@@ -10,4 +10,5 @@ val LightGrey = Color(0xFFFFF9FF)
 val Black = Color(0xFF141218)
 val OnSurfaceOpacity12 = Color(0x1FFFFFFF)
 
-val ColorTest = Color(0x4D32333A)
+val BottomSheetTextGrey = Color(0xFF49454F)
+val BottomSheetTextBlack = Color(0xFF1D1B20)
