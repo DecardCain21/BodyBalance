@@ -51,7 +51,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    onForgotPasswordClick: () -> Unit = {},
     navigateToIntroductionScreen: () -> Unit = {},
     viewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -171,6 +170,7 @@ fun HomeScreen(
                         buttonColor = MaterialTheme.colorScheme.onPrimary,
                         enabledTextColor = MaterialTheme.colorScheme.primary,
                         onClick = {
+                            viewModel.handleEvent(HomeScreenUiEvent.GetLogin)
                             scope.launch { sheetState.hide() }.invokeOnCompletion {
                                 if (!sheetState.isVisible) {
                                     showBottomSheet = false

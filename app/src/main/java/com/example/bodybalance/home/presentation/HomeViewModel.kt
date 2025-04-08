@@ -2,6 +2,7 @@ package com.example.bodybalance.home.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.bodybalance.core.domain.usecase.api.FollowTheLinkUseCase
 import com.example.bodybalance.home.domain.usecase.CheckLoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -14,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val checkLoginUseCase: CheckLoginUseCase
+    private val checkLoginUseCase: CheckLoginUseCase,
+    private val followTheLinkUseCase: FollowTheLinkUseCase
 ) : ViewModel() {
 
     private val _navigationEvent = MutableSharedFlow<Unit>()
@@ -74,7 +76,8 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun requestLogin() {}
+    // todo: заменить ссылку
+    private fun requestLogin() { followTheLinkUseCase("") }
 
     private fun clearAll() {
         _uiState.value = uiState.value.copy(inputValue = "")
