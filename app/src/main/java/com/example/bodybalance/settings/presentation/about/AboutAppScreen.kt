@@ -2,7 +2,9 @@ package com.example.bodybalance.settings.presentation.about
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,11 +43,13 @@ import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import com.example.bodybalance.ui.theme.BottomSheetTextBlack
 import com.example.bodybalance.ui.theme.BottomSheetTextGrey
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun AboutAppScreen(
     modifier: Modifier = Modifier,
-    navigateBackToSettings: () -> Unit = {}
+    navigateBackToSettings: () -> Unit = {},
+    openContributorLink: (String) -> Unit = {},
+    shareApp: () -> Unit = {}
 ) {
 
     val sheetState = rememberModalBottomSheetState()
@@ -81,7 +85,7 @@ fun AboutAppScreen(
         )
 
         VersionRow()
-        AboutRow()
+        AboutRow(modifier = Modifier.clickable { shareApp() })
         DevelopersRow(onClick = { showBottomSheet = true })
 
         if (showBottomSheet) {
@@ -98,14 +102,29 @@ fun AboutAppScreen(
                         .padding(horizontal = 16.dp)
                 ) {
                     ContributorsItem(
+                        modifier = Modifier.combinedClickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() },
+                            onClick = { openContributorLink(Contributors.DEV_NIKITA.url) }
+                        ),
                         fieldOfWork = stringResource(R.string.develop),
                         information = "Имя ссылка/контакт"
                     )
                     ContributorsItem(
+                        modifier = Modifier.combinedClickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() },
+                            onClick = { openContributorLink(Contributors.DEV_MARAT.url) }
+                        ),
                         fieldOfWork = stringResource(R.string.develop),
                         information = "Имя ссылка/контакт"
                     )
                     ContributorsItem(
+                        modifier = Modifier.combinedClickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() },
+                            onClick = { openContributorLink(Contributors.DESIGN_ANASTASIA.url) }
+                        ),
                         fieldOfWork = stringResource(R.string.interface_design),
                         information = "Имя ссылка/контакт"
                     )
