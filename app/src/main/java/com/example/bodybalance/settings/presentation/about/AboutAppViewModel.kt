@@ -2,7 +2,7 @@ package com.example.bodybalance.settings.presentation.about
 
 import androidx.lifecycle.ViewModel
 import com.example.bodybalance.core.domain.usecase.api.FollowTheLinkUseCase
-import com.example.bodybalance.settings.domain.usecase.ShareContentUseCase
+import com.example.bodybalance.core.domain.usecase.api.ShareContentUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

@@ -4,5 +4,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface GetCategoryUseCase {
 
-    operator fun invoke(): Flow<List<String>>
+   suspend operator fun invoke(): List<String>
 }

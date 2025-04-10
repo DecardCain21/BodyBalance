@@ -1,9 +1,9 @@
 package com.example.bodybalance.settings.di
 
-import com.example.bodybalance.settings.domain.usecase.LogOutOfAccount
-import com.example.bodybalance.settings.domain.usecase.ShareContentUseCase
-import com.example.bodybalance.settings.domain.usecase.impl.LogOutOfAccountImpl
-import com.example.bodybalance.settings.domain.usecase.impl.ShareContentUseCaseImpl
+import com.example.bodybalance.settings.domain.usecase.LogOutOfAccountUseCase
+import com.example.bodybalance.core.domain.usecase.api.ShareContentUseCase
+import com.example.bodybalance.settings.domain.usecase.impl.LogOutOfAccountUseCaseUseCaseImpl
+import com.example.bodybalance.core.domain.usecase.impl.ShareContentUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,11 +15,6 @@ abstract class SettingsModuleBinder {
 
     @Binds
     abstract fun bindLogOutOfAccountUseCase(
-        logOutOfAccount: LogOutOfAccountImpl
-    ): LogOutOfAccount
-
-    @Binds
-    abstract fun bindShareContentUseCase(
-        shareContentUseCase: ShareContentUseCaseImpl
-    ): ShareContentUseCase
+        logOutOfAccount: LogOutOfAccountUseCaseUseCaseImpl
+    ): LogOutOfAccountUseCase
 }

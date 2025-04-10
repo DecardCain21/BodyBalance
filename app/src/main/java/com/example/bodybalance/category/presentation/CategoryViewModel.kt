@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bodybalance.category.domain.usecase.GetCategoryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -15,15 +15,28 @@ class CategoryViewModel @Inject constructor(
     private val getCategoryUseCase: GetCategoryUseCase
 ) : ViewModel() {
 
-    private val categories = getCategoryUseCase()
+    private val _uiState = MutableStateFlow<CategoryState>(CategoryState.Loading)
+    val uiState: StateFlow<CategoryState> = _uiState.asStateFlow()
 
-    val state: StateFlow<CategoryState> = categories.map { categoryList ->
-        if (categoryList.isNotEmpty())
-            CategoryState.Content(categoryList)
-        else CategoryState.Error
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = CategoryState.Loading
-    )
+    init {
+        loadCategories()
+    }
+
+    fun handleEvent(event: CategoryScreenUiEvent) {
+        when (event) {
+            CategoryScreenUiEvent.ChangeUser -> TODO()
+            is CategoryScreenUiEvent.DeleteVideo -> TODO()
+        }
+    }
+
+    private fun loadCategories() {
+        viewModelScope.launch {
+            try {
+                val categories = getCategoryUseCase()
+                _uiState.value = CategoryState.Content(categories, emptyList())
+            } catch (e: Exception) {
+                _uiState.value = CategoryState.Error
+            }
+        }
+    }
 }

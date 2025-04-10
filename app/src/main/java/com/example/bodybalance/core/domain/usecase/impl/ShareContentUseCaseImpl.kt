@@ -1,7 +1,7 @@
-package com.example.bodybalance.settings.domain.usecase.impl
+package com.example.bodybalance.core.domain.usecase.impl
 
 import com.example.bodybalance.core.domain.api.ExternalNavigator
-import com.example.bodybalance.settings.domain.usecase.ShareContentUseCase
+import com.example.bodybalance.core.domain.usecase.api.ShareContentUseCase
 import javax.inject.Inject
 
 class ShareContentUseCaseImpl @Inject constructor(

@@ -1,4 +1,4 @@
-package com.example.bodybalance.settings.domain.usecase
+package com.example.bodybalance.core.domain.usecase.api
 
 interface ShareContentUseCase {
 

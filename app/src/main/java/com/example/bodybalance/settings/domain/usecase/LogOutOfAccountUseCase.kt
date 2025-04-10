@@ -1,6 +1,6 @@
 package com.example.bodybalance.settings.domain.usecase
 
-interface LogOutOfAccount {
+interface LogOutOfAccountUseCase {
 
     operator fun invoke()
 }

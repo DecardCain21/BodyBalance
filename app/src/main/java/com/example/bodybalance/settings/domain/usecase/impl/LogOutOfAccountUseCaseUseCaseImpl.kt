@@ -1,12 +1,12 @@
 package com.example.bodybalance.settings.domain.usecase.impl
 
 import com.example.bodybalance.core.domain.api.AuthRepository
-import com.example.bodybalance.settings.domain.usecase.LogOutOfAccount
+import com.example.bodybalance.settings.domain.usecase.LogOutOfAccountUseCase
 import javax.inject.Inject
 
-class LogOutOfAccountImpl @Inject constructor(
+class LogOutOfAccountUseCaseUseCaseImpl @Inject constructor(
     private val authRepository: AuthRepository
-): LogOutOfAccount {
+): LogOutOfAccountUseCase {
 
     override fun invoke() = authRepository.logout()
 }

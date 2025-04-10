@@ -1,7 +1,9 @@
 package com.example.bodybalance.core.domain.usecase.di
 
 import com.example.bodybalance.core.domain.usecase.api.FollowTheLinkUseCase
+import com.example.bodybalance.core.domain.usecase.api.ShareContentUseCase
 import com.example.bodybalance.core.domain.usecase.impl.FollowTheLinkUseCaseImpl
+import com.example.bodybalance.core.domain.usecase.impl.ShareContentUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,4 +17,9 @@ abstract class UseCaseBinder {
     abstract fun bindFollowTheLinkUseCase(
         followTheLinkUseCase: FollowTheLinkUseCaseImpl
     ): FollowTheLinkUseCase
+
+    @Binds
+    abstract fun bindShareContentUseCase(
+        shareContentUseCase: ShareContentUseCaseImpl
+    ): ShareContentUseCase
 }
