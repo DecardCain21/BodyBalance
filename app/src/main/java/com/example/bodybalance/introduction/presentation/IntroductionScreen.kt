@@ -22,9 +22,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
@@ -43,6 +45,7 @@ import com.example.bodybalance.introduction.presentation.IntroductionScreenState
 import com.example.bodybalance.introduction.presentation.IntroductionScreenState.IntroductionPlayerState
 import com.example.bodybalance.player.composable.exoPlayer
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
+import kotlinx.coroutines.delay
 
 const val INTRODUCTION = "Introduction"
 
@@ -50,8 +53,8 @@ const val INTRODUCTION = "Introduction"
 @androidx.annotation.OptIn(UnstableApi::class)
 @Composable
 fun IntroductionScreen(
-    modifier: Modifier = Modifier,
     uiState: IntroductionScreenState,
+    modifier: Modifier = Modifier,
     inputCodeWord: (String) -> Unit,
     getVideo: (String) -> Unit,
     navToPlaylist: () -> Unit
@@ -90,14 +93,25 @@ fun IntroductionScreen(
 
 @Composable
 fun IntroductionScreenContent(
-    modifier: Modifier = Modifier,
     videoUrl: String,
-    navToPlaylist: () -> Unit,
     inputValue: String,
-    inputCodeWord: (String) -> Unit,
     isEnabledButton: Boolean,
-    supportText: String
+    supportText: String,
+    modifier: Modifier = Modifier,
+    navToPlaylist: () -> Unit,
+    inputCodeWord: (String) -> Unit,
 ) {
+
+    var shouldRequestFocus by rememberSaveable { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(shouldRequestFocus) {
+        if (shouldRequestFocus) {
+            delay(500) // Необходимо
+            focusRequester.requestFocus()
+            shouldRequestFocus = false
+        }
+    }
+
 
     val isPreview = LocalInspectionMode.current
     var isFocused by remember { mutableStateOf(false) }
@@ -141,7 +155,9 @@ fun IntroductionScreenContent(
             exoPlayer(
                 context = LocalContext.current,
                 videoUrl = videoUrl,
-                listener = listener
+                listener = listener,
+                showButton = true,
+                shouldRequestFocus = { shouldRequestFocus = true }
             )
         }
         Text(
@@ -177,6 +193,7 @@ fun IntroductionScreenContent(
             onValueChange = { inputCodeWord(it) },
             isError = !isEnabledButton,
             supportingText = supportText,
+            focusRequester = focusRequester,
             trailingIcon = {
                 if (!isEnabledButton) {
                     Icon(
