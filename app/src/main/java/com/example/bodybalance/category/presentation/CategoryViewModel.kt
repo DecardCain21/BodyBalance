@@ -3,6 +3,7 @@ package com.example.bodybalance.category.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bodybalance.category.domain.usecase.GetCategoryUseCase
+import com.example.bodybalance.videoplayer.domain.usecase.GetAllVideosUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +13,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
-    private val getCategoryUseCase: GetCategoryUseCase
+    private val getCategoryUseCase: GetCategoryUseCase,
+    private val getAllVideosUseCase: GetAllVideosUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<CategoryState>(CategoryState.Loading)
@@ -33,7 +35,11 @@ class CategoryViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val categories = getCategoryUseCase()
-                _uiState.value = CategoryState.Content(categories, emptyList())
+                val savedVideos = getAllVideosUseCase().getOrNull()
+                _uiState.value = CategoryState.Content(
+                    category = categories,
+                    playlist = savedVideos ?: emptyList()
+                )
             } catch (e: Exception) {
                 _uiState.value = CategoryState.Error
             }

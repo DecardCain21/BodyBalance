@@ -1,22 +1,26 @@
 package com.example.bodybalance.category.presentation
 
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.NavigateBefore
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -33,13 +37,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.bodybalance.R
+import com.example.bodybalance.core.composable.ExerciseItem
+import com.example.bodybalance.core.composable.VideoItem
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
-import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -58,12 +63,11 @@ fun CategoryScreen(
             navigateToSettingsScreen = { navigateToSettingsScreen() }
         )
 
-        is CategoryState.Error -> CategoryErrorScreen(modifier = modifier)
+        is CategoryState.Error -> CategoryErrorScreen()
         is CategoryState.Loading -> CategoryScreenLoading(modifier = modifier)
     }
 }
 
-@OptIn(DelicateCoroutinesApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryContentScreen(
     modifier: Modifier = Modifier,
@@ -72,75 +76,100 @@ fun CategoryContentScreen(
     navigateToVideoPlayerScreen: (String) -> Unit,
     navigateToSettingsScreen: () -> Unit
 ) {
+    Header(
+        modifier = modifier,
+        exercise = exercise,
+        playlist = playlist
+    )
+}
+
+@Composable
+fun Header(
+    modifier: Modifier, exercise: List<String>,
+    playlist: List<String>
+) {
     val tabs = listOf("Плейлист", "Упражнения")
     val pagerState = rememberPagerState { tabs.size }
     val scope = rememberCoroutineScope()
 
     Column(modifier = Modifier.fillMaxSize()) {
-        TopAppBar(
-            title = {
+        BodyBalanceTopAppBar()
+        BodyBalancePages(pagerState, tabs, scope, exercise, playlist)
+    }
+}
 
-            },
-            navigationIcon = {
-                IconButton(onClick = { }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.NavigateBefore,
-                        contentDescription = "Button back",
-                        tint = Color.White
-                    )
-                }
-            },
-            actions = {
-                IconButton(
-                    modifier = modifier/*.align(Alignment.TopEnd)*/,
-                    onClick = { }) {
-                    Icon(
-                        imageVector = Icons.Default.AccountBox,
-                        contentDescription = "Localized description",
-                        tint = Color.White
-                    )
-                }
-                IconButton(
-                    modifier = modifier/*.align(Alignment.TopEnd)*/,
-                    onClick = { }) {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = "Localized description",
-                        tint = Color.White
-                    )
-                }
-            })
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BodyBalanceTopAppBar() {
+    TopAppBar(
+        title = {
 
-        // Верхняя панель вкладок
-        TabRow(
-            selectedTabIndex = pagerState.currentPage,
-            indicator = { tabPositions ->
-                SecondaryIndicator(
-                    modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
-                    height = 2.dp,
-                    color = MaterialTheme.colorScheme.primary
+        },
+        navigationIcon = {
+            IconButton(onClick = { }) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.NavigateBefore,
+                    contentDescription = "Button back",
+                    tint = Color.White
                 )
             }
-        ) {
-            // Ваши табы здесь
-            tabs.forEachIndexed { index, title ->
-                Tab(
-                    selected = pagerState.currentPage == index,
-                    onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
-                    text = { Text(title) }
+        },
+        actions = {
+            IconButton(
+                onClick = { }) {
+                Icon(
+                    imageVector = Icons.Default.AccountBox,
+                    contentDescription = "Localized description",
+                    tint = Color.White
                 )
             }
+            IconButton(
+                onClick = { }) {
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = "Localized description",
+                    tint = Color.White
+                )
+            }
+        })
+}
+
+@Composable
+fun BodyBalancePages(
+    pagerState: PagerState,
+    tabs: List<String>,
+    scope: CoroutineScope,
+    exercise: List<String>,
+    playlist: List<String>
+) {
+    TabRow(
+        selectedTabIndex = pagerState.currentPage,
+        indicator = { tabPositions ->
+            SecondaryIndicator(
+                modifier = Modifier
+                    .tabIndicatorOffset(tabPositions[pagerState.currentPage])
+                    .padding(horizontal = 60.dp),
+                height = 3.dp,
+                color = MaterialTheme.colorScheme.primary
+            )
         }
+    ) {
+        tabs.forEachIndexed { index, title ->
+            Tab(
+                selected = pagerState.currentPage == index,
+                onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
+                text = { Text(title) }
+            )
+        }
+    }
 
-        // Контент страниц
-        HorizontalPager(
-            state = pagerState,
-        ) { page ->
-            when (page) {
-                0 -> PlaylistScreen(category = playlist)
-                1 -> ExerciseScreen(category = exercise)
-                else -> Text("Неизвестная страница")
-            }
+    HorizontalPager(
+        state = pagerState,
+    ) { page ->
+        when (page) {
+            0 -> PlaylistScreen(category = playlist)
+            1 -> ExerciseScreen(category = exercise)
+            else -> Text("Неизвестная страница")
         }
     }
 }
@@ -149,21 +178,15 @@ fun CategoryContentScreen(
 fun ExerciseScreen(modifier: Modifier = Modifier, category: List<String>) {
     Box {
         LazyColumn(
-            modifier = modifier.fillMaxWidth(),
+            modifier = modifier
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(20.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(16.dp),
+            state = rememberLazyListState()
         ) {
-            items(category) {
-                //Spacer(modifier = Modifier.height(20.dp))
-                Button(
-                    onClick = { },
-                    shape = RectangleShape,
-                    modifier = Modifier
-                        .width(250.dp)
-                        .height(100.dp)
-                ) {
-                    Text(text = it)
-                }
+            items(category) { item ->
+                ExerciseItem(title = item)
             }
         }
     }
@@ -173,28 +196,21 @@ fun ExerciseScreen(modifier: Modifier = Modifier, category: List<String>) {
 fun PlaylistScreen(modifier: Modifier = Modifier, category: List<String>) {
     Box {
         LazyColumn(
-            modifier = modifier.fillMaxWidth(),
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(20.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            items(category) {
-                //Spacer(modifier = Modifier.height(20.dp))
-                Button(
-                    onClick = { },
-                    shape = RectangleShape,
-                    modifier = Modifier
-                        .width(250.dp)
-                        .height(100.dp)
-                ) {
-                    Text(text = it)
-                }
+            items(category) { item ->
+                VideoItem(title = item)
             }
         }
     }
 }
 
 @Composable
-fun CategoryErrorScreen(modifier: Modifier = Modifier) {
+fun CategoryErrorScreen() {
     Text(text = stringResource(R.string.error))
 }
 
@@ -213,8 +229,28 @@ private fun PreviewPlaylist(
     BodyBalanceTheme(dynamicColor = false) {
         CategoryContentScreen(
             navigateToSettingsScreen = {},
-            exercise = listOf(),
-            playlist = listOf(),
+            exercise = listOf(
+                "1",
+                "2",
+                "3",
+                "1",
+                "2",
+                "3",
+                "1",
+                "2",
+                "3",
+                "1",
+                "2",
+                "3",
+                "1",
+                "2",
+                "3"
+            ),
+            playlist = listOf(
+                "Разминка перед упражнениями на отдельную группу мыщц",
+                "Название видео",
+                "Название видео"
+            ),
             navigateToVideoPlayerScreen = {})
     }
 }

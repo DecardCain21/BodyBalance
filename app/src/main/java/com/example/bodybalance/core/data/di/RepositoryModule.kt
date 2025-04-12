@@ -3,10 +3,12 @@ package com.example.bodybalance.core.data.di
 import com.example.bodybalance.core.data.repository.AuthRepositoryImpl
 import com.example.bodybalance.core.data.repository.CategoryRepositoryImpl
 import com.example.bodybalance.core.data.repository.LoginRepositoryImpl
+import com.example.bodybalance.core.data.repository.SavedVideoRepositoryImpl
 import com.example.bodybalance.core.data.repository.VideoRepositoryImpl
 import com.example.bodybalance.core.domain.api.AuthRepository
 import com.example.bodybalance.core.domain.api.CategoryRepository
 import com.example.bodybalance.core.domain.api.LoginRepository
+import com.example.bodybalance.core.domain.api.SavedVideoRepository
 import com.example.bodybalance.core.domain.api.VideoRepository
 import dagger.Binds
 import dagger.Module
@@ -36,4 +38,9 @@ abstract class NetworkModuleBinder {
     abstract fun bindAuthRepository(
         authRepositoryImpl: AuthRepositoryImpl
     ): AuthRepository
+
+    @Binds
+    abstract fun bindSaveVideoRepository(
+        savedVideoRepositoryImpl: SavedVideoRepositoryImpl
+    ): SavedVideoRepository
 }

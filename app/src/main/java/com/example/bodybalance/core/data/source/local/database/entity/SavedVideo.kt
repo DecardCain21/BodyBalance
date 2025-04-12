@@ -8,5 +8,5 @@ data class SavedVideo(
     @PrimaryKey
     val id: Double,
     val videoUrl: String,
-    val category: String? = ""
+    val title: String? = ""
 )

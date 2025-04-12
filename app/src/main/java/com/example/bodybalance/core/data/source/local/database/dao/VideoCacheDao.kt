@@ -31,7 +31,7 @@ interface VideoCacheDao {
     suspend fun getAll(): List<SavedVideo>
 
     // Поиск записей по категории
-    @Query("SELECT * FROM saved_video WHERE category = :category")
+    @Query("SELECT * FROM saved_video WHERE title = :category")
     suspend fun getByCategory(category: String): List<SavedVideo>
 
     // Обновление записи
