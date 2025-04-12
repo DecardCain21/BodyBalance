@@ -8,7 +8,16 @@ import android.net.Uri
 import android.view.View
 import android.view.WindowManager
 import androidx.annotation.OptIn
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -18,8 +27,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -30,14 +44,18 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT
 import androidx.media3.ui.PlayerView
+import com.example.bodybalance.R
+import com.example.bodybalance.ui.theme.White
 
 @OptIn(UnstableApi::class)
 @Composable
 fun exoPlayer(
-    modifier: Modifier = Modifier,
     context: Context,
     videoUrl: String,
-    listener: Player.Listener? = null
+    modifier: Modifier = Modifier,
+    listener: Player.Listener? = null,
+    shouldRequestFocus: () -> Unit = {},
+    showButton: Boolean = false
 ): ExoPlayer {
 
     val exoPlayer = remember {
@@ -59,6 +77,8 @@ fun exoPlayer(
         mutableStateOf(configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
     }
     val activity = context as Activity
+
+    val controllerVisible = remember { mutableStateOf(true) }
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -83,19 +103,55 @@ fun exoPlayer(
 
     HandleFullscreenMode(activity, isLandscape)
 
-    AndroidView(
-        modifier = modifier.aspectRatio(16 / 9f),
-        factory = { _ ->
-            PlayerView(context).apply {
-                setFullscreenButtonClickListener {
-                    isLandscape = !isLandscape
+    Box {
+        AndroidView(
+            modifier = modifier.aspectRatio(16 / 9f),
+            factory = { _ ->
+                PlayerView(context).apply {
+                    setFullscreenButtonClickListener {
+                        isLandscape = !isLandscape
+                    }
+                    resizeMode = RESIZE_MODE_FIT
+                    player = exoPlayer
+
+                    setControllerVisibilityListener(PlayerView.ControllerVisibilityListener { visibility ->
+                        controllerVisible.value = visibility == View.VISIBLE
+                    })
                 }
-                resizeMode = RESIZE_MODE_FIT
-                player = exoPlayer
+            },
+            update = { it.player = exoPlayer }
+        )
+        if (showButton && isLandscape) {
+            AnimatedVisibility(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(end = 16.dp, top = 12.dp),
+                visible = controllerVisible.value,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                Button(
+                    modifier = modifier
+                        .padding(horizontal = 24.dp)
+                        .padding(vertical = 10.dp),
+                    onClick = {
+                        shouldRequestFocus()
+                        isLandscape = !isLandscape
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = White
+                    ),
+                    shape = RoundedCornerShape(19.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.enter_code),
+                        fontSize = 14.sp,
+                        color = Color.Black
+                    )
+                }
             }
-        },
-        update = { it.player = exoPlayer }
-    )
+        }
+    }
 
     return exoPlayer
 }

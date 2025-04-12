@@ -28,4 +28,5 @@
     <string name="logout_of_account">Выйти из аккаунта?</string>
     <string name="develop">Разработка</string>
     <string name="interface_design">Проектирование интерфейса</string>
+    <string name="enter_code">Ввести кодовое слово</string>
 </resources>
