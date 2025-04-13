@@ -43,7 +43,8 @@ import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.core.composable.CustomTextField
 import com.example.bodybalance.introduction.presentation.IntroductionScreenState.Input
 import com.example.bodybalance.introduction.presentation.IntroductionScreenState.IntroductionPlayerState
-import com.example.bodybalance.player.composable.exoPlayer
+import com.example.bodybalance.core.composable.exoPlayer
+import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import kotlinx.coroutines.delay
 
@@ -75,7 +76,7 @@ fun IntroductionScreen(
                         is Input.Text -> uiState.inputValue.value
                     }
                 IntroductionScreenContent(
-                    videoUrl = uiState.videoState.videoUrl,
+                    video = uiState.videoState.video,
                     navToPlaylist = navToPlaylist,
                     inputValue = input,
                     inputCodeWord = { inputCodeWord(it) },
@@ -93,7 +94,7 @@ fun IntroductionScreen(
 
 @Composable
 fun IntroductionScreenContent(
-    videoUrl: String,
+    video: Video,
     inputValue: String,
     isEnabledButton: Boolean,
     supportText: String,
@@ -154,7 +155,7 @@ fun IntroductionScreenContent(
         } else {
             exoPlayer(
                 context = LocalContext.current,
-                videoUrl = videoUrl,
+                video = video,
                 listener = listener,
                 showButton = true,
                 shouldRequestFocus = { shouldRequestFocus = true }
@@ -232,7 +233,7 @@ private fun IntroductionScreenLoading(modifier: Modifier = Modifier) {
 fun IntroductionPreview() {
     BodyBalanceTheme {
         IntroductionScreenContent(
-            videoUrl = "",
+            video = Video.emptyVideo(),
             navToPlaylist = { },
             inputValue = "",
             inputCodeWord = { },

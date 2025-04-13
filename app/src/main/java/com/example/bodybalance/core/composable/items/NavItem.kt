@@ -1,4 +1,4 @@
-package com.example.bodybalance.core.composable
+package com.example.bodybalance.core.composable.items
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
@@ -35,7 +35,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.bodybalance.core.data.dto.VideoDto
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 
@@ -44,7 +43,7 @@ import com.example.bodybalance.ui.theme.BodyBalanceTheme
 fun NavItem(
     modifier: Modifier = Modifier,
     videoList: List<Video>,
-    onItemSelected: (String) -> Unit
+    onItemSelected: (Video) -> Unit
 ) {
 
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -89,7 +88,7 @@ fun NavItem(
                     verticalArrangement = Arrangement.Bottom,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    itemsIndexed(videoList) { index, item ->
+                    itemsIndexed(videoList) { index, video ->
                         Text(
                             text = (index + 1).toString(),
                             modifier = Modifier
@@ -97,7 +96,7 @@ fun NavItem(
                                 .clickable {
                                     selectedItem = (index + 1).toString()
                                     expanded = false
-                                    onItemSelected(item.url)
+                                    onItemSelected(video)
                                 }
                                 .padding(6.dp),
                             textAlign = TextAlign.Center,

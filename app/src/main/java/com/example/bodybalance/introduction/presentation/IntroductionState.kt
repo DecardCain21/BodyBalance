@@ -1,10 +1,12 @@
 package com.example.bodybalance.introduction.presentation
 
+import com.example.bodybalance.core.domain.models.Video
+
 data class IntroductionScreenState(
     val inputValue: Input,
     val videoState: IntroductionPlayerState,
     val buttonIsEnabled: Boolean = false,
-    val supportText : String = SupportTextIntroduction.ENTER_LOGIN.message
+    val supportText: String = SupportTextIntroduction.ENTER_LOGIN.message
 ) {
     sealed interface Input {
         data object Empty : Input
@@ -14,9 +16,7 @@ data class IntroductionScreenState(
     sealed interface IntroductionPlayerState {
         data object Empty : IntroductionPlayerState
         data object Loading : IntroductionPlayerState
-        data class Content(
-            val videoUrl: String,
-        ) : IntroductionPlayerState
+        data class Content(val video: Video) : IntroductionPlayerState
     }
 }
 

@@ -7,7 +7,7 @@ sealed interface VideoPlayerState {
     data object Empty : VideoPlayerState
     data object Loading : VideoPlayerState
     data class Content(
-        val currentVideoUrl: String,
+        val currentVideo: Video,
         val videoList: List<Video>
     ) : VideoPlayerState
 }

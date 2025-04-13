@@ -1,4 +1,4 @@
-package com.example.bodybalance.core.composable
+package com.example.bodybalance.core.composable.items
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

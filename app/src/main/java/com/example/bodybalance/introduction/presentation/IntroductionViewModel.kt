@@ -71,7 +71,7 @@ class IntroductionViewModel @Inject constructor(
     private fun hardCode(result: List<Video>): IntroductionScreenState {
         return IntroductionScreenState(
             inputValue = Input.Text("Marat"), IntroductionPlayerState.Content(
-                videoUrl = result.map { video -> video.url }.first()
+                video = result.map { video -> video }.first()
             ), buttonIsEnabled = true
         )
     }

@@ -24,18 +24,18 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
 import com.example.bodybalance.core.composable.BasicButton
-import com.example.bodybalance.core.composable.NavItem
+import com.example.bodybalance.core.composable.exoPlayer
+import com.example.bodybalance.core.composable.items.NavItem
 import com.example.bodybalance.core.data.service.FileDownloader
 import com.example.bodybalance.core.domain.models.Video
-import com.example.bodybalance.player.composable.exoPlayer
 import java.io.File
 
 @OptIn(UnstableApi::class)
 @Composable
 fun VideoPlayerScreen(
+    category: String,
     modifier: Modifier = Modifier,
     viewModel: VideoPlayerViewModel = hiltViewModel(),
-    category: String
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -60,7 +60,7 @@ fun VideoPlayerScreen(
             is VideoPlayerState.Content -> {
                 VideoPlayerScreenContent(
                     modifier = modifier,
-                    url = currentState.currentVideoUrl,
+                    video = currentState.currentVideo,
                     videoList = currentState.videoList,
                     onItemSelected = { viewModel.selectVideo(it) }
                 )
@@ -74,10 +74,10 @@ fun VideoPlayerScreen(
 
 @Composable
 fun VideoPlayerScreenContent(
-    modifier: Modifier = Modifier,
-    url: String,
+    video: Video,
     videoList: List<Video>,
-    onItemSelected: (String) -> Unit,
+    onItemSelected: (Video) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
@@ -85,8 +85,7 @@ fun VideoPlayerScreenContent(
     ) {
         exoPlayer(
             context = LocalContext.current,
-            modifier = modifier,
-            videoUrl = url
+            video = video
         )
         BasicButton(
             text = "Done!", onClick = { }, modifier = Modifier

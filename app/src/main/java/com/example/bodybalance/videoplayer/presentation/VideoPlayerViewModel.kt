@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.util.UnstableApi
 import com.example.bodybalance.core.data.source.network.NetworkError
+import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.videoplayer.domain.usecase.GetVideoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,7 +38,7 @@ class VideoPlayerViewModel @Inject constructor(
 
                 else -> result.getOrNull()?.let {
                     VideoPlayerState.Content(
-                        currentVideoUrl = it.videoItems.map { video -> video.url }.first(),
+                        currentVideo = it.videoItems.map { video -> video }.first(),
                         videoList = it.videoItems
                     )
                 } ?: VideoPlayerState.Empty
@@ -47,9 +48,9 @@ class VideoPlayerViewModel @Inject constructor(
     }
 
 
-    fun selectVideo(url: String) {
+    fun selectVideo(video: Video) {
         _uiState.update {
-            (it as VideoPlayerState.Content).copy(currentVideoUrl = url)
+            (it as VideoPlayerState.Content).copy(currentVideo = video)
         }
     }
 }
