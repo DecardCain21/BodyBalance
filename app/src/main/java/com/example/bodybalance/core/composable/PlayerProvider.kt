@@ -1,4 +1,4 @@
-package com.example.bodybalance.player.composable
+package com.example.bodybalance.core.composable
 
 import android.app.Activity
 import android.content.Context
@@ -11,9 +11,16 @@ import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -32,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -45,22 +53,23 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT
 import androidx.media3.ui.PlayerView
 import com.example.bodybalance.R
+import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.ui.theme.White
 
 @OptIn(UnstableApi::class)
 @Composable
 fun exoPlayer(
     context: Context,
-    videoUrl: String,
+    video: Video,
     modifier: Modifier = Modifier,
     listener: Player.Listener? = null,
-    shouldRequestFocus: () -> Unit = {},
-    showButton: Boolean = false
+    showButton: Boolean = false,
+    shouldRequestFocus: () -> Unit = {}
 ): ExoPlayer {
 
     val exoPlayer = remember {
         ExoPlayer.Builder(context).build().apply {
-            val mediaItem = MediaItem.fromUri(Uri.parse(videoUrl))
+            val mediaItem = MediaItem.fromUri(Uri.parse(video.url))
             setMediaItem(mediaItem)
             prepare()
             playWhenReady = false
@@ -103,57 +112,143 @@ fun exoPlayer(
 
     HandleFullscreenMode(activity, isLandscape)
 
-    Box {
-        AndroidView(
-            modifier = modifier.aspectRatio(16 / 9f),
-            factory = { _ ->
-                PlayerView(context).apply {
-                    setFullscreenButtonClickListener {
-                        isLandscape = !isLandscape
-                    }
-                    resizeMode = RESIZE_MODE_FIT
-                    player = exoPlayer
+    BoxWithConstraints {
+        val screenWidth = maxWidth
+        val playerHeight = screenWidth / (16f / 9f)
 
-                    setControllerVisibilityListener(PlayerView.ControllerVisibilityListener { visibility ->
-                        controllerVisible.value = visibility == View.VISIBLE
-                    })
+        Box(
+            modifier = modifier
+                .width(screenWidth)
+                .height(playerHeight)
+                .align(Alignment.Center)
+        ) {
+            VideoPlayer(
+                exoPlayer = exoPlayer,
+                context = context,
+                onFullscreenClick = { isLandscape = !isLandscape },
+                onControllerVisibilityChange = { visible ->
+                    controllerVisible.value = visible
                 }
-            },
-            update = { it.player = exoPlayer }
-        )
-        if (showButton && isLandscape) {
-            AnimatedVisibility(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(end = 16.dp, top = 12.dp),
-                visible = controllerVisible.value,
-                enter = fadeIn(),
-                exit = fadeOut()
-            ) {
-                Button(
-                    modifier = modifier
-                        .padding(horizontal = 24.dp)
-                        .padding(vertical = 10.dp),
-                    onClick = {
+            )
+
+            if (isLandscape) {
+                VideoPlayerControls(
+                    controllerVisible = controllerVisible.value,
+                    videoName = video.name,
+                    showButton = showButton,
+                    onButtonClick = {
                         shouldRequestFocus()
                         isLandscape = !isLandscape
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = White
-                    ),
-                    shape = RoundedCornerShape(19.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.enter_code),
-                        fontSize = 14.sp,
-                        color = Color.Black
-                    )
-                }
+                    }
+                )
             }
         }
     }
 
     return exoPlayer
+}
+
+@OptIn(UnstableApi::class)
+@Composable
+private fun VideoPlayer(
+    exoPlayer: ExoPlayer,
+    context: Context,
+    onFullscreenClick: () -> Unit,
+    onControllerVisibilityChange: (Boolean) -> Unit
+) {
+    AndroidView(
+        modifier = Modifier.fillMaxSize(),
+        factory = {
+            PlayerView(context).apply {
+                setFullscreenButtonClickListener { onFullscreenClick() }
+                resizeMode = RESIZE_MODE_FIT
+                player = exoPlayer
+
+                setControllerVisibilityListener(
+                    PlayerView.ControllerVisibilityListener { visibility ->
+                        onControllerVisibilityChange(visibility == View.VISIBLE)
+                    }
+                )
+            }
+        },
+        update = { it.player = exoPlayer }
+    )
+}
+
+@Composable
+private fun VideoPlayerControls(
+    controllerVisible: Boolean,
+    videoName: String,
+    showButton: Boolean,
+    onButtonClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Box(modifier = Modifier.weight(1f)) {
+            VideoTitle(
+                text = videoName,
+                visible = controllerVisible
+            )
+        }
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        if (showButton) {
+            EnterCodeButton(
+                visible = controllerVisible,
+                onClick = onButtonClick
+            )
+        }
+    }
+}
+
+@Composable
+private fun VideoTitle(
+    text: String,
+    visible: Boolean
+) {
+    AnimatedVisibility(
+        visible = visible,
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
+        Text(
+            text = text,
+            color = White,
+            fontSize = 22.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+    }
+}
+
+@Composable
+private fun EnterCodeButton(
+    visible: Boolean,
+    onClick: () -> Unit
+) {
+    AnimatedVisibility(
+        visible = visible,
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
+        Button(
+            onClick = onClick,
+            colors = ButtonDefaults.buttonColors(containerColor = White),
+            shape = RoundedCornerShape(19.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.enter_code),
+                fontSize = 14.sp,
+                color = Color.Black
+            )
+        }
+    }
 }
 
 @Composable
