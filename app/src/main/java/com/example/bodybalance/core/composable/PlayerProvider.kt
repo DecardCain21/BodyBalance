@@ -134,7 +134,7 @@ fun exoPlayer(
             if (isLandscape) {
                 VideoPlayerControls(
                     controllerVisible = controllerVisible.value,
-                    videoName = video.name,
+                    videoName = video.title,
                     showButton = showButton,
                     onButtonClick = {
                         shouldRequestFocus()

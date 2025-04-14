@@ -1,5 +1,6 @@
 package com.example.bodybalance.category.presentation
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bodybalance.category.domain.usecase.GetCategoryUseCase
@@ -36,6 +37,7 @@ class CategoryViewModel @Inject constructor(
             try {
                 val categories = getCategoryUseCase()
                 val savedVideos = getAllVideosUseCase().getOrNull()
+                Log.e("savedVideos","$savedVideos")
                 _uiState.value = CategoryState.Content(
                     category = categories,
                     playlist = savedVideos ?: emptyList()

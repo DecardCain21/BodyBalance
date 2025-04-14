@@ -15,6 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,28 +30,26 @@ public fun VideoItem(
 ) {
     Row(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .height(80.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Surface(
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
         ) {
-
             Image(
-                modifier = Modifier
-                    .width(142.dp)
-                    .height(80.dp),
+                modifier = Modifier.width(142.dp),
                 painter = painterResource(R.drawable.ic_launcher_background),
                 contentDescription = "Изображение курса",
                 contentScale = ContentScale.Crop,
             )
         }
         Text(
-            modifier = Modifier
-                .weight(1f)
-                .padding(start = 16.dp),
-            text = if (title.length > 30) "${title.take(30)}..." else title,
+            modifier = Modifier.padding(16.dp),
+            text = title,
+            fontWeight = FontWeight(500),
+            overflow = TextOverflow.Ellipsis,
             fontSize = 16.sp,
             color = MaterialTheme.colorScheme.primary
         )

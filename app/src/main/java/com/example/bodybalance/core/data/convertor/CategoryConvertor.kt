@@ -17,6 +17,6 @@ fun VideoDto.convertToVideo() = Video(
     id = id,
     url = url,
     category = category,
-    name = name,
+    title = name,
     description = description
 )

@@ -1,6 +1,7 @@
 package com.example.bodybalance.category.presentation
 
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,12 +15,14 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.NavigateBefore
-import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -29,18 +32,24 @@ import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.bodybalance.R
 import com.example.bodybalance.core.composable.items.ExerciseItem
 import com.example.bodybalance.core.composable.items.VideoItem
+import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
+import com.example.bodybalance.ui.theme.TabRowDividerColor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -55,7 +64,7 @@ fun CategoryScreen(
         is CategoryState.Content -> CategoryContentScreen(
             modifier = modifier,
             exercise = uiState.category,
-            playlist = listOf(),
+            playlist = uiState.playlist,
             navigateToVideoPlayerScreen = { navigateToVideoPlayerScreen(it) },
             navigateToSettingsScreen = { navigateToSettingsScreen() }
         )
@@ -69,7 +78,7 @@ fun CategoryScreen(
 fun CategoryContentScreen(
     modifier: Modifier = Modifier,
     exercise: List<String>,
-    playlist: List<String>,
+    playlist: List<Video>,
     navigateToVideoPlayerScreen: (String) -> Unit,
     navigateToSettingsScreen: () -> Unit
 ) {
@@ -83,13 +92,17 @@ fun CategoryContentScreen(
 @Composable
 fun Header(
     modifier: Modifier, exercise: List<String>,
-    playlist: List<String>
+    playlist: List<Video>
 ) {
     val tabs = listOf("Плейлист", "Упражнения")
     val pagerState = rememberPagerState { tabs.size }
     val scope = rememberCoroutineScope()
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.background)
+    ) {
         BodyBalanceTopAppBar()
         BodyBalancePages(pagerState, tabs, scope, exercise, playlist)
     }
@@ -99,6 +112,13 @@ fun Header(
 @Composable
 fun BodyBalanceTopAppBar() {
     TopAppBar(
+        colors = TopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.background,
+            titleContentColor = MaterialTheme.colorScheme.background,
+            actionIconContentColor = MaterialTheme.colorScheme.background,
+            navigationIconContentColor = MaterialTheme.colorScheme.background,
+            scrolledContainerColor = MaterialTheme.colorScheme.background
+        ),
         title = {
 
         },
@@ -115,7 +135,7 @@ fun BodyBalanceTopAppBar() {
             IconButton(
                 onClick = { }) {
                 Icon(
-                    imageVector = Icons.Default.AccountBox,
+                    imageVector = Icons.Default.AccountCircle,
                     contentDescription = "Localized description",
                     tint = Color.White
                 )
@@ -137,17 +157,25 @@ fun BodyBalancePages(
     tabs: List<String>,
     scope: CoroutineScope,
     exercise: List<String>,
-    playlist: List<String>
+    playlist: List<Video>
 ) {
     TabRow(
+        containerColor = MaterialTheme.colorScheme.background,
+        divider = {
+            HorizontalDivider(
+                thickness = 1.dp,
+                color = TabRowDividerColor
+            )
+        },
         selectedTabIndex = pagerState.currentPage,
         indicator = { tabPositions ->
             SecondaryIndicator(
                 modifier = Modifier
                     .tabIndicatorOffset(tabPositions[pagerState.currentPage])
-                    .padding(horizontal = 60.dp),
+                    .padding(horizontal = 60.dp)
+                    .clip(RoundedCornerShape(topStart = 50f, topEnd = 50f)),
                 height = 3.dp,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
             )
         }
     ) {
@@ -155,7 +183,7 @@ fun BodyBalancePages(
             Tab(
                 selected = pagerState.currentPage == index,
                 onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
-                text = { Text(title) }
+                text = { Text(text = title, fontWeight = FontWeight(700), fontSize = 14.sp) }
             )
         }
     }
@@ -190,7 +218,7 @@ fun ExerciseScreen(modifier: Modifier = Modifier, category: List<String>) {
 }
 
 @Composable
-fun PlaylistScreen(modifier: Modifier = Modifier, category: List<String>) {
+fun PlaylistScreen(modifier: Modifier = Modifier, category: List<Video>) {
     Box {
         LazyColumn(
             modifier = modifier
@@ -200,7 +228,7 @@ fun PlaylistScreen(modifier: Modifier = Modifier, category: List<String>) {
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             items(category) { item ->
-                VideoItem(title = item)
+                item.title?.let { VideoItem(title = it) }
             }
         }
     }
@@ -244,9 +272,14 @@ private fun PreviewPlaylist(
                 "3"
             ),
             playlist = listOf(
-                "Разминка перед упражнениями на отдельную группу мыщц",
-                "Название видео",
-                "Название видео"
+                Video(
+                    title = "Разминка перед упражнениями на отдельную группу мыщц",
+                    url = "",
+                    id = 0.0,
+                    description = "321"
+                ),
+                Video(title = "\"Название видео\"", url = "", id = 0.0, description = "321"),
+                Video(title = "\"Название видео\"", url = "", id = 0.0, description = "321")
             ),
             navigateToVideoPlayerScreen = {})
     }

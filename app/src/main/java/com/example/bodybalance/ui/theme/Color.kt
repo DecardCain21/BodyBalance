@@ -12,3 +12,4 @@ val OnSurfaceOpacity12 = Color(0x1FFFFFFF)
 
 val BottomSheetTextGrey = Color(0xFF49454F)
 val BottomSheetTextBlack = Color(0xFF1D1B20)
+val TabRowDividerColor = Color(0xFFCEC8D4)

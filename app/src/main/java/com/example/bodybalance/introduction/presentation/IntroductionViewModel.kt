@@ -7,18 +7,19 @@ import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.introduction.presentation.IntroductionScreenState.Input
 import com.example.bodybalance.introduction.presentation.IntroductionScreenState.IntroductionPlayerState
 import com.example.bodybalance.videoplayer.domain.usecase.GetVideoUseCase
+import com.example.bodybalance.videoplayer.domain.usecase.SaveVideoInCacheUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class IntroductionViewModel @Inject constructor(
-    private val getVideoUseCase: GetVideoUseCase
+    private val getVideoUseCase: GetVideoUseCase,
+    private val savedVideoUseCase: SaveVideoInCacheUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -57,6 +58,15 @@ class IntroductionViewModel @Inject constructor(
                     /*IntroductionScreenState(
                         inputValue = Input.Empty, IntroductionPlayerState.Content(
                             videoUrl = it.videoItems.map { video -> video.url }.first()
+                        )
+                    )*/
+                    /*savedVideoUseCase(
+                        video = Video(
+                            id = 1.2,
+                            url = it.videoItems[0].url,
+                            category = "test",
+                            title = "test name",
+                            description = "test description"
                         )
                     )*/
                     hardCode(result.getOrNull()!!.videoItems)

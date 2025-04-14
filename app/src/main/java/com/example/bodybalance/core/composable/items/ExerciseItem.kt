@@ -15,6 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,11 +47,11 @@ public fun ExerciseItem(
             )
             Text(
                 modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 16.dp)
-                /*.align(Alignment.CenterVertically)
-                .wrapContentWidth(Alignment.CenterHorizontally)*/,
+                    .fillMaxWidth()
+                    .padding(all = 16.dp),
                 text = title,
+                overflow = TextOverflow.Ellipsis,
+                fontWeight = FontWeight(500),
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.primary
             )

@@ -7,6 +7,9 @@ import androidx.room.PrimaryKey
 data class SavedVideo(
     @PrimaryKey
     val id: Double,
+    val title: String,
     val videoUrl: String,
-    val title: String? = ""
+    val description: String,
+    val category: String? = "",
+    val imageUrl: String? = ""
 )
