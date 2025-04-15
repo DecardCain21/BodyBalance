@@ -239,11 +239,16 @@ private fun HomeScreenPreview() {
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
         ) {
-            /*HomeScreen(
+            HomeScreen(
                 uiState = HomeScreenState(),
                 accountEnter = {},
-                snackbarEvent =
-            )*/
+                snackbarHostState = SnackbarHostState(),
+                inputLogin = {},
+                clearAll = {},
+                getLogin = {},
+                navigateToIntroductionScreen = {},
+                navEvent = null
+            )
         }
     }
 }
