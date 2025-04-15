@@ -35,7 +35,8 @@ fun Navigation(isAuthenticated: Boolean) {
 
         playlistScreen(
             navigateToVideoPlayerScreen = { navController.navigateToVideoPlayerScreen(it) },
-            navigateToSettingsScreen = { navController.navigateToSettingsScreen() }
+            navigateToSettingsScreen = { navController.navigateToSettingsScreen() },
+            navigateBackToIntroduction = { navController.popBackStack() }
         )
 
         settingsScreen(

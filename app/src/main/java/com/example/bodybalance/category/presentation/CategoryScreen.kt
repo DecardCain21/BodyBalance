@@ -57,6 +57,7 @@ import kotlinx.coroutines.launch
 fun CategoryScreen(
     modifier: Modifier = Modifier,
     uiState: CategoryState,
+    navigateBackToIntroduction: () -> Unit,
     navigateToVideoPlayerScreen: (String) -> Unit,
     navigateToSettingsScreen: () -> Unit
 ) {
@@ -66,7 +67,8 @@ fun CategoryScreen(
             exercise = uiState.category,
             playlist = uiState.playlist,
             navigateToVideoPlayerScreen = { navigateToVideoPlayerScreen(it) },
-            navigateToSettingsScreen = { navigateToSettingsScreen() }
+            navigateToSettingsScreen = { navigateToSettingsScreen() },
+            navigateBackToIntroduction = { navigateBackToIntroduction() }
         )
 
         is CategoryState.Error -> CategoryErrorScreen()
@@ -79,20 +81,27 @@ fun CategoryContentScreen(
     modifier: Modifier = Modifier,
     exercise: List<String>,
     playlist: List<Video>,
+    navigateBackToIntroduction: () -> Unit,
     navigateToVideoPlayerScreen: (String) -> Unit,
     navigateToSettingsScreen: () -> Unit
 ) {
     Header(
         modifier = modifier,
         exercise = exercise,
-        playlist = playlist
+        playlist = playlist,
+        navigateToVideoPlayerScreen = navigateToVideoPlayerScreen,
+        navigateToSettingsScreen = navigateToSettingsScreen,
+        navigateBackToIntroduction = navigateBackToIntroduction
     )
 }
 
 @Composable
 fun Header(
     modifier: Modifier, exercise: List<String>,
-    playlist: List<Video>
+    playlist: List<Video>,
+    navigateBackToIntroduction: () -> Unit,
+    navigateToVideoPlayerScreen: (String) -> Unit,
+    navigateToSettingsScreen: () -> Unit
 ) {
     val tabs = listOf("Плейлист", "Упражнения")
     val pagerState = rememberPagerState { tabs.size }
@@ -103,14 +112,20 @@ fun Header(
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.background)
     ) {
-        BodyBalanceTopAppBar()
+        BodyBalanceTopAppBar(
+            navigateToSettingsScreen = navigateToSettingsScreen,
+            navigateBackToIntroduction = navigateBackToIntroduction
+        )
         BodyBalancePages(pagerState, tabs, scope, exercise, playlist)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BodyBalanceTopAppBar() {
+fun BodyBalanceTopAppBar(
+    navigateToSettingsScreen: () -> Unit,
+    navigateBackToIntroduction: () -> Unit,
+) {
     TopAppBar(
         colors = TopAppBarColors(
             containerColor = MaterialTheme.colorScheme.background,
@@ -123,7 +138,7 @@ fun BodyBalanceTopAppBar() {
 
         },
         navigationIcon = {
-            IconButton(onClick = { }) {
+            IconButton(onClick = { navigateBackToIntroduction() }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.NavigateBefore,
                     contentDescription = "Button back",
@@ -141,7 +156,7 @@ fun BodyBalanceTopAppBar() {
                 )
             }
             IconButton(
-                onClick = { }) {
+                onClick = { navigateToSettingsScreen() }) {
                 Icon(
                     imageVector = Icons.Default.Settings,
                     contentDescription = "Localized description",
@@ -281,6 +296,7 @@ private fun PreviewPlaylist(
                 Video(title = "\"Название видео\"", url = "", id = 0.0, description = "321"),
                 Video(title = "\"Название видео\"", url = "", id = 0.0, description = "321")
             ),
-            navigateToVideoPlayerScreen = {})
+            navigateToVideoPlayerScreen = {},
+            navigateBackToIntroduction = {})
     }
 }

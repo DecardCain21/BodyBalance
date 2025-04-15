@@ -11,6 +11,7 @@ fun CategoryScreenRoute(
     modifier: Modifier = Modifier,
     navigateToVideoPlayerScreen: (String) -> Unit,
     navigateToSettingsScreen: () -> Unit,
+    navigateBackToIntroduction: () -> Unit,
     viewModel: CategoryViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -19,6 +20,7 @@ fun CategoryScreenRoute(
         modifier = modifier,
         uiState = uiState,
         navigateToVideoPlayerScreen = navigateToVideoPlayerScreen,
-        navigateToSettingsScreen = navigateToSettingsScreen
+        navigateToSettingsScreen = navigateToSettingsScreen,
+        navigateBackToIntroduction = navigateBackToIntroduction
     )
 }
