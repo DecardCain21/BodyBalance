@@ -3,7 +3,7 @@ package com.example.bodybalance.videoplayer.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.util.UnstableApi
-import com.example.bodybalance.core.data.source.network.NetworkError
+import com.example.bodybalance.core.util.NetworkError
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.videoplayer.domain.usecase.GetVideoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

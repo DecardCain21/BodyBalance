@@ -114,7 +114,9 @@ fun exoPlayer(
 
     BoxWithConstraints {
         val screenWidth = maxWidth
-        val playerHeight = screenWidth / (16f / 9f)
+        val screenHeight = maxHeight
+
+        val playerHeight = if (isLandscape) screenHeight else screenWidth / (16f / 9f)
 
         Box(
             modifier = modifier
@@ -144,6 +146,7 @@ fun exoPlayer(
             }
         }
     }
+
 
     return exoPlayer
 }

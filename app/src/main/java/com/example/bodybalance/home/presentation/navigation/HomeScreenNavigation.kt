@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.bodybalance.home.presentation.HomeScreen
+import com.example.bodybalance.home.presentation.HomeScreenRoute
 
 const val HOME_ROUTE = "home"
 
@@ -17,6 +18,6 @@ fun NavGraphBuilder.homeScreen(
     navigateToIntroductionScreen: () -> Unit,
 ) {
     composable(route = HOME_ROUTE) {
-        HomeScreen(navigateToIntroductionScreen = navigateToIntroductionScreen)
+        HomeScreenRoute(navigateToIntroductionScreen = navigateToIntroductionScreen)
     }
 }
