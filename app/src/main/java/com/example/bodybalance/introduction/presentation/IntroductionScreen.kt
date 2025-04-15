@@ -41,10 +41,10 @@ import androidx.media3.common.util.UnstableApi
 import com.example.bodybalance.R
 import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.core.composable.CustomTextField
-import com.example.bodybalance.introduction.presentation.IntroductionScreenState.Input
-import com.example.bodybalance.introduction.presentation.IntroductionScreenState.IntroductionPlayerState
 import com.example.bodybalance.core.composable.exoPlayer
 import com.example.bodybalance.core.domain.models.Video
+import com.example.bodybalance.introduction.presentation.IntroductionScreenState.Input
+import com.example.bodybalance.introduction.presentation.IntroductionScreenState.IntroductionPlayerState
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import kotlinx.coroutines.delay
 
