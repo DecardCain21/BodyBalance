@@ -1,4 +1,4 @@
-package com.example.bodybalance.core.data.source.network
+package com.example.bodybalance.core.util
 
 sealed class NetworkError(override val message: String) : Throwable(message = message) {
 
@@ -8,6 +8,7 @@ sealed class NetworkError(override val message: String) : Throwable(message = me
     class NoData(requestName: String) :
         NetworkError("Empty response body for requestName: $requestName")
 
+    // todo: нужна ли ?
     class BadCode(requestName: String, code: Int) :
         NetworkError("Server response with code: $code for requestName: $requestName")
 

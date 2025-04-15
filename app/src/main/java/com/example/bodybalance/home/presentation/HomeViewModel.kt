@@ -3,6 +3,8 @@ package com.example.bodybalance.home.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bodybalance.core.domain.usecase.api.FollowTheLinkUseCase
+import com.example.bodybalance.core.util.NetworkError
+import com.example.bodybalance.core.util.SnackbarEventParams
 import com.example.bodybalance.home.domain.usecase.CheckLoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -21,6 +23,9 @@ class HomeViewModel @Inject constructor(
 
     private val _navigationEvent = MutableSharedFlow<Unit>()
     val navigationEvent = _navigationEvent.asSharedFlow()
+
+    private val _snackbarEvent = MutableSharedFlow<SnackbarEventParams>()
+    val snackbarEvent = _snackbarEvent.asSharedFlow()
 
     private val _uiState = MutableStateFlow(HomeScreenState())
     val uiState: StateFlow<HomeScreenState> = _uiState.asStateFlow()
@@ -71,13 +76,39 @@ class HomeViewModel @Inject constructor(
                                 supportText = SupportTextHome.INVALID_LOGIN
                             )
                         }
-                    }.onFailure { } // Проверки на эксепшены (нет интернета и тд)
+                    }.onFailure { error ->
+                        when (error) {
+                            is NetworkError.ServerError -> {
+                                _snackbarEvent.emit(
+                                    SnackbarEventParams("Что-то не так, попробуйте ещё раз")
+                                )
+                            }
+
+                            // todo: нигде не задаем эту ошибку
+                            is NetworkError.NoData -> {
+                                _snackbarEvent.emit(
+                                    SnackbarEventParams("Видео пока недоступно, загляните позже")
+                                )
+                            }
+
+                            is NetworkError.NoInternet -> {
+                                _snackbarEvent.emit(
+                                    SnackbarEventParams(
+                                        message = "Нет интернета",
+                                        actionLabel = "Обновить" // todo: нужна ли эта кнопка ?
+                                    )
+                                )
+                            }
+                        }
+                    }
             }
         }
     }
 
     // todo: заменить ссылку
-    private fun requestLogin() { followTheLinkUseCase("") }
+    private fun requestLogin() {
+        followTheLinkUseCase("")
+    }
 
     private fun clearAll() {
         _uiState.value = uiState.value.copy(inputValue = "")
