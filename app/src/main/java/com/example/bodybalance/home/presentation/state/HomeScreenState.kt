@@ -1,4 +1,4 @@
-package com.example.bodybalance.home.presentation
+package com.example.bodybalance.home.presentation.state
 
 data class HomeScreenState(
     val inputError: Boolean = false,

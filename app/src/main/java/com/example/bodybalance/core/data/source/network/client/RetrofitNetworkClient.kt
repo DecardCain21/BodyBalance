@@ -15,7 +15,7 @@ import java.net.SocketTimeoutException
 @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 abstract class RetrofitNetworkClient : NetworkClient {
 
-    private val maxRetries = 1
+    private val maxRetries = 10
     private val retryDelayMillis = 2000L
 
     override suspend fun <T> doRequest(request: suspend () -> T): Result<T> {

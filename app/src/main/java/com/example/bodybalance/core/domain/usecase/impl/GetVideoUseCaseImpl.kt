@@ -1,8 +1,8 @@
-package com.example.bodybalance.videoplayer.domain.usecase.impl
+package com.example.bodybalance.core.domain.usecase.impl
 
 import com.example.bodybalance.core.domain.api.VideoRepository
 import com.example.bodybalance.core.domain.models.Category
-import com.example.bodybalance.videoplayer.domain.usecase.GetVideoUseCase
+import com.example.bodybalance.core.domain.usecase.api.GetVideoUseCase
 import javax.inject.Inject
 
 class GetVideoUseCaseImpl @Inject constructor(

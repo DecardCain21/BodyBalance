@@ -1,10 +1,12 @@
 package com.example.bodybalance.introduction.presentation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.bodybalance.introduction.presentation.state.IntroductionScreenUiEvent
 
 @Composable
 fun IntroductionScreenRoute(
@@ -20,6 +22,7 @@ fun IntroductionScreenRoute(
         uiState = uiState,
         inputCodeWord = { viewModel.handleEvent(IntroductionScreenUiEvent.InputLogin(it)) },
         getVideo = { viewModel.getVideo(it) },
-        navToPlaylist = navToPlaylist
+        navToPlaylist = navToPlaylist,
+        eventContinue = {viewModel.handleEvent(IntroductionScreenUiEvent.Continue)},
     )
 }

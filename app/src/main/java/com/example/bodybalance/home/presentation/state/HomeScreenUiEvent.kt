@@ -1,4 +1,4 @@
-package com.example.bodybalance.home.presentation
+package com.example.bodybalance.home.presentation.state
 
 sealed interface HomeScreenUiEvent {
     data class InputLogin(val text: String) : HomeScreenUiEvent

@@ -43,6 +43,7 @@ import com.example.bodybalance.R
 import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.core.composable.CustomTextField
 import com.example.bodybalance.core.composable.snackbar.CustomSnackbar
+import com.example.bodybalance.home.presentation.state.HomeScreenState
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import kotlinx.coroutines.launch
 
@@ -163,7 +164,7 @@ fun HomeScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GetLoginBlockBottomSheet(
+private fun GetLoginBlockBottomSheet(
     modifier: Modifier = Modifier,
     sheetState: SheetState,
     showBottomSheetAction: () -> Unit,

@@ -54,6 +54,7 @@ fun AboutAppScreen(
 
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
+    var isBackClickable by remember { mutableStateOf(true) }
 
     Column(
         modifier = modifier.fillMaxSize(),
@@ -74,7 +75,12 @@ fun AboutAppScreen(
                 )
             },
             navigationIcon = {
-                IconButton(onClick = { navigateBackToSettings() }) {
+                IconButton(
+                    onClick = {
+                        isBackClickable = false
+                        navigateBackToSettings() },
+                    enabled = isBackClickable
+                ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.NavigateBefore,
                         contentDescription = "Button back",
@@ -160,7 +166,7 @@ private fun VersionRow(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun AboutRow(modifier: Modifier = Modifier) {
+private fun AboutRow(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -184,7 +190,7 @@ fun AboutRow(modifier: Modifier = Modifier) {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun DevelopersRow(
+private fun DevelopersRow(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
@@ -239,7 +245,7 @@ private fun ContributorsItem(
     backgroundColor = 0xFF141218
 )
 @Composable
-fun PreviewAboutAppScreen() {
+private fun PreviewAboutAppScreen() {
     BodyBalanceTheme(dynamicColor = false, darkTheme = true) {
         AboutAppScreen()
     }

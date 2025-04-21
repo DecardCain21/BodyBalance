@@ -43,8 +43,9 @@ import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.core.composable.CustomTextField
 import com.example.bodybalance.core.composable.exoPlayer
 import com.example.bodybalance.core.domain.models.Video
-import com.example.bodybalance.introduction.presentation.IntroductionScreenState.Input
-import com.example.bodybalance.introduction.presentation.IntroductionScreenState.IntroductionPlayerState
+import com.example.bodybalance.introduction.presentation.state.IntroductionScreenState
+import com.example.bodybalance.introduction.presentation.state.IntroductionScreenState.Input
+import com.example.bodybalance.introduction.presentation.state.IntroductionScreenState.IntroductionPlayerState
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import kotlinx.coroutines.delay
 
@@ -55,10 +56,11 @@ const val INTRODUCTION = "Introduction"
 @Composable
 fun IntroductionScreen(
     uiState: IntroductionScreenState,
-    modifier: Modifier = Modifier,
     inputCodeWord: (String) -> Unit,
     getVideo: (String) -> Unit,
-    navToPlaylist: () -> Unit
+    navToPlaylist: () -> Unit,
+    eventContinue: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
 
     LaunchedEffect(Unit) { getVideo(INTRODUCTION) }
@@ -78,6 +80,7 @@ fun IntroductionScreen(
                 IntroductionScreenContent(
                     video = uiState.videoState.video,
                     navToPlaylist = navToPlaylist,
+                    eventContinue = eventContinue,
                     inputValue = input,
                     inputCodeWord = { inputCodeWord(it) },
                     isEnabledButton = uiState.buttonIsEnabled,
@@ -100,6 +103,7 @@ fun IntroductionScreenContent(
     supportText: String,
     modifier: Modifier = Modifier,
     navToPlaylist: () -> Unit,
+    eventContinue: () -> Unit,
     inputCodeWord: (String) -> Unit,
 ) {
 
@@ -215,7 +219,10 @@ fun IntroductionScreenContent(
             buttonColor = MaterialTheme.colorScheme.primary,
             enabledTextColor = MaterialTheme.colorScheme.onPrimary,
             disabledTextColor = MaterialTheme.colorScheme.primary,
-            onClick = { navToPlaylist() },
+            onClick = {
+                eventContinue()
+                navToPlaylist()
+            },
             isEnabled = isEnabledButton
         )
     }
@@ -238,6 +245,7 @@ fun IntroductionPreview() {
             inputValue = "",
             inputCodeWord = { },
             isEnabledButton = true,
+            eventContinue = {},
             supportText = "Неверное кодовое слово"
         )
     }

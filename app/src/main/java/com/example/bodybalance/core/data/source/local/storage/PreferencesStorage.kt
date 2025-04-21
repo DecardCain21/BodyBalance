@@ -11,11 +11,16 @@ class PreferencesStorage @Inject constructor(
         get() = sharedPreferences.getString(KEY_IS_AUTHENTICATED, "") ?: ""
         set(value) = sharedPreferences.edit().putString(KEY_IS_AUTHENTICATED, value).apply()
 
+    var code: String
+        get() = sharedPreferences.getString(KEY_CODE, "") ?: ""
+        set(value) = sharedPreferences.edit().putString(KEY_CODE, value).apply()
+
     fun isAuthenticated(): Boolean = login.isNotEmpty()
 
     fun logout() = sharedPreferences.edit().remove(KEY_IS_AUTHENTICATED).apply()
 
     companion object {
         private const val KEY_IS_AUTHENTICATED = "is_authenticated"
+        private const val KEY_CODE = "is_authenticated"
     }
 }

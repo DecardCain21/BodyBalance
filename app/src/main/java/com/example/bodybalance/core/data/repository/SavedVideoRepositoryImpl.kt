@@ -9,8 +9,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class SavedVideoRepositoryImpl @Inject constructor(private val savedVideoDao: VideoCacheDao) : SavedVideoRepository {
-    override suspend fun getAllVideos() = withContext(Dispatchers.IO) {
+class SavedVideoRepositoryImpl @Inject constructor(
+    private val savedVideoDao: VideoCacheDao
+) : SavedVideoRepository {
+    override suspend fun getAllSavedVideos() = withContext(Dispatchers.IO) {
         savedVideoDao.getAll().map { it.convertToVideo() }
     }
 

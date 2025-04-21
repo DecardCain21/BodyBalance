@@ -57,7 +57,7 @@ fun SettingsScreen(
 ) {
 
     var showDialog by remember { mutableStateOf(false) }
-
+    var isBackClickable by remember { mutableStateOf(true) }
 
     Column(
         modifier = modifier.fillMaxSize(),
@@ -72,7 +72,13 @@ fun SettingsScreen(
                 Text(stringResource(R.string.settings))
             },
             navigationIcon = {
-                IconButton(onClick = { navigateBackToPlaylistScreen() }) {
+                IconButton(
+                    onClick = {
+                        isBackClickable = false
+                        navigateBackToPlaylistScreen()
+                    },
+                    enabled = isBackClickable
+                ) {
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = "Localized description",
@@ -204,12 +210,19 @@ fun SettingsScreen(
 }
 
 @Composable
-fun LogoutDialog(showDialog: Boolean, onDismiss: () -> Unit, onConfirm: () -> Unit) {
+private fun LogoutDialog(
+    showDialog: Boolean,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     if (showDialog) {
         AlertDialog(
+            modifier = modifier,
             onDismissRequest = { onDismiss() },
             title = {
                 Text(
+                    modifier = Modifier.padding(end = 30.dp),
                     text = stringResource(R.string.logout_of_account),
                     color = MaterialTheme.colorScheme.primary
                 )
@@ -233,7 +246,7 @@ fun LogoutDialog(showDialog: Boolean, onDismiss: () -> Unit, onConfirm: () -> Un
     backgroundColor = 0xFF141218
 )
 @Composable
-fun PreviewSettingsScreen() {
+private fun PreviewSettingsScreen() {
     BodyBalanceTheme(dynamicColor = false, darkTheme = true) {
         SettingsScreen(
             navigateToAboutAppScreen = {},

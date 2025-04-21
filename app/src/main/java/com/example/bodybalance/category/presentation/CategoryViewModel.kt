@@ -4,7 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bodybalance.category.domain.usecase.GetCategoryUseCase
-import com.example.bodybalance.videoplayer.domain.usecase.GetAllVideosUseCase
+import com.example.bodybalance.core.domain.models.Video
+import com.example.bodybalance.category.domain.usecase.GetAllSavedVideosUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
     private val getCategoryUseCase: GetCategoryUseCase,
-    private val getAllVideosUseCase: GetAllVideosUseCase
+    private val getAllSavedVideosUseCase: GetAllSavedVideosUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<CategoryState>(CategoryState.Loading)
@@ -27,7 +28,7 @@ class CategoryViewModel @Inject constructor(
 
     fun handleEvent(event: CategoryScreenUiEvent) {
         when (event) {
-            CategoryScreenUiEvent.ChangeUser -> TODO()
+            is CategoryScreenUiEvent.ChangeUser -> TODO()
             is CategoryScreenUiEvent.DeleteVideo -> TODO()
         }
     }
@@ -36,11 +37,18 @@ class CategoryViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val categories = getCategoryUseCase()
-                val savedVideos = getAllVideosUseCase().getOrNull()
+                val savedVideos = getAllSavedVideosUseCase().getOrNull()
                 Log.e("savedVideos","$savedVideos")
                 _uiState.value = CategoryState.Content(
                     category = categories,
-                    playlist = savedVideos ?: emptyList()
+                    savedVideo = listOf(Video(
+                        id = 0.0,
+                        title = "test",
+                        url = "",
+                        category = null,
+                        description = "",
+                        imageUrl = null
+                    ))//emptyList()
                 )
             } catch (e: Exception) {
                 _uiState.value = CategoryState.Error

@@ -4,14 +4,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bodybalance.core.util.NetworkError
 import com.example.bodybalance.core.domain.models.Video
-import com.example.bodybalance.introduction.presentation.IntroductionScreenState.Input
-import com.example.bodybalance.introduction.presentation.IntroductionScreenState.IntroductionPlayerState
-import com.example.bodybalance.videoplayer.domain.usecase.GetVideoUseCase
-import com.example.bodybalance.videoplayer.domain.usecase.SaveVideoInCacheUseCase
+import com.example.bodybalance.introduction.presentation.state.IntroductionScreenState
+import com.example.bodybalance.introduction.presentation.state.IntroductionScreenState.Input
+import com.example.bodybalance.introduction.presentation.state.IntroductionScreenState.IntroductionPlayerState
+import com.example.bodybalance.introduction.presentation.state.IntroductionScreenUiEvent
+import com.example.bodybalance.introduction.presentation.state.SupportTextIntroduction
+import com.example.bodybalance.core.domain.usecase.api.GetVideoUseCase
+import com.example.bodybalance.introduction.domain.usecase.GetIntroductionCodeUseCase
+import com.example.bodybalance.introduction.domain.usecase.SetIntroductionCodeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,7 +25,8 @@ import javax.inject.Inject
 @HiltViewModel
 class IntroductionViewModel @Inject constructor(
     private val getVideoUseCase: GetVideoUseCase,
-    private val savedVideoUseCase: SaveVideoInCacheUseCase
+    private val getIntroductionCodeUseCase: GetIntroductionCodeUseCase,
+    private val setIntroductionCodeUseCase: SetIntroductionCodeUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -35,7 +42,7 @@ class IntroductionViewModel @Inject constructor(
 
     fun handleEvent(event: IntroductionScreenUiEvent) {
         when (event) {
-            is IntroductionScreenUiEvent.Continue -> {}
+            is IntroductionScreenUiEvent.Continue -> eventContinue()
             is IntroductionScreenUiEvent.InputLogin -> enterCodeWord(event.text)
         }
     }
@@ -45,18 +52,21 @@ class IntroductionViewModel @Inject constructor(
         isInitialized = true
 
         viewModelScope.launch(Dispatchers.IO) {
+            val code = getIntroductionCodeUseCase()
+            val inputState = if(code.isNotEmpty()) Input.Text(code)  else  Input.Empty
+
             val result = getVideoUseCase(category)
             val newState = when (result.exceptionOrNull()) {
                 is NetworkError.ServerError,
                 is NetworkError.NoData,
                 is NetworkError.NoInternet -> IntroductionScreenState(
-                    inputValue = Input.Empty,
+                    inputValue = inputState,
                     videoState = IntroductionPlayerState.Empty
                 )
 
                 else -> result.getOrNull()?.let {
                     /*IntroductionScreenState(
-                        inputValue = Input.Empty, IntroductionPlayerState.Content(
+                        inputValue = inputState, IntroductionPlayerState.Content(
                             videoUrl = it.videoItems.map { video -> video.url }.first()
                         )
                     )*/
@@ -76,6 +86,10 @@ class IntroductionViewModel @Inject constructor(
             }
             _uiState.value = newState
         }
+    }
+
+    private fun eventContinue() {
+        setIntroductionCodeUseCase(CODE)
     }
 
     private fun hardCode(result: List<Video>): IntroductionScreenState {
@@ -108,5 +122,9 @@ class IntroductionViewModel @Inject constructor(
                 buttonIsEnabled = isEnabled,
                 supportText = supportText
             )
+    }
+
+    companion object {
+        const val CODE = "1234"
     }
 }

@@ -25,8 +25,11 @@
     <string name="developers">Разработчики</string>
     <string name="cansel">Отмена</string>
     <string name="logout">Выйти</string>
+    <string name="remove">Удалить</string>
     <string name="logout_of_account">Выйти из аккаунта?</string>
     <string name="develop">Разработка</string>
     <string name="interface_design">Проектирование интерфейса</string>
     <string name="enter_code">Ввести кодовое слово</string>
+    <string name="delete_video_from_playlist">Удалить видео из плейлиста?</string>
+    <string name="delete_video_dilog_message">Видео останется в разделе упражнения</string>
 </resources>

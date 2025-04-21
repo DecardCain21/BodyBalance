@@ -12,10 +12,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.bodybalance.home.presentation.HomeScreenUiEvent.ClearAll
-import com.example.bodybalance.home.presentation.HomeScreenUiEvent.Enter
-import com.example.bodybalance.home.presentation.HomeScreenUiEvent.GetLogin
-import com.example.bodybalance.home.presentation.HomeScreenUiEvent.InputLogin
+import com.example.bodybalance.home.presentation.state.HomeScreenUiEvent.ClearAll
+import com.example.bodybalance.home.presentation.state.HomeScreenUiEvent.Enter
+import com.example.bodybalance.home.presentation.state.HomeScreenUiEvent.GetLogin
+import com.example.bodybalance.home.presentation.state.HomeScreenUiEvent.InputLogin
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 

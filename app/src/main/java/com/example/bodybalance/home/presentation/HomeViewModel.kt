@@ -6,6 +6,9 @@ import com.example.bodybalance.core.domain.usecase.api.FollowTheLinkUseCase
 import com.example.bodybalance.core.util.NetworkError
 import com.example.bodybalance.core.util.SnackbarEventParams
 import com.example.bodybalance.home.domain.usecase.CheckLoginUseCase
+import com.example.bodybalance.home.presentation.state.HomeScreenState
+import com.example.bodybalance.home.presentation.state.HomeScreenUiEvent
+import com.example.bodybalance.home.presentation.state.SupportTextHome
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

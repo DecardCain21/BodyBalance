@@ -1,15 +1,16 @@
-package com.example.bodybalance.videoplayer.domain.usecase.impl
+package com.example.bodybalance.category.domain.usecase.impl
 
 import com.example.bodybalance.core.domain.api.SavedVideoRepository
 import com.example.bodybalance.core.domain.models.Video
-import com.example.bodybalance.videoplayer.domain.usecase.GetAllVideosUseCase
+import com.example.bodybalance.category.domain.usecase.GetAllSavedVideosUseCase
 import javax.inject.Inject
 
-class GetAllVideosUseCaseImpl @Inject constructor(private val repository: SavedVideoRepository) :
-    GetAllVideosUseCase {
+class GetAllSavedVideosUseCaseImpl @Inject constructor(
+    private val repository: SavedVideoRepository
+) : GetAllSavedVideosUseCase {
     override suspend operator fun invoke(): Result<List<Video>> {
         return try {
-            val videos = repository.getAllVideos()
+            val videos = repository.getAllSavedVideos()
             Result.success(videos)
         } catch (e: Exception) {
             Result.failure(e)

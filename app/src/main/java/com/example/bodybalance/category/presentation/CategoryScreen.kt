@@ -1,11 +1,13 @@
 package com.example.bodybalance.category.presentation
 
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,22 +21,37 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.NavigateBefore
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BottomSheetDefaults
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxState
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -65,22 +82,22 @@ fun CategoryScreen(
         is CategoryState.Content -> CategoryContentScreen(
             modifier = modifier,
             exercise = uiState.category,
-            playlist = uiState.playlist,
+            savedVideo = uiState.savedVideo,
             navigateToVideoPlayerScreen = { navigateToVideoPlayerScreen(it) },
             navigateToSettingsScreen = { navigateToSettingsScreen() },
             navigateBackToIntroduction = { navigateBackToIntroduction() }
         )
 
-        is CategoryState.Error -> CategoryErrorScreen()
+        is CategoryState.Error -> CategoryErrorScreen(modifier = modifier)
         is CategoryState.Loading -> CategoryScreenLoading(modifier = modifier)
     }
 }
 
 @Composable
-fun CategoryContentScreen(
+private fun CategoryContentScreen(
     modifier: Modifier = Modifier,
     exercise: List<String>,
-    playlist: List<Video>,
+    savedVideo: List<Video>,
     navigateBackToIntroduction: () -> Unit,
     navigateToVideoPlayerScreen: (String) -> Unit,
     navigateToSettingsScreen: () -> Unit
@@ -88,7 +105,7 @@ fun CategoryContentScreen(
     Header(
         modifier = modifier,
         exercise = exercise,
-        playlist = playlist,
+        playlist = savedVideo,
         navigateToVideoPlayerScreen = navigateToVideoPlayerScreen,
         navigateToSettingsScreen = navigateToSettingsScreen,
         navigateBackToIntroduction = navigateBackToIntroduction
@@ -96,7 +113,7 @@ fun CategoryContentScreen(
 }
 
 @Composable
-fun Header(
+private fun Header(
     modifier: Modifier, exercise: List<String>,
     playlist: List<Video>,
     navigateBackToIntroduction: () -> Unit,
@@ -112,20 +129,24 @@ fun Header(
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.background)
     ) {
-        BodyBalanceTopAppBar(
+        TopAppBar(
             navigateToSettingsScreen = navigateToSettingsScreen,
             navigateBackToIntroduction = navigateBackToIntroduction
         )
-        BodyBalancePages(pagerState, tabs, scope, exercise, playlist)
+        CategoryPages(pagerState, tabs, scope, exercise, playlist)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BodyBalanceTopAppBar(
+private fun TopAppBar(
     navigateToSettingsScreen: () -> Unit,
     navigateBackToIntroduction: () -> Unit,
 ) {
+    val sheetState = rememberModalBottomSheetState()
+    var showBottomSheet by remember { mutableStateOf(false) }
+    var isClickable by remember { mutableStateOf(true) }
+
     TopAppBar(
         colors = TopAppBarColors(
             containerColor = MaterialTheme.colorScheme.background,
@@ -138,7 +159,13 @@ fun BodyBalanceTopAppBar(
 
         },
         navigationIcon = {
-            IconButton(onClick = { navigateBackToIntroduction() }) {
+            IconButton(
+                onClick = {
+                    isClickable = false
+                    navigateBackToIntroduction()
+                },
+                enabled = isClickable
+            ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.NavigateBefore,
                     contentDescription = "Button back",
@@ -148,7 +175,8 @@ fun BodyBalanceTopAppBar(
         },
         actions = {
             IconButton(
-                onClick = { }) {
+                onClick = { showBottomSheet = true })
+            {
                 Icon(
                     imageVector = Icons.Default.AccountCircle,
                     contentDescription = "Localized description",
@@ -156,7 +184,8 @@ fun BodyBalanceTopAppBar(
                 )
             }
             IconButton(
-                onClick = { navigateToSettingsScreen() }) {
+                onClick = { navigateToSettingsScreen() }
+            ) {
                 Icon(
                     imageVector = Icons.Default.Settings,
                     contentDescription = "Localized description",
@@ -164,10 +193,24 @@ fun BodyBalanceTopAppBar(
                 )
             }
         })
+
+    if (showBottomSheet) {
+        ModalBottomSheet(
+            onDismissRequest = { showBottomSheet = false },
+            sheetState = sheetState,
+            dragHandle = {
+                BottomSheetDefaults.DragHandle(color = MaterialTheme.colorScheme.outline)
+            }
+        ) {
+            Column {
+                // ChangeUserBlock()
+            }
+        }
+    }
 }
 
 @Composable
-fun BodyBalancePages(
+private fun CategoryPages(
     pagerState: PagerState,
     tabs: List<String>,
     scope: CoroutineScope,
@@ -207,7 +250,7 @@ fun BodyBalancePages(
         state = pagerState,
     ) { page ->
         when (page) {
-            0 -> PlaylistScreen(category = playlist)
+            0 -> PlaylistScreen(savedVideo = playlist)
             1 -> ExerciseScreen(category = exercise)
             else -> Text("Неизвестная страница")
         }
@@ -215,7 +258,10 @@ fun BodyBalancePages(
 }
 
 @Composable
-fun ExerciseScreen(modifier: Modifier = Modifier, category: List<String>) {
+private fun ExerciseScreen(
+    category: List<String>,
+    modifier: Modifier = Modifier
+) {
     Box {
         LazyColumn(
             modifier = modifier
@@ -233,29 +279,125 @@ fun ExerciseScreen(modifier: Modifier = Modifier, category: List<String>) {
 }
 
 @Composable
-fun PlaylistScreen(modifier: Modifier = Modifier, category: List<Video>) {
+private fun PlaylistScreen(
+    savedVideo: List<Video>,
+    modifier: Modifier = Modifier
+) {
+    var showDialog by remember { mutableStateOf(false) }
+    
     Box {
         LazyColumn(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp, start = 16.dp, end = 16.dp),
+                .padding(top = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            items(category) { item ->
-                item.title?.let { VideoItem(title = it) }
+            items(items = savedVideo, key = { it.hashCode() }) { item ->
+                val dismissState = rememberSwipeToDismissBoxState(
+                    confirmValueChange = {
+                        if (it == SwipeToDismissBoxValue.EndToStart) {
+                            showDialog = true
+                            true
+                        } else {
+                            false
+                        }
+                    },
+                    positionalThreshold = { it * .6f }
+                )
+                SwipeToDismissBox(
+                    state = dismissState,
+                    backgroundContent = { DismissBackground(dismissState) },
+                    content = {
+                        item.title?.let { VideoItem(title = it, showIconDrag = true) }
+                    }
+                )
             }
         }
+    }
+    DeleteVideoDialog(
+        showDialog = showDialog,
+        onDismiss = { showDialog = false },
+        onConfirm = {
+            // todo: удалить видео
+            showDialog = false
+        }
+    )
+}
+
+@Composable
+private fun DismissBackground(dismissState: SwipeToDismissBoxState) {
+    val color = when (dismissState.dismissDirection) {
+        SwipeToDismissBoxValue.EndToStart -> Color(0xFFFF1744)
+        else -> Color.Transparent
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color)
+            .padding(12.dp, 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.End
+    ) {
+        Icon(
+            Icons.Default.Delete,
+            contentDescription = "delete"
+        )
     }
 }
 
 @Composable
-fun CategoryErrorScreen() {
+private fun DeleteVideoDialog(
+    showDialog: Boolean,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    if (showDialog) {
+        AlertDialog(
+            modifier = modifier,
+            onDismissRequest = { onDismiss() },
+            title = {
+                Text(
+                    modifier = Modifier.padding(end = 30.dp),
+                    text = stringResource(R.string.delete_video_from_playlist),
+                    color = MaterialTheme.colorScheme.primary
+                )
+            },
+            text = {
+                Text(
+                    text = stringResource(R.string.delete_video_dilog_message),
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight(400)
+                )
+            },
+            confirmButton = {
+                Button(onClick = { onConfirm() }) {
+                    Text(text = stringResource(R.string.remove))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { onDismiss() }) {
+                    Text(stringResource(R.string.cansel))
+                }
+            }
+        )
+    }
+}
+
+@Composable
+private fun CategoryErrorScreen(
+    modifier: Modifier = Modifier
+) {
     Text(text = stringResource(R.string.error))
 }
 
 @Composable
-private fun CategoryScreenLoading(modifier: Modifier = Modifier) {
+private fun CategoryScreenLoading(
+    modifier: Modifier = Modifier
+) {
     Box(modifier = modifier.fillMaxSize()) {
         CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
     }
@@ -286,7 +428,7 @@ private fun PreviewPlaylist(
                 "2",
                 "3"
             ),
-            playlist = listOf(
+            savedVideo = listOf(
                 Video(
                     title = "Разминка перед упражнениями на отдельную группу мыщц",
                     url = "",
