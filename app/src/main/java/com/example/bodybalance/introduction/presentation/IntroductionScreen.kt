@@ -109,6 +109,7 @@ fun IntroductionScreenContent(
 
     var shouldRequestFocus by rememberSaveable { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
+
     LaunchedEffect(shouldRequestFocus) {
         if (shouldRequestFocus) {
             delay(500) // Необходимо

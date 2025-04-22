@@ -1,4 +1,4 @@
-package com.example.bodybalance.category.presentation
+package com.example.bodybalance.category.presentation.state
 
 sealed interface CategoryScreenUiEvent {
     data object ChangeUser : CategoryScreenUiEvent

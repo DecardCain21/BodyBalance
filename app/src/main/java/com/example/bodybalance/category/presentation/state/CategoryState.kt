@@ -1,4 +1,4 @@
-package com.example.bodybalance.category.presentation
+package com.example.bodybalance.category.presentation.state
 
 import com.example.bodybalance.core.domain.models.Video
 

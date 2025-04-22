@@ -2,22 +2,20 @@ package com.example.bodybalance.introduction.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.bodybalance.core.util.NetworkError
 import com.example.bodybalance.core.domain.models.Video
+import com.example.bodybalance.core.domain.usecase.api.GetVideoUseCase
+import com.example.bodybalance.core.util.NetworkError
+import com.example.bodybalance.introduction.domain.usecase.GetIntroductionCodeUseCase
+import com.example.bodybalance.introduction.domain.usecase.SetIntroductionCodeUseCase
 import com.example.bodybalance.introduction.presentation.state.IntroductionScreenState
 import com.example.bodybalance.introduction.presentation.state.IntroductionScreenState.Input
 import com.example.bodybalance.introduction.presentation.state.IntroductionScreenState.IntroductionPlayerState
 import com.example.bodybalance.introduction.presentation.state.IntroductionScreenUiEvent
 import com.example.bodybalance.introduction.presentation.state.SupportTextIntroduction
-import com.example.bodybalance.core.domain.usecase.api.GetVideoUseCase
-import com.example.bodybalance.introduction.domain.usecase.GetIntroductionCodeUseCase
-import com.example.bodybalance.introduction.domain.usecase.SetIntroductionCodeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -53,7 +51,7 @@ class IntroductionViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             val code = getIntroductionCodeUseCase()
-            val inputState = if(code.isNotEmpty()) Input.Text(code)  else  Input.Empty
+            val inputState = if (code.isNotEmpty()) Input.Text(code) else Input.Empty
 
             val result = getVideoUseCase(category)
             val newState = when (result.exceptionOrNull()) {

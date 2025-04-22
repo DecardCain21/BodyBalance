@@ -1,7 +1,6 @@
 package com.example.bodybalance.category.presentation
 
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -47,6 +46,7 @@ import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -62,6 +62,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bodybalance.R
+import com.example.bodybalance.category.presentation.state.CategoryState
 import com.example.bodybalance.core.composable.items.ExerciseItem
 import com.example.bodybalance.core.composable.items.VideoItem
 import com.example.bodybalance.core.domain.models.Video
@@ -283,108 +284,125 @@ private fun PlaylistScreen(
     savedVideo: List<Video>,
     modifier: Modifier = Modifier
 ) {
+
     var showDialog by remember { mutableStateOf(false) }
-    
-    Box {
+    var videoToDelete by remember { mutableStateOf<Video?>(null) }
+
+    Box(modifier = modifier.fillMaxSize()) {
         LazyColumn(
-            modifier = modifier
-                .fillMaxWidth()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(top = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            items(items = savedVideo, key = { it.hashCode() }) { item ->
+            items(items = savedVideo, key = { it.id }) { item ->
                 val dismissState = rememberSwipeToDismissBoxState(
-                    confirmValueChange = {
-                        if (it == SwipeToDismissBoxValue.EndToStart) {
+                    confirmValueChange = { value ->
+                        if (value == SwipeToDismissBoxValue.EndToStart) {
+                            videoToDelete = item
                             showDialog = true
-                            true
+                            false
                         } else {
                             false
                         }
                     },
-                    positionalThreshold = { it * .6f }
+                    positionalThreshold = { distance -> distance * 0.6f }
                 )
+
+                if (showDialog && videoToDelete == item) {
+                    LaunchedEffect(showDialog) {
+                        if (!showDialog) {
+                            dismissState.reset()
+                        }
+                    }
+                }
+
                 SwipeToDismissBox(
                     state = dismissState,
-                    backgroundContent = { DismissBackground(dismissState) },
+                    enableDismissFromStartToEnd = false, // Отключаем свайп вправо
+                    backgroundContent = { DismissBackground() },
                     content = {
-                        item.title?.let { VideoItem(title = it, showIconDrag = true) }
+                        VideoItem(
+                            title = item.title,
+                            showIconDrag = true
+                        )
                     }
                 )
             }
         }
     }
-    DeleteVideoDialog(
-        showDialog = showDialog,
-        onDismiss = { showDialog = false },
-        onConfirm = {
-            // todo: удалить видео
-            showDialog = false
-        }
-    )
+
+    if (showDialog) {
+        DeleteVideoDialog(
+            onDismiss = {
+                showDialog = false
+                videoToDelete = null
+            },
+            onConfirm = {
+                videoToDelete?.let { video ->
+                    // todo: вызвать функцию удаления видео
+                }
+                showDialog = false
+                videoToDelete = null
+            }
+        )
+    }
 }
 
 @Composable
-private fun DismissBackground(dismissState: SwipeToDismissBoxState) {
-    val color = when (dismissState.dismissDirection) {
-        SwipeToDismissBoxValue.EndToStart -> Color(0xFFFF1744)
-        else -> Color.Transparent
-    }
-
-    Row(
+private fun DismissBackground() {
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(color)
-            .padding(12.dp, 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.End
+            .background(Color.Red)
+            .padding(horizontal = 20.dp),
+        contentAlignment = Alignment.CenterEnd
     ) {
         Icon(
-            Icons.Default.Delete,
-            contentDescription = "delete"
+            imageVector = Icons.Default.Delete,
+            contentDescription = "Delete",
+            tint = Color.White,
         )
     }
 }
 
 @Composable
 private fun DeleteVideoDialog(
-    showDialog: Boolean,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    if (showDialog) {
-        AlertDialog(
-            modifier = modifier,
-            onDismissRequest = { onDismiss() },
-            title = {
-                Text(
-                    modifier = Modifier.padding(end = 30.dp),
-                    text = stringResource(R.string.delete_video_from_playlist),
-                    color = MaterialTheme.colorScheme.primary
-                )
-            },
-            text = {
-                Text(
-                    text = stringResource(R.string.delete_video_dilog_message),
-                    color = MaterialTheme.colorScheme.primary,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight(400)
-                )
-            },
-            confirmButton = {
-                Button(onClick = { onConfirm() }) {
-                    Text(text = stringResource(R.string.remove))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { onDismiss() }) {
-                    Text(stringResource(R.string.cansel))
-                }
+
+    AlertDialog(
+        modifier = modifier,
+        onDismissRequest = { onDismiss() },
+        title = {
+            Text(
+                modifier = Modifier.padding(end = 30.dp),
+                text = stringResource(R.string.delete_video_from_playlist),
+                color = MaterialTheme.colorScheme.primary
+            )
+        },
+        text = {
+            Text(
+                text = stringResource(R.string.delete_video_dilog_message),
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 14.sp,
+                fontWeight = FontWeight(400)
+            )
+        },
+        confirmButton = {
+            Button(onClick = { onConfirm() }) {
+                Text(text = stringResource(R.string.remove))
             }
-        )
-    }
+        },
+        dismissButton = {
+            TextButton(onClick = { onDismiss() }) {
+                Text(stringResource(R.string.cansel))
+            }
+        }
+    )
 }
 
 @Composable

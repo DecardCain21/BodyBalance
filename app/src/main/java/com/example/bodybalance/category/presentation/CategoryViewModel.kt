@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.bodybalance.category.domain.usecase.GetCategoryUseCase
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.category.domain.usecase.GetAllSavedVideosUseCase
+import com.example.bodybalance.category.presentation.state.CategoryScreenUiEvent
+import com.example.bodybalance.category.presentation.state.CategoryState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
