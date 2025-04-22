@@ -15,7 +15,7 @@ class VideoRepositoryImpl @Inject constructor(
 
     override suspend fun getVideoByCategory(category: String): Result<Category> {
         return videoNetworkClient.getVideo(
-            type = userAccountLocalSource.getActiveAccount().name,
+            type = userAccountLocalSource.getActiveAccount()?.name ?: "",
             category = category
         ).map { it.convertToCategory() }
     }

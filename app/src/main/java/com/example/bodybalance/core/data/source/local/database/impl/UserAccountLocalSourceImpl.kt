@@ -23,8 +23,8 @@ class UserAccountLocalSourceImpl @Inject constructor(
         dao.deleteAccount(account.name)
     }
 
-    override suspend fun getActiveAccount(): Account {
-        return dao.getActiveAccount().convertToAccount()
+    override suspend fun getActiveAccount(): Account? {
+        return dao.getActiveAccount()?.convertToAccount()
     }
 
     override suspend fun activateAccount(account: Account) {

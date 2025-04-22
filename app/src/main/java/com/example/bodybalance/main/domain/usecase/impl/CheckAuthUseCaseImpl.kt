@@ -8,5 +8,5 @@ class CheckAuthUseCaseImpl @Inject constructor(
     private val authRepository: AuthRepository
 ) : CheckAuthUseCase {
 
-    override operator fun invoke(): Boolean = authRepository.isAuthenticated()
+    override suspend operator fun invoke(): Boolean = authRepository.isAuthenticated()
 }

@@ -10,7 +10,7 @@ interface UserAccountLocalSource {
 
     suspend fun deleteAccount(account: Account)
 
-    suspend fun getActiveAccount(): Account
+    suspend fun getActiveAccount(): Account?
 
     suspend fun activateAccount(account: Account)
 }

@@ -20,7 +20,7 @@ interface UserAccountDao {
     suspend fun deleteAccount(name: String)
 
     @Query("SELECT * FROM user_account WHERE isActive = 1 LIMIT 1")
-    suspend fun getActiveAccount(): AccountEntity
+    suspend fun getActiveAccount(): AccountEntity?
 
     @Query("UPDATE user_account SET isActive = 0")
     suspend fun clearActiveFlags()

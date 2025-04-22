@@ -14,8 +14,9 @@ class UserAccountRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteAccount() {
-        val currentAccount = userAccountLocalSource.getActiveAccount()
-        userAccountLocalSource.deleteAccount(currentAccount)
+        userAccountLocalSource.getActiveAccount().let {
+            userAccountLocalSource.deleteAccount(it!!)
+        }
     }
 
     override suspend fun activateAccount(account: Account) {
