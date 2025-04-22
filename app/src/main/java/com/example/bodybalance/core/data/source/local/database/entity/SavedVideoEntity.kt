@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "saved_video")
-data class SavedVideo(
+data class SavedVideoEntity(
     @PrimaryKey
     val id: Double,
     val title: String,

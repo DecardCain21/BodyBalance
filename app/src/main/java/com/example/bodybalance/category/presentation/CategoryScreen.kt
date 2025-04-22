@@ -85,16 +85,20 @@ fun CategoryScreen(
     navigateToVideoPlayerScreen: (String) -> Unit,
     navigateToSettingsScreen: () -> Unit,
     navigateToHomeScreen: () -> Unit,
+    changeUser: (Account) -> Unit
 ) {
     when (uiState) {
         is CategoryState.Content -> CategoryContentScreen(
             modifier = modifier,
+            accounts = uiState.accounts,
             exercise = uiState.category,
             playlist = uiState.savedVideo,
+            activeAccount = uiState.activeAccount,
             navigateToVideoPlayerScreen = { navigateToVideoPlayerScreen(it) },
             navigateToSettingsScreen = { navigateToSettingsScreen() },
             navigateBackToIntroduction = { navigateBackToIntroduction() },
-            navigateToHomeScreen = { navigateToHomeScreen() }
+            navigateToHomeScreen = { navigateToHomeScreen() },
+            changeUser = { changeUser(it) }
         )
 
         is CategoryState.Error -> CategoryErrorScreen(modifier = modifier)
@@ -104,24 +108,30 @@ fun CategoryScreen(
 
 @Composable
 private fun CategoryContentScreen(
+    accounts: List<Account>,
     exercise: List<String>,
     playlist: List<Video>,
+    activeAccount: Account,
     navigateBackToIntroduction: () -> Unit,
     navigateToVideoPlayerScreen: (String) -> Unit, // String - Название категории
     navigateToSettingsScreen: () -> Unit,
     navigateToHomeScreen: () -> Unit,
+    changeUser: (Account) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // todo: Добавить сохранение аккаунта в Room с полями name, isActive
-    val accounts = listOf(
-        Account(name = "ExerciseBasic", isActive = true),
-        Account(name = "ExercisePro", isActive = false),
-    )
     // todo: скорее всего стоит вынести в стейт, а выбранный аккаунт подтягивать из Room (isActive)
-    var selectedAccount by remember {
-        mutableStateOf(
-            accounts.find { it.isActive } ?: accounts.first()
-        )
+    var selectedAccount by remember(accounts) {
+        mutableStateOf(activeAccount)
+    }
+
+    var isFirstLaunch by remember { mutableStateOf(true) }
+
+    LaunchedEffect(selectedAccount) {
+        if (isFirstLaunch) {
+            isFirstLaunch = false
+        } else {
+            changeUser(selectedAccount)
+        }
     }
 
     Column(
@@ -537,7 +547,10 @@ private fun PreviewPlaylist(
             ),
             navigateToVideoPlayerScreen = {},
             navigateBackToIntroduction = {},
-            navigateToHomeScreen = {}
+            navigateToHomeScreen = {},
+            changeUser = {},
+            accounts = emptyList(),
+            activeAccount = Account(name = "", isActive = true)
         )
     }
 }
