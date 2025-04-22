@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.bodybalance.category.presentation.state.CategoryScreenUiEvent
 
 @Composable
 fun CategoryScreenRoute(
@@ -23,6 +24,7 @@ fun CategoryScreenRoute(
         navigateToVideoPlayerScreen = navigateToVideoPlayerScreen,
         navigateToSettingsScreen = navigateToSettingsScreen,
         navigateBackToIntroduction = navigateBackToIntroduction,
-        navigateToHomeScreen = navigateToHomeScreen
+        navigateToHomeScreen = navigateToHomeScreen,
+        changeUser = { viewModel.handleEvent(CategoryScreenUiEvent.ChangeUser(it)) }
     )
 }

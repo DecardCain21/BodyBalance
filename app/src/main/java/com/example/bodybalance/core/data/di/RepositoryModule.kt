@@ -5,12 +5,14 @@ import com.example.bodybalance.core.data.repository.CategoryRepositoryImpl
 import com.example.bodybalance.core.data.repository.IntroductionCodeRepositoryImpl
 import com.example.bodybalance.core.data.repository.LoginRepositoryImpl
 import com.example.bodybalance.core.data.repository.SavedVideoRepositoryImpl
+import com.example.bodybalance.core.data.repository.UserAccountRepositoryImpl
 import com.example.bodybalance.core.data.repository.VideoRepositoryImpl
 import com.example.bodybalance.core.domain.api.AuthRepository
 import com.example.bodybalance.core.domain.api.CategoryRepository
 import com.example.bodybalance.core.domain.api.IntroductionCodeRepository
 import com.example.bodybalance.core.domain.api.LoginRepository
 import com.example.bodybalance.core.domain.api.SavedVideoRepository
+import com.example.bodybalance.core.domain.api.UserAccountRepository
 import com.example.bodybalance.core.domain.api.VideoRepository
 import dagger.Binds
 import dagger.Module
@@ -51,4 +53,9 @@ abstract class NetworkModuleBinder {
         introductionCodeRepositoryImpl: IntroductionCodeRepositoryImpl
     ): IntroductionCodeRepository
 
+
+    @Binds
+    abstract fun bindUserAccountRepository(
+        userAccountRepositoryImpl: UserAccountRepositoryImpl
+    ): UserAccountRepository
 }

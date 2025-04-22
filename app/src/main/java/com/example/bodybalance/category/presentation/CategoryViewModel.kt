@@ -30,8 +30,8 @@ class CategoryViewModel @Inject constructor(
 
     fun handleEvent(event: CategoryScreenUiEvent) {
         when (event) {
-            is CategoryScreenUiEvent.ChangeUser -> TODO()
-            is CategoryScreenUiEvent.DeleteVideo -> TODO()
+            is CategoryScreenUiEvent.ChangeUser -> {}
+            is CategoryScreenUiEvent.DeleteVideo -> {}
         }
     }
 
@@ -43,14 +43,16 @@ class CategoryViewModel @Inject constructor(
                 Log.e("savedVideos","$savedVideos")
                 _uiState.value = CategoryState.Content(
                     category = categories,
-                    savedVideo = listOf(Video(
+                    savedVideo = listOf(
+                        Video(
                         id = 0.0,
                         title = "test",
                         url = "",
                         category = null,
                         description = "",
                         imageUrl = null
-                    ))//emptyList()
+                    )
+                    )//emptyList()
                 )
             } catch (e: Exception) {
                 _uiState.value = CategoryState.Error

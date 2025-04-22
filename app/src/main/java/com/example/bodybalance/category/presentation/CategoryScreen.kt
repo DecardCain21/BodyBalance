@@ -85,6 +85,7 @@ fun CategoryScreen(
     navigateToVideoPlayerScreen: (String) -> Unit,
     navigateToSettingsScreen: () -> Unit,
     navigateToHomeScreen: () -> Unit,
+    changeUser: (Account) -> Unit
 ) {
     when (uiState) {
         is CategoryState.Content -> CategoryContentScreen(
@@ -94,7 +95,8 @@ fun CategoryScreen(
             navigateToVideoPlayerScreen = { navigateToVideoPlayerScreen(it) },
             navigateToSettingsScreen = { navigateToSettingsScreen() },
             navigateBackToIntroduction = { navigateBackToIntroduction() },
-            navigateToHomeScreen = { navigateToHomeScreen() }
+            navigateToHomeScreen = { navigateToHomeScreen() },
+            changeUser = { changeUser(it) }
         )
 
         is CategoryState.Error -> CategoryErrorScreen(modifier = modifier)
@@ -110,6 +112,7 @@ private fun CategoryContentScreen(
     navigateToVideoPlayerScreen: (String) -> Unit, // String - Название категории
     navigateToSettingsScreen: () -> Unit,
     navigateToHomeScreen: () -> Unit,
+    changeUser: (Account) -> Unit,
     modifier: Modifier = Modifier
 ) {
     // todo: Добавить сохранение аккаунта в Room с полями name, isActive
@@ -118,10 +121,18 @@ private fun CategoryContentScreen(
         Account(name = "ExercisePro", isActive = false),
     )
     // todo: скорее всего стоит вынести в стейт, а выбранный аккаунт подтягивать из Room (isActive)
-    var selectedAccount by remember {
-        mutableStateOf(
-            accounts.find { it.isActive } ?: accounts.first()
-        )
+    var selectedAccount by remember(accounts) {
+        mutableStateOf(accounts.find { it.isActive } ?: accounts.first())
+    }
+
+    var isFirstLaunch by remember { mutableStateOf(true) }
+
+    LaunchedEffect(selectedAccount) {
+        if (isFirstLaunch) {
+            isFirstLaunch = false
+        } else {
+            changeUser(selectedAccount)
+        }
     }
 
     Column(
@@ -537,7 +548,8 @@ private fun PreviewPlaylist(
             ),
             navigateToVideoPlayerScreen = {},
             navigateBackToIntroduction = {},
-            navigateToHomeScreen = {}
+            navigateToHomeScreen = {},
+            changeUser = {}
         )
     }
 }

@@ -6,35 +6,29 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.example.bodybalance.core.data.source.local.database.entity.SavedVideo
+import com.example.bodybalance.core.data.source.local.database.entity.SavedVideoEntity
 
 @Dao
 interface VideoCacheDao {
-    // Вставка или обновление записи
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(savedVideo: SavedVideo)
+    suspend fun insert(savedVideoEntity: SavedVideoEntity)
 
-    // Удаление записи по объекту
     @Delete
-    suspend fun delete(savedVideo: SavedVideo)
+    suspend fun delete(savedVideoEntity: SavedVideoEntity)
 
-    // Удаление записи по id
     @Query("DELETE FROM saved_video WHERE id = :id")
     suspend fun deleteById(id: Double)
 
-    // Поиск записи по id
     @Query("SELECT * FROM saved_video WHERE id = :id")
-    suspend fun getById(id: Double): SavedVideo?
+    suspend fun getById(id: Double): SavedVideoEntity?
 
-    // Получение всех записей
     @Query("SELECT * FROM saved_video")
-    suspend fun getAll(): List<SavedVideo>
+    suspend fun getAll(): List<SavedVideoEntity>
 
-    // Поиск записей по категории
     @Query("SELECT * FROM saved_video WHERE title = :category")
-    suspend fun getByCategory(category: String): List<SavedVideo>
+    suspend fun getByCategory(category: String): List<SavedVideoEntity>
 
-    // Обновление записи
     @Update
-    suspend fun update(savedVideo: SavedVideo)
+    suspend fun update(savedVideoEntity: SavedVideoEntity)
 }
