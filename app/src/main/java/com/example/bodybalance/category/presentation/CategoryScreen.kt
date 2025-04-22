@@ -90,8 +90,10 @@ fun CategoryScreen(
     when (uiState) {
         is CategoryState.Content -> CategoryContentScreen(
             modifier = modifier,
+            accounts = uiState.accounts,
             exercise = uiState.category,
             playlist = uiState.savedVideo,
+            activeAccount = uiState.activeAccount,
             navigateToVideoPlayerScreen = { navigateToVideoPlayerScreen(it) },
             navigateToSettingsScreen = { navigateToSettingsScreen() },
             navigateBackToIntroduction = { navigateBackToIntroduction() },
@@ -106,8 +108,10 @@ fun CategoryScreen(
 
 @Composable
 private fun CategoryContentScreen(
+    accounts: List<Account>,
     exercise: List<String>,
     playlist: List<Video>,
+    activeAccount: Account,
     navigateBackToIntroduction: () -> Unit,
     navigateToVideoPlayerScreen: (String) -> Unit, // String - Название категории
     navigateToSettingsScreen: () -> Unit,
@@ -115,14 +119,9 @@ private fun CategoryContentScreen(
     changeUser: (Account) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // todo: Добавить сохранение аккаунта в Room с полями name, isActive
-    val accounts = listOf(
-        Account(name = "ExerciseBasic", isActive = true),
-        Account(name = "ExercisePro", isActive = false),
-    )
     // todo: скорее всего стоит вынести в стейт, а выбранный аккаунт подтягивать из Room (isActive)
     var selectedAccount by remember(accounts) {
-        mutableStateOf(accounts.find { it.isActive } ?: accounts.first())
+        mutableStateOf(activeAccount)
     }
 
     var isFirstLaunch by remember { mutableStateOf(true) }
@@ -549,7 +548,9 @@ private fun PreviewPlaylist(
             navigateToVideoPlayerScreen = {},
             navigateBackToIntroduction = {},
             navigateToHomeScreen = {},
-            changeUser = {}
+            changeUser = {},
+            accounts = emptyList(),
+            activeAccount = Account(name = "", isActive = true)
         )
     }
 }
