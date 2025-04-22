@@ -3,7 +3,7 @@ package com.example.bodybalance.introduction.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bodybalance.core.domain.models.Video
-import com.example.bodybalance.core.domain.usecase.api.GetVideoUseCase
+import com.example.bodybalance.core.domain.usecase.api.GetVideoByCategoryUseCase
 import com.example.bodybalance.core.util.NetworkError
 import com.example.bodybalance.introduction.domain.usecase.GetIntroductionCodeUseCase
 import com.example.bodybalance.introduction.domain.usecase.SetIntroductionCodeUseCase
@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class IntroductionViewModel @Inject constructor(
-    private val getVideoUseCase: GetVideoUseCase,
+    private val getVideoByCategoryUseCase: GetVideoByCategoryUseCase,
     private val getIntroductionCodeUseCase: GetIntroductionCodeUseCase,
     private val setIntroductionCodeUseCase: SetIntroductionCodeUseCase
 ) : ViewModel() {
@@ -53,7 +53,7 @@ class IntroductionViewModel @Inject constructor(
             val code = getIntroductionCodeUseCase()
             val inputState = if (code.isNotEmpty()) Input.Text(code) else Input.Empty
 
-            val result = getVideoUseCase(category)
+            val result = getVideoByCategoryUseCase(category)
             val newState = when (result.exceptionOrNull()) {
                 is NetworkError.ServerError,
                 is NetworkError.NoData,

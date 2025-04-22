@@ -1,20 +1,23 @@
 package com.example.bodybalance.category.presentation
 
-
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -32,8 +35,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonColors
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxState
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -63,12 +68,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bodybalance.R
 import com.example.bodybalance.category.presentation.state.CategoryState
+import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.core.composable.items.ExerciseItem
 import com.example.bodybalance.core.composable.items.VideoItem
+import com.example.bodybalance.core.domain.models.Account
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import com.example.bodybalance.ui.theme.TabRowDividerColor
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -77,16 +83,18 @@ fun CategoryScreen(
     uiState: CategoryState,
     navigateBackToIntroduction: () -> Unit,
     navigateToVideoPlayerScreen: (String) -> Unit,
-    navigateToSettingsScreen: () -> Unit
+    navigateToSettingsScreen: () -> Unit,
+    navigateToHomeScreen: () -> Unit,
 ) {
     when (uiState) {
         is CategoryState.Content -> CategoryContentScreen(
             modifier = modifier,
             exercise = uiState.category,
-            savedVideo = uiState.savedVideo,
+            playlist = uiState.savedVideo,
             navigateToVideoPlayerScreen = { navigateToVideoPlayerScreen(it) },
             navigateToSettingsScreen = { navigateToSettingsScreen() },
-            navigateBackToIntroduction = { navigateBackToIntroduction() }
+            navigateBackToIntroduction = { navigateBackToIntroduction() },
+            navigateToHomeScreen = { navigateToHomeScreen() }
         )
 
         is CategoryState.Error -> CategoryErrorScreen(modifier = modifier)
@@ -96,34 +104,25 @@ fun CategoryScreen(
 
 @Composable
 private fun CategoryContentScreen(
-    modifier: Modifier = Modifier,
     exercise: List<String>,
-    savedVideo: List<Video>,
-    navigateBackToIntroduction: () -> Unit,
-    navigateToVideoPlayerScreen: (String) -> Unit,
-    navigateToSettingsScreen: () -> Unit
-) {
-    Header(
-        modifier = modifier,
-        exercise = exercise,
-        playlist = savedVideo,
-        navigateToVideoPlayerScreen = navigateToVideoPlayerScreen,
-        navigateToSettingsScreen = navigateToSettingsScreen,
-        navigateBackToIntroduction = navigateBackToIntroduction
-    )
-}
-
-@Composable
-private fun Header(
-    modifier: Modifier, exercise: List<String>,
     playlist: List<Video>,
     navigateBackToIntroduction: () -> Unit,
-    navigateToVideoPlayerScreen: (String) -> Unit,
-    navigateToSettingsScreen: () -> Unit
+    navigateToVideoPlayerScreen: (String) -> Unit, // String - Название категории
+    navigateToSettingsScreen: () -> Unit,
+    navigateToHomeScreen: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    val tabs = listOf("Плейлист", "Упражнения")
-    val pagerState = rememberPagerState { tabs.size }
-    val scope = rememberCoroutineScope()
+    // todo: Добавить сохранение аккаунта в Room с полями name, isActive
+    val accounts = listOf(
+        Account(name = "ExerciseBasic", isActive = true),
+        Account(name = "ExercisePro", isActive = false),
+    )
+    // todo: скорее всего стоит вынести в стейт, а выбранный аккаунт подтягивать из Room (isActive)
+    var selectedAccount by remember {
+        mutableStateOf(
+            accounts.find { it.isActive } ?: accounts.first()
+        )
+    }
 
     Column(
         modifier = modifier
@@ -131,18 +130,29 @@ private fun Header(
             .background(color = MaterialTheme.colorScheme.background)
     ) {
         TopAppBar(
+            accounts = accounts,
+            selectedAccount = selectedAccount,
+            onAccountSelected = { selectedAccount = it },
             navigateToSettingsScreen = navigateToSettingsScreen,
-            navigateBackToIntroduction = navigateBackToIntroduction
+            navigateBackToIntroduction = navigateBackToIntroduction,
+            navigateToHomeScreen = navigateToHomeScreen
         )
-        CategoryPages(pagerState, tabs, scope, exercise, playlist)
+        CategoryPages(
+            exercise = exercise,
+            playlist = playlist
+        )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TopAppBar(
+    accounts: List<Account>,
+    selectedAccount: Account,
+    onAccountSelected: (Account) -> Unit,
     navigateToSettingsScreen: () -> Unit,
     navigateBackToIntroduction: () -> Unit,
+    navigateToHomeScreen: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -203,21 +213,90 @@ private fun TopAppBar(
                 BottomSheetDefaults.DragHandle(color = MaterialTheme.colorScheme.outline)
             }
         ) {
-            Column {
-                // ChangeUserBlock()
+            ChangeUserBlock(
+                accounts = accounts,
+                selectedAccount = selectedAccount,
+                onAccountSelected = { onAccountSelected(it) },
+                onAddAccountClick = {
+                    navigateToHomeScreen()
+                    showBottomSheet = false
+                },
+                sheetState = sheetState
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@Composable
+private fun ChangeUserBlock(
+    accounts: List<Account>,
+    selectedAccount: Account,
+    onAccountSelected: (Account) -> Unit,
+    onAddAccountClick: () -> Unit,
+    sheetState: SheetState,
+    modifier: Modifier = Modifier
+) {
+    val scope = rememberCoroutineScope()
+
+    Column(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        accounts.forEach { account ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .combinedClickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = { onAccountSelected(account) }
+                    )
+                    .padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(text = account.name, fontSize = 16.sp)
+                RadioButton(
+                    selected = selectedAccount == account,
+                    onClick = { onAccountSelected(account) },
+                    colors = RadioButtonColors(
+                        selectedColor = MaterialTheme.colorScheme.onPrimary,
+                        unselectedColor = MaterialTheme.colorScheme.onPrimary,
+                        disabledSelectedColor = MaterialTheme.colorScheme.onPrimary,
+                        disabledUnselectedColor = MaterialTheme.colorScheme.onPrimary,
+                    )
+                )
             }
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        BasicButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            text = stringResource(R.string.add_account),
+            buttonColor = MaterialTheme.colorScheme.onPrimary,
+            enabledTextColor = MaterialTheme.colorScheme.primary,
+            onClick = {
+                scope.launch { sheetState.hide() }.invokeOnCompletion {
+                    if (!sheetState.isVisible) {
+                        onAddAccountClick()
+                    }
+                }
+            })
     }
 }
 
 @Composable
 private fun CategoryPages(
-    pagerState: PagerState,
-    tabs: List<String>,
-    scope: CoroutineScope,
     exercise: List<String>,
     playlist: List<Video>
 ) {
+    val tabs = listOf("Плейлист", "Упражнения")
+    val pagerState = rememberPagerState { tabs.size }
+    val scope = rememberCoroutineScope()
+
     TabRow(
         containerColor = MaterialTheme.colorScheme.background,
         divider = {
@@ -446,7 +525,7 @@ private fun PreviewPlaylist(
                 "2",
                 "3"
             ),
-            savedVideo = listOf(
+            playlist = listOf(
                 Video(
                     title = "Разминка перед упражнениями на отдельную группу мыщц",
                     url = "",
@@ -457,6 +536,8 @@ private fun PreviewPlaylist(
                 Video(title = "\"Название видео\"", url = "", id = 0.0, description = "321")
             ),
             navigateToVideoPlayerScreen = {},
-            navigateBackToIntroduction = {})
+            navigateBackToIntroduction = {},
+            navigateToHomeScreen = {}
+        )
     }
 }

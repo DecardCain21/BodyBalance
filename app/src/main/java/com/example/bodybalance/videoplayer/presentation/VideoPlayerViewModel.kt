@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.media3.common.util.UnstableApi
 import com.example.bodybalance.core.util.NetworkError
 import com.example.bodybalance.core.domain.models.Video
-import com.example.bodybalance.core.domain.usecase.api.GetVideoUseCase
+import com.example.bodybalance.core.domain.usecase.api.GetVideoByCategoryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +17,7 @@ import javax.inject.Inject
 @UnstableApi
 @HiltViewModel
 class VideoPlayerViewModel @Inject constructor(
-    private val getVideoUseCase: GetVideoUseCase
+    private val getVideoByCategoryUseCase: GetVideoByCategoryUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<VideoPlayerState>(VideoPlayerState.Loading)
@@ -30,7 +30,7 @@ class VideoPlayerViewModel @Inject constructor(
         isInitialized = true
 
         viewModelScope.launch {
-            val result = getVideoUseCase(category)
+            val result = getVideoByCategoryUseCase(category)
             val newState = when (result.exceptionOrNull()) {
                 is NetworkError.ServerError,
                 is NetworkError.NoData,

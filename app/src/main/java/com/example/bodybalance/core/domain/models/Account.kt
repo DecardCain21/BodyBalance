@@ -7,5 +7,7 @@ sealed class AccountTypeTherapy() {
     data object RehabilitationSecond : AccountTypeTherapy()
 }
 
-data class Account(val type: AccountTypeTherapy)
-// Возможность переключения между аккаунтами в рантайме
+data class Account(
+    val name: String,
+    val isActive: Boolean
+)

@@ -11,12 +11,14 @@ fun NavGraphBuilder.playlistScreen(
     navigateToVideoPlayerScreen: (String) -> Unit,
     navigateToSettingsScreen: () -> Unit,
     navigateBackToIntroduction: () -> Unit,
+    navigateToHomeScreen: () -> Unit
 ) {
     composable(route = PLAYLIST_ROUTE) {
         CategoryScreenRoute(
             navigateToVideoPlayerScreen = navigateToVideoPlayerScreen,
             navigateToSettingsScreen = navigateToSettingsScreen,
-            navigateBackToIntroduction = navigateBackToIntroduction
+            navigateBackToIntroduction = navigateBackToIntroduction,
+            navigateToHomeScreen = navigateToHomeScreen
         )
     }
 }

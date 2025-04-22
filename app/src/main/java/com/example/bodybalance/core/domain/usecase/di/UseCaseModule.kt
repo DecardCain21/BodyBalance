@@ -4,8 +4,8 @@ import com.example.bodybalance.core.domain.usecase.api.FollowTheLinkUseCase
 import com.example.bodybalance.core.domain.usecase.api.ShareContentUseCase
 import com.example.bodybalance.core.domain.usecase.impl.FollowTheLinkUseCaseImpl
 import com.example.bodybalance.core.domain.usecase.impl.ShareContentUseCaseImpl
-import com.example.bodybalance.core.domain.usecase.api.GetVideoUseCase
-import com.example.bodybalance.core.domain.usecase.impl.GetVideoUseCaseImpl
+import com.example.bodybalance.core.domain.usecase.api.GetVideoByCategoryUseCase
+import com.example.bodybalance.core.domain.usecase.impl.GetVideoByCategoryByCategoryUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -27,6 +27,6 @@ abstract class UseCaseBinder {
 
     @Binds
     abstract fun bindGetVideoUseCase(
-        getVideoUseCaseImpl: GetVideoUseCaseImpl
-    ): GetVideoUseCase
+        getVideoByCategoryUseCaseImpl: GetVideoByCategoryByCategoryUseCaseImpl
+    ): GetVideoByCategoryUseCase
 }
