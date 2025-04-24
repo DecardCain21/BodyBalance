@@ -119,7 +119,6 @@ private fun CategoryContentScreen(
     changeUser: (Account) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // todo: скорее всего стоит вынести в стейт, а выбранный аккаунт подтягивать из Room (isActive)
     var selectedAccount by remember(accounts) {
         mutableStateOf(activeAccount)
     }

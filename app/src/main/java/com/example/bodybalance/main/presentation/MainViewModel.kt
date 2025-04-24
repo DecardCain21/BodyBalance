@@ -14,11 +14,9 @@ class MainViewModel @Inject constructor(
     checkAuthUseCase: CheckAuthUseCase
 ) : ViewModel() {
 
-    private val _isAuthenticated = MutableStateFlow(false)
-    val isAuthenticated: StateFlow<Boolean> get() = _isAuthenticated
+    private val _isAuthenticated = MutableStateFlow<Boolean?>(null)
+    val isAuthenticated: StateFlow<Boolean?> get() = _isAuthenticated
 
-    // todo: из-за того что сейчас checkAuthUseCase() suspent функция,
-    //  Home экран успевает октрыться, норм ли ?
     init {
         viewModelScope.launch {
             _isAuthenticated.value = checkAuthUseCase()

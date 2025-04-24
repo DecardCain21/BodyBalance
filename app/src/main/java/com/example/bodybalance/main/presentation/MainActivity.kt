@@ -29,7 +29,11 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize()
                         .background(MaterialTheme.colorScheme.background)
                 ) {
-                    Navigation(isAuthenticated)
+                    if (isAuthenticated != null) {
+                        Navigation(isAuthenticated = isAuthenticated!!)
+                    } else {
+                        Unit
+                    }
                 }
             }
             SetSystemBarsColor()
