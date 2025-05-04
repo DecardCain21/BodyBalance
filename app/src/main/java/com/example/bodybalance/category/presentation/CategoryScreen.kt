@@ -148,7 +148,8 @@ private fun CategoryContentScreen(
         )
         CategoryPages(
             exercise = exercise,
-            playlist = playlist
+            playlist = playlist,
+            navigateToVideoPlayerScreen = navigateToVideoPlayerScreen
         )
     }
 }
@@ -300,7 +301,8 @@ private fun ChangeUserBlock(
 @Composable
 private fun CategoryPages(
     exercise: List<String>,
-    playlist: List<Video>
+    playlist: List<Video>,
+    navigateToVideoPlayerScreen: (String) -> Unit
 ) {
     val tabs = listOf("Плейлист", "Упражнения")
     val pagerState = rememberPagerState { tabs.size }
@@ -340,16 +342,22 @@ private fun CategoryPages(
     ) { page ->
         when (page) {
             0 -> PlaylistScreen(savedVideo = playlist)
-            1 -> ExerciseScreen(category = exercise)
+            1 -> ExerciseScreen(
+                category = exercise,
+                navigateToVideoPlayerScreen = navigateToVideoPlayerScreen
+            )
+
             else -> Text("Неизвестная страница")
         }
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ExerciseScreen(
     category: List<String>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigateToVideoPlayerScreen: (String) -> Unit
 ) {
     Box {
         LazyColumn(
@@ -361,7 +369,11 @@ private fun ExerciseScreen(
             state = rememberLazyListState()
         ) {
             items(category) { item ->
-                ExerciseItem(title = item)
+                ExerciseItem(modifier = Modifier.combinedClickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                    onClick = { navigateToVideoPlayerScreen(item) }
+                ), title = item)
             }
         }
     }

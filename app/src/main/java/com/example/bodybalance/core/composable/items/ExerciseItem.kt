@@ -26,11 +26,12 @@ import com.example.bodybalance.ui.theme.BodyBalanceTheme
 @Composable
 public fun ExerciseItem(
     title: String,
+    modifier: Modifier = Modifier,
     imageUrl: String = ""
 ) {
     Surface(
         shape = RoundedCornerShape(12.dp),
-        modifier = Modifier
+        modifier = modifier
     ) {
         Row(
             modifier = Modifier
