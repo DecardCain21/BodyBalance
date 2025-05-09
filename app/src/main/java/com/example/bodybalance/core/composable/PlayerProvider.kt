@@ -69,14 +69,16 @@ fun exoPlayer(
 
     val exoPlayer = remember {
         ExoPlayer.Builder(context).build().apply {
-            val mediaItem = MediaItem.fromUri(Uri.parse(video.url))
-            setMediaItem(mediaItem)
-            prepare()
             playWhenReady = false
             if (listener != null) {
                 addListener(listener)
             }
         }
+    }
+    exoPlayer.apply {
+        val mediaItem = MediaItem.fromUri(Uri.parse(video.url))
+        setMediaItem(mediaItem)
+        prepare()
     }
     var currentPosition by rememberSaveable { mutableLongStateOf(0L) }
 

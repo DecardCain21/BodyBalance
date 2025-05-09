@@ -3,6 +3,7 @@ package com.example.bodybalance.videoplayer.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.util.UnstableApi
+import androidx.room.util.copy
 import com.example.bodybalance.core.util.NetworkError
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.core.domain.usecase.api.GetVideoByCategoryUseCase
