@@ -20,7 +20,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.NavigateBefore
-import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material3.CircularProgressIndicator
@@ -47,7 +46,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
 import com.example.bodybalance.core.composable.BodyBalanceActionButton
 import com.example.bodybalance.core.composable.exoPlayer
-import com.example.bodybalance.core.composable.items.ExerciseItem
+import com.example.bodybalance.core.composable.items.VideoItem
 import com.example.bodybalance.core.data.service.FileDownloader
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
@@ -99,7 +98,7 @@ private fun VideoPlayerScreenContent(
     ) {
         IconButton(
             modifier = Modifier
-                .padding(26.dp)
+                .padding(start = 4.dp, bottom = 12.dp, top = 12.dp)
                 .align(Alignment.Start),
             onClick = {
                 /*navigateBackToIntroduction()*/
@@ -155,18 +154,19 @@ private fun VideoPlayerScreenContent(
         }
         LazyColumn(
             modifier = modifier
-                .fillMaxWidth().padding(top = 8.dp),
+                .fillMaxWidth()
+                .padding(top = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(16.dp),
             state = rememberLazyListState()
         ) {
             items(videoList) { item ->
-                ExerciseItem(modifier = Modifier.combinedClickable(
+                VideoItem(modifier = Modifier.combinedClickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() },
                     onClick = { onItemSelected(item) }
-                ), title = item.title)
+                ), title = item.title, showIconDrag = false)
             }
         }
     }
