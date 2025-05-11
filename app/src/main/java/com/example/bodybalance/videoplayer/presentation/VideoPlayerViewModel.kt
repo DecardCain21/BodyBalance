@@ -7,6 +7,7 @@ import androidx.room.util.copy
 import com.example.bodybalance.core.util.NetworkError
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.core.domain.usecase.api.GetVideoByCategoryUseCase
+import com.example.bodybalance.videoplayer.domain.usecase.AddPlaylistVideoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,7 +19,8 @@ import javax.inject.Inject
 @UnstableApi
 @HiltViewModel
 class VideoPlayerViewModel @Inject constructor(
-    private val getVideoByCategoryUseCase: GetVideoByCategoryUseCase
+    private val getVideoByCategoryUseCase: GetVideoByCategoryUseCase,
+    private val addPlaylistVideoUseCase: AddPlaylistVideoUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<VideoPlayerState>(VideoPlayerState.Loading)

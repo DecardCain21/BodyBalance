@@ -1,6 +1,8 @@
 package com.example.bodybalance.videoplayer.di
 
+import com.example.bodybalance.videoplayer.domain.usecase.AddPlaylistVideoUseCase
 import com.example.bodybalance.videoplayer.domain.usecase.SaveVideoInCacheUseCase
+import com.example.bodybalance.videoplayer.domain.usecase.impl.AddPlaylistVideoUseCaseImpl
 import com.example.bodybalance.videoplayer.domain.usecase.impl.SaveVideoInCacheUseCaseImpl
 import dagger.Binds
 import dagger.Module
@@ -15,4 +17,9 @@ abstract class VideoPlaylistModuleBinder {
     abstract fun bindSaveVideoInCache(
         saveVideoInCacheImpl: SaveVideoInCacheUseCaseImpl
     ): SaveVideoInCacheUseCase
+
+    @Binds
+    abstract fun bindAddPlaylistVideo(
+        addPlaylistVideoUseCaseImpl: AddPlaylistVideoUseCaseImpl
+    ): AddPlaylistVideoUseCase
 }
