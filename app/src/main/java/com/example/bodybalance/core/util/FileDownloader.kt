@@ -1,4 +1,4 @@
-package com.example.bodybalance.core.data.service
+package com.example.bodybalance.core.util
 
 import android.content.Context
 import okhttp3.OkHttpClient

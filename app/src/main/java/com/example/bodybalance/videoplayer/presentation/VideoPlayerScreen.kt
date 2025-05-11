@@ -47,9 +47,11 @@ import androidx.media3.common.util.UnstableApi
 import com.example.bodybalance.core.composable.BodyBalanceActionButton
 import com.example.bodybalance.core.composable.exoPlayer
 import com.example.bodybalance.core.composable.items.VideoItem
-import com.example.bodybalance.core.data.service.FileDownloader
+import com.example.bodybalance.core.util.FileDownloader
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
+import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerScreenUiEvent
+import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerState
 import java.io.File
 
 @OptIn(UnstableApi::class)
@@ -72,7 +74,26 @@ fun VideoPlayerScreen(
                 modifier = modifier,
                 video = currentState.currentVideo,
                 videoList = currentState.videoList,
-                onItemSelected = { viewModel.selectVideo(it) }
+                onItemSelected = { viewModel.selectVideo(it) },
+                onClickDownload = {
+                    with(currentState.currentVideo) {
+                        viewModel.handleEvent(
+                            VideoPlayerScreenUiEvent.DownloadVideo(
+                                url = url,
+                                fileName = id.toString()
+                            )
+                        )
+                    }
+                },
+                onClickAddToPlaylist = {
+                    with(currentState.currentVideo) {
+                        viewModel.handleEvent(
+                            VideoPlayerScreenUiEvent.AddToPlaylist(
+                                video = this
+                            )
+                        )
+                    }
+                }
             )
         }
 
@@ -88,7 +109,9 @@ private fun VideoPlayerScreenContent(
     video: Video,
     videoList: List<Video>,
     onItemSelected: (Video) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClickDownload: () -> Unit,
+    onClickAddToPlaylist: () -> Unit
 ) {
     val isPreview = LocalInspectionMode.current
 
@@ -141,12 +164,16 @@ private fun VideoPlayerScreenContent(
         //NavItem(videoList = videoList, onItemSelected = { onItemSelected(it) })
         Row() {
             BodyBalanceActionButton(
-                onClick = {},
+                onClick = {
+                    onClickDownload()
+                },
                 text = "Скачать",
                 imageVector = Icons.Default.Download
             )
             BodyBalanceActionButton(
-                onClick = {},
+                onClick = {
+                    onClickAddToPlaylist()
+                },
                 text = "Добавить в плейлист",
                 imageVector = Icons.Default.BookmarkBorder
             )
@@ -191,6 +218,7 @@ private fun fileExist(viewModel: VideoPlayerViewModel) {
     } else {
         println("Файл не найден: $filePath")
     }
+    //Вынести в утилиту
 }
 
 @Composable
@@ -211,6 +239,8 @@ fun IntroductionPreview() {
                 video = Video.emptyVideo(),
                 videoList = listOf(Video.emptyVideo(), Video.emptyVideo()),
                 onItemSelected = {},
+                onClickDownload = {},
+                onClickAddToPlaylist = {}
             )
         }
     }

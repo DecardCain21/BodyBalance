@@ -4,8 +4,9 @@ import com.example.bodybalance.core.data.convertor.convertToPlaylistVideo
 import com.example.bodybalance.core.data.source.local.database.dao.PlaylistVideoDao
 import com.example.bodybalance.core.domain.api.PlaylistVideoRepository
 import com.example.bodybalance.core.domain.models.Video
+import javax.inject.Inject
 
-class PlaylistVideoRepositoryImpl(
+class PlaylistVideoRepositoryImpl @Inject constructor(
     private val playlistVideoDao: PlaylistVideoDao
 ) : PlaylistVideoRepository {
 
