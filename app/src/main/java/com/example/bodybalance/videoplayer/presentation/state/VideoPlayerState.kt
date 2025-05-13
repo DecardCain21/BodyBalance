@@ -8,6 +8,8 @@ sealed interface VideoPlayerState {
     data object Loading : VideoPlayerState
     data class Content(
         val currentVideo: Video,
-        val videoList: List<Video>
+        val videoList: List<Video>,
+        val videoInCache: Boolean = false,
+        val videoInPlaylist: Boolean = false
     ) : VideoPlayerState
 }

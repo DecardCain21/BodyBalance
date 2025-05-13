@@ -8,6 +8,7 @@ import com.example.bodybalance.core.domain.usecase.api.GetVideoByCategoryUseCase
 import com.example.bodybalance.core.util.FileDownloader
 import com.example.bodybalance.core.util.NetworkError
 import com.example.bodybalance.videoplayer.domain.usecase.AddPlaylistVideoUseCase
+import com.example.bodybalance.videoplayer.domain.usecase.DeletePlaylistVideoUseCase
 import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerScreenUiEvent
 import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +24,8 @@ import javax.inject.Inject
 class VideoPlayerViewModel @Inject constructor(
     private val fileDownloader: FileDownloader,
     private val getVideoByCategoryUseCase: GetVideoByCategoryUseCase,
-    private val addPlaylistVideoUseCase: AddPlaylistVideoUseCase
+    private val addPlaylistVideoUseCase: AddPlaylistVideoUseCase,
+    private val deletePlaylistVideoUseCase: DeletePlaylistVideoUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<VideoPlayerState>(VideoPlayerState.Loading)
@@ -32,17 +34,26 @@ class VideoPlayerViewModel @Inject constructor(
     private var isInitialized = false
 
     fun handleEvent(event: VideoPlayerScreenUiEvent) {
+        //Проверить есть ли видео в кэше и плейлисте
         when (event) {
             is VideoPlayerScreenUiEvent.DownloadVideo -> {
-                fileDownloader.downloadFile(url = event.url, fileName = event.fileName)
+                downloadVideo(url = event.url, fileName = event.fileName)
+            }
+
+            is VideoPlayerScreenUiEvent.RemoveVideoFromCache -> {
+                removeVideoFromCache(event.fileName)
             }
 
             is VideoPlayerScreenUiEvent.ChoiceVideo -> {
-                /*TODO()*/
+                selectVideo(event.video)
             }
 
             is VideoPlayerScreenUiEvent.AddToPlaylist -> {
                 addToPlaylist(event.video)
+            }
+
+            is VideoPlayerScreenUiEvent.RemoveFromPlaylist -> {
+                removeFromPlaylist(event.video)
             }
         }
     }
@@ -70,7 +81,7 @@ class VideoPlayerViewModel @Inject constructor(
     }
 
 
-    fun selectVideo(video: Video) {
+    private fun selectVideo(video: Video) {
         _uiState.update {
             (it as VideoPlayerState.Content).copy(currentVideo = video)
         }
@@ -80,5 +91,19 @@ class VideoPlayerViewModel @Inject constructor(
         viewModelScope.launch {
             addPlaylistVideoUseCase(video = video)
         }
+    }
+
+    private fun removeFromPlaylist(video: Video) {
+        viewModelScope.launch {
+            deletePlaylistVideoUseCase(video = video)
+        }
+    }
+
+    private fun downloadVideo(url: String, fileName: String) {
+        fileDownloader.downloadFile(url = url, fileName = fileName)
+    }
+
+    private fun removeVideoFromCache(fileName: String) {
+
     }
 }

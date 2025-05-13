@@ -20,7 +20,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.NavigateBefore
+import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
+import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -47,12 +49,10 @@ import androidx.media3.common.util.UnstableApi
 import com.example.bodybalance.core.composable.BodyBalanceActionButton
 import com.example.bodybalance.core.composable.exoPlayer
 import com.example.bodybalance.core.composable.items.VideoItem
-import com.example.bodybalance.core.util.FileDownloader
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerScreenUiEvent
 import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerState
-import java.io.File
 
 @OptIn(UnstableApi::class)
 @Composable
@@ -74,12 +74,27 @@ fun VideoPlayerScreen(
                 modifier = modifier,
                 video = currentState.currentVideo,
                 videoList = currentState.videoList,
-                onItemSelected = { viewModel.selectVideo(it) },
+                onItemSelected = {
+                    viewModel.handleEvent(
+                        VideoPlayerScreenUiEvent.ChoiceVideo(
+                            video = it
+                        )
+                    )
+                },
                 onClickDownload = {
                     with(currentState.currentVideo) {
                         viewModel.handleEvent(
                             VideoPlayerScreenUiEvent.DownloadVideo(
                                 url = url,
+                                fileName = id.toString()
+                            )
+                        )
+                    }
+                },
+                removeVideoFromCache = {
+                    with(currentState.currentVideo) {
+                        viewModel.handleEvent(
+                            VideoPlayerScreenUiEvent.RemoveVideoFromCache(
                                 fileName = id.toString()
                             )
                         )
@@ -93,7 +108,18 @@ fun VideoPlayerScreen(
                             )
                         )
                     }
-                }
+                },
+                onClickRemoveFromPlaylist = {
+                    with(currentState.currentVideo) {
+                        viewModel.handleEvent(
+                            VideoPlayerScreenUiEvent.RemoveFromPlaylist(
+                                video = this
+                            )
+                        )
+                    }
+                },
+                isDownloadState = currentState.videoInCache,
+                isAddPlaylist = currentState.videoInPlaylist
             )
         }
 
@@ -111,7 +137,11 @@ private fun VideoPlayerScreenContent(
     onItemSelected: (Video) -> Unit,
     modifier: Modifier = Modifier,
     onClickDownload: () -> Unit,
-    onClickAddToPlaylist: () -> Unit
+    removeVideoFromCache: () -> Unit,
+    onClickAddToPlaylist: () -> Unit,
+    onClickRemoveFromPlaylist: () -> Unit,
+    isDownloadState: Boolean,
+    isAddPlaylist: Boolean
 ) {
     val isPreview = LocalInspectionMode.current
 
@@ -124,7 +154,7 @@ private fun VideoPlayerScreenContent(
                 .padding(start = 4.dp, bottom = 12.dp, top = 12.dp)
                 .align(Alignment.Start),
             onClick = {
-                /*navigateBackToIntroduction()*/
+                /*TODO*/
             },
             enabled = false /*isClickable*/
         ) {
@@ -163,20 +193,40 @@ private fun VideoPlayerScreenContent(
         )
         //NavItem(videoList = videoList, onItemSelected = { onItemSelected(it) })
         Row() {
-            BodyBalanceActionButton(
-                onClick = {
-                    onClickDownload()
-                },
-                text = "Скачать",
-                imageVector = Icons.Default.Download
-            )
-            BodyBalanceActionButton(
-                onClick = {
-                    onClickAddToPlaylist()
-                },
-                text = "Добавить в плейлист",
-                imageVector = Icons.Default.BookmarkBorder
-            )
+            if (isDownloadState) {
+                BodyBalanceActionButton(
+                    onClick = {
+                        removeVideoFromCache()
+                    },
+                    text = "Удалить с устройства",
+                    imageVector = Icons.Default.DeleteOutline
+                )
+            } else {
+                BodyBalanceActionButton(
+                    onClick = {
+                        onClickDownload()
+                    },
+                    text = "Скачать",
+                    imageVector = Icons.Default.Download
+                )
+            }
+            if (isAddPlaylist) {
+                BodyBalanceActionButton(
+                    onClick = {
+                        onClickRemoveFromPlaylist()
+                    },
+                    text = "Добавлено в плейлист",
+                    imageVector = Icons.Default.Bookmark
+                )
+            } else {
+                BodyBalanceActionButton(
+                    onClick = {
+                        onClickAddToPlaylist()
+                    },
+                    text = "Добавить в плейлист",
+                    imageVector = Icons.Default.BookmarkBorder
+                )
+            }
 
         }
         LazyColumn(
@@ -189,11 +239,17 @@ private fun VideoPlayerScreenContent(
             state = rememberLazyListState()
         ) {
             items(videoList) { item ->
-                VideoItem(modifier = Modifier.combinedClickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() },
-                    onClick = { onItemSelected(item) }
-                ), title = item.title, showIconDrag = false)
+                VideoItem(
+                    title = item.title,
+                    showIconDrag = false,
+                    modifier = Modifier.combinedClickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClick = {
+                            onItemSelected(item)
+                        }
+                    )
+                )
             }
         }
     }
@@ -206,30 +262,6 @@ private fun VideoPlayerScreenLoading(modifier: Modifier = Modifier) {
     }
 }
 
-@OptIn(UnstableApi::class)
-@Composable
-private fun fileExist(viewModel: VideoPlayerViewModel) {
-    //"/data/data/com.example.bodybalance/files/videoSaved"
-    val fileName = "videoSaved"
-    val filePath = "${LocalContext.current.filesDir.path}/$fileName.mp4"
-    val file = File(filePath)
-    if (file.exists()) {
-        // ExoPlayer(exoPlayer = viewModel.exoPlayer)
-    } else {
-        println("Файл не найден: $filePath")
-    }
-    //Вынести в утилиту
-}
-
-@Composable
-private fun downloadVideo(url: String, fileName: String) {
-    val downloader = FileDownloader(LocalContext.current)
-    downloader.downloadFile(
-        url = url,
-        fileName = fileName
-    )
-}
-
 @Preview(showBackground = true, backgroundColor = 0xFF141218)
 @Composable
 fun IntroductionPreview() {
@@ -240,7 +272,11 @@ fun IntroductionPreview() {
                 videoList = listOf(Video.emptyVideo(), Video.emptyVideo()),
                 onItemSelected = {},
                 onClickDownload = {},
-                onClickAddToPlaylist = {}
+                onClickAddToPlaylist = {},
+                onClickRemoveFromPlaylist = {},
+                removeVideoFromCache = {},
+                isDownloadState = false,
+                isAddPlaylist = false
             )
         }
     }

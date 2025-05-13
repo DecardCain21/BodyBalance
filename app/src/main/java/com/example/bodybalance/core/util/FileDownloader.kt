@@ -1,6 +1,8 @@
 package com.example.bodybalance.core.util
 
 import android.content.Context
+import androidx.compose.ui.platform.LocalContext
+import com.example.bodybalance.videoplayer.presentation.VideoPlayerViewModel
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -12,7 +14,7 @@ class FileDownloader(private val context: Context) {
 
     private val client = OkHttpClient()
 
-    fun downloadFile(url: String, fileName: String) {
+    public fun downloadFile(url: String, fileName: String) {
         val request = Request.Builder().url(url).build()
 
         client.newCall(request).enqueue(object : okhttp3.Callback {
@@ -44,5 +46,18 @@ class FileDownloader(private val context: Context) {
                 }
             }
         })
+    }
+
+    public fun fileExist(context: Context) {
+        //"/data/data/com.example.bodybalance/files/videoSaved"
+        val fileName = "videoSaved"
+        val filePath = "${context.filesDir.path}/$fileName.mp4"
+        val file = File(filePath)
+        if (file.exists()) {
+            // ExoPlayer(exoPlayer = viewModel.exoPlayer)
+        } else {
+            println("Файл не найден: $filePath")
+        }
+        //Вынести в FileDownloader или утилиту
     }
 }
