@@ -48,16 +48,17 @@ class FileDownloader(private val context: Context) {
         })
     }
 
-    public fun fileExist(context: Context) {
-        //"/data/data/com.example.bodybalance/files/videoSaved"
-        val fileName = "videoSaved"
-        val filePath = "${context.filesDir.path}/$fileName.mp4"
-        val file = File(filePath)
-        if (file.exists()) {
-            // ExoPlayer(exoPlayer = viewModel.exoPlayer)
+    fun fileExists(fileName: String): Boolean {
+        val file = File(context.filesDir, fileName)
+        return file.exists()
+    }
+
+    fun deleteFile(fileName: String): Boolean {
+        val file = File(context.filesDir, fileName)
+        return if (file.exists()) {
+            file.delete()
         } else {
-            println("Файл не найден: $filePath")
+            false
         }
-        //Вынести в FileDownloader или утилиту
     }
 }

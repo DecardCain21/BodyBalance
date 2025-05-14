@@ -2,9 +2,11 @@ package com.example.bodybalance.videoplayer.di
 
 import com.example.bodybalance.videoplayer.domain.usecase.AddPlaylistVideoUseCase
 import com.example.bodybalance.videoplayer.domain.usecase.DeletePlaylistVideoUseCase
+import com.example.bodybalance.videoplayer.domain.usecase.ExistsPlaylistVideoByIdUseCase
 import com.example.bodybalance.videoplayer.domain.usecase.SaveVideoInCacheUseCase
 import com.example.bodybalance.videoplayer.domain.usecase.impl.AddPlaylistVideoUseCaseImpl
 import com.example.bodybalance.videoplayer.domain.usecase.impl.DeletePlaylistVideoUseCaseImpl
+import com.example.bodybalance.videoplayer.domain.usecase.impl.ExistsPlaylistVideoByIdUseCaseImpl
 import com.example.bodybalance.videoplayer.domain.usecase.impl.SaveVideoInCacheUseCaseImpl
 import dagger.Binds
 import dagger.Module
@@ -29,4 +31,9 @@ abstract class VideoPlaylistModuleBinder {
     abstract fun bindDeletePlaylistVideo(
         deletePlaylistVideoUseCaseImpl: DeletePlaylistVideoUseCaseImpl
     ): DeletePlaylistVideoUseCase
+
+    @Binds
+    abstract fun bindExistsPlaylistVideo(
+        existsPlaylistVideoByIdUseCaseImpl: ExistsPlaylistVideoByIdUseCaseImpl
+    ): ExistsPlaylistVideoByIdUseCase
 }

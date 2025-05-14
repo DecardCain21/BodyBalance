@@ -11,19 +11,19 @@ class PlaylistVideoRepositoryImpl @Inject constructor(
 ) : PlaylistVideoRepository {
 
     override suspend fun insertPlaylistVideo(video: Video) {
-        playlistVideoDao.insertPlaylistVideo(video.convertToPlaylistVideo())
+        playlistVideoDao.insertPlaylistVideo(entity = video.convertToPlaylistVideo())
     }
 
     override suspend fun deletePlaylistVideo(video: Video) {
-        playlistVideoDao.deletePlaylistVideo(video.convertToPlaylistVideo())
+        playlistVideoDao.deletePlaylistVideo(entity = video.convertToPlaylistVideo())
     }
 
     override suspend fun deletePlaylistVideoById(id: Double) {
-        playlistVideoDao.deletePlaylistVideoById(id)
+        playlistVideoDao.deletePlaylistVideoById(id = id)
     }
 
     override suspend fun getPlaylistVideoById(id: Double): Double {
-       return playlistVideoDao.getPlaylistVideoById(id)?.id ?: 0.0
+        return playlistVideoDao.getPlaylistVideoById(id = id)?.id ?: 0.0
     }
 
     override suspend fun getPlaylistAllVideos(): List<Double> {
@@ -31,6 +31,10 @@ class PlaylistVideoRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updatePlaylistVideo(video: Video) {
-        playlistVideoDao.updatePlaylistVideo(video.convertToPlaylistVideo())
+        playlistVideoDao.updatePlaylistVideo(entity = video.convertToPlaylistVideo())
+    }
+
+    override suspend fun existsPlaylistVideoById(id: Double): Boolean {
+        return playlistVideoDao.existsById(id = id)
     }
 }

@@ -34,4 +34,7 @@ interface PlaylistVideoDao {
     // Обновление существующей записи
     @Update
     suspend fun updatePlaylistVideo(entity: PlaylistVideoEntity)
+
+    @Query("SELECT EXISTS(SELECT 1 FROM playlist_video WHERE id = :id LIMIT 1)")
+    suspend fun existsById(id: Double): Boolean
 }
