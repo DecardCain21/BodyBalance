@@ -176,10 +176,7 @@ private fun VideoPlayerScreenContent(
                 Text("ExoPlayer Placeholder", color = Color.White)
             }
         } else {
-            exoPlayer(
-                context = LocalContext.current,
-                video = video
-            )
+            ExoPlayer(video = video)
         }
         Text(
             modifier = Modifier
@@ -253,6 +250,14 @@ private fun VideoPlayerScreenContent(
             }
         }
     }
+}
+
+@Composable
+fun ExoPlayer(modifier: Modifier = Modifier, video: Video) {
+    exoPlayer(
+        context = LocalContext.current,
+        video = video
+    )
 }
 
 @Composable

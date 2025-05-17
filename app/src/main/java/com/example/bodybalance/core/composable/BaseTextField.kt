@@ -69,8 +69,6 @@ fun CustomTextField(
         supportingText = { if (isError) Text(text = supportingText) },
         label = { Text(text = label) },
     )
-
-
 }
 
 @Preview
