@@ -16,16 +16,11 @@ import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,10 +38,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bodybalance.R
+import com.example.bodybalance.core.composable.BaseTopAppBar
 import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
@@ -55,38 +50,18 @@ fun SettingsScreen(
     navigateToHomeScreen: () -> Unit,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
-
     var showDialog by remember { mutableStateOf(false) }
-    var isBackClickable by remember { mutableStateOf(true) }
 
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.Start
     ) {
-        TopAppBar(
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.background,
-                titleContentColor = MaterialTheme.colorScheme.primary,
-            ),
-            title = {
-                Text(stringResource(R.string.settings))
-            },
-            navigationIcon = {
-                IconButton(
-                    onClick = {
-                        isBackClickable = false
-                        navigateBackToPlaylistScreen()
-                    },
-                    enabled = isBackClickable
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = "Localized description",
-                        tint = Color.White
-                    )
-                }
-            }
+        BaseTopAppBar(
+            navigateBack = navigateBackToPlaylistScreen,
+            title = stringResource(R.string.settings),
+            navigationIcon = Icons.Default.Close
         )
+
         Row(
             modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp),
             verticalAlignment = Alignment.CenterVertically

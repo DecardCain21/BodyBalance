@@ -21,7 +21,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.NavigateBefore
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Settings
@@ -46,8 +45,6 @@ import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
@@ -68,6 +65,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bodybalance.R
 import com.example.bodybalance.category.presentation.state.CategoryState
+import com.example.bodybalance.core.composable.BaseTopAppBar
 import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.core.composable.items.ExerciseItem
 import com.example.bodybalance.core.composable.items.VideoItem
@@ -166,34 +164,9 @@ private fun TopAppBar(
 ) {
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
-    var isClickable by remember { mutableStateOf(true) }
 
-    TopAppBar(
-        colors = TopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.background,
-            titleContentColor = MaterialTheme.colorScheme.background,
-            actionIconContentColor = MaterialTheme.colorScheme.background,
-            navigationIconContentColor = MaterialTheme.colorScheme.background,
-            scrolledContainerColor = MaterialTheme.colorScheme.background
-        ),
-        title = {
-
-        },
-        navigationIcon = {
-            IconButton(
-                onClick = {
-                    isClickable = false
-                    navigateBackToIntroduction()
-                },
-                enabled = isClickable
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.NavigateBefore,
-                    contentDescription = "Button back",
-                    tint = Color.White
-                )
-            }
-        },
+    BaseTopAppBar(
+        navigateBack = navigateBackToIntroduction,
         actions = {
             IconButton(
                 onClick = { showBottomSheet = true })
@@ -213,7 +186,8 @@ private fun TopAppBar(
                     tint = Color.White
                 )
             }
-        })
+        }
+    )
 
     if (showBottomSheet) {
         ModalBottomSheet(

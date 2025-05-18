@@ -26,18 +26,23 @@ import androidx.compose.ui.unit.sp
 import com.example.bodybalance.R
 import com.example.bodybalance.ui.theme.Black
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
+import com.example.bodybalance.ui.theme.Grey
 
 @Composable
 public fun VideoItem(
     title: String,
     modifier: Modifier = Modifier,
     imageUrl: String = "",
-    showIconDrag: Boolean = true
+    showIconDrag: Boolean = true,
+    showSelectItem: Boolean = false
 ) {
+
+    val colorBackground = if (showSelectItem) Grey else Black
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Black)
+            .background(colorBackground)
     ) {
         Row(
             modifier = modifier
