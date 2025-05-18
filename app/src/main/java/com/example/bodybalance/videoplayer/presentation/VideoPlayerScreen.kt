@@ -16,23 +16,23 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.NavigateBefore
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
+import com.example.bodybalance.core.composable.BaseTopAppBar
 import com.example.bodybalance.core.composable.BodyBalanceActionButton
 import com.example.bodybalance.core.composable.exoPlayer
 import com.example.bodybalance.core.composable.items.VideoItem
@@ -126,10 +127,8 @@ fun VideoPlayerScreen(
         is VideoPlayerState.Loading -> VideoPlayerScreenLoading()
         is VideoPlayerState.Empty -> Unit
     }
-
 }
 
-@kotlin.OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun VideoPlayerScreenContent(
     video: Video,
@@ -149,21 +148,8 @@ private fun VideoPlayerScreenContent(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        IconButton(
-            modifier = Modifier
-                .padding(start = 4.dp, bottom = 12.dp, top = 12.dp)
-                .align(Alignment.Start),
-            onClick = {
-                /*TODO*/
-            },
-            enabled = false /*isClickable*/
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.NavigateBefore,
-                contentDescription = "Button back",
-                tint = Color.White
-            )
-        }
+        BaseTopAppBar(navigateBack = {})
+
         if (isPreview) {
             Box(
                 modifier = Modifier
@@ -224,37 +210,53 @@ private fun VideoPlayerScreenContent(
                     imageVector = Icons.Default.BookmarkBorder
                 )
             }
-
         }
-        LazyColumn(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(16.dp),
-            state = rememberLazyListState()
-        ) {
-            items(videoList) { item ->
-                VideoItem(
-                    title = item.title,
-                    showIconDrag = false,
-                    modifier = Modifier.combinedClickable(
+        VideoList(videoList = videoList, onItemSelected = onItemSelected)
+    }
+}
+
+@kotlin.OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun VideoList(
+    videoList: List<Video>,
+    onItemSelected: (Video) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var selectItemIndex by rememberSaveable { mutableIntStateOf(0) }
+
+    LazyColumn(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        contentPadding = PaddingValues(vertical = 16.dp),
+        state = rememberLazyListState()
+    ) {
+        itemsIndexed(videoList) { index, item ->
+            VideoItem(
+                title = item.title,
+                showIconDrag = false,
+                showSelectItem = selectItemIndex == index,
+                modifier = Modifier
+                    .combinedClickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() },
                         onClick = {
+                            selectItemIndex = index
                             onItemSelected(item)
                         }
                     )
-                )
-            }
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            )
         }
     }
 }
 
 @Composable
-fun ExoPlayer(modifier: Modifier = Modifier, video: Video) {
+private fun ExoPlayer(modifier: Modifier = Modifier, video: Video) {
     exoPlayer(
+        modifier = modifier,
         context = LocalContext.current,
         video = video
     )
