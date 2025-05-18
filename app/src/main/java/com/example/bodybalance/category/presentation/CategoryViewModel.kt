@@ -10,6 +10,7 @@ import com.example.bodybalance.category.presentation.state.CategoryScreenUiEvent
 import com.example.bodybalance.category.presentation.state.CategoryState
 import com.example.bodybalance.core.domain.models.Account
 import com.example.bodybalance.core.domain.models.Video
+import com.example.bodybalance.videoplayer.domain.usecase.DeletePlaylistVideoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +24,8 @@ class CategoryViewModel @Inject constructor(
     private val getCategoryUseCase: GetCategoryUseCase,
     private val getAllSavedVideosUseCase: GetAllSavedVideosUseCase,
     private val activateAccountUseCase: ActivateAccountUseCase,
-    private val getAllAccountsUseCase: GetAllAccountsUseCase
+    private val getAllAccountsUseCase: GetAllAccountsUseCase,
+    private val deletePlaylistVideoUseCase: DeletePlaylistVideoUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<CategoryState>(CategoryState.Loading)
@@ -36,7 +38,7 @@ class CategoryViewModel @Inject constructor(
     fun handleEvent(event: CategoryScreenUiEvent) {
         when (event) {
             is CategoryScreenUiEvent.ChangeUser -> changeUserAccount(event.account)
-            is CategoryScreenUiEvent.DeleteVideo -> {}
+            is CategoryScreenUiEvent.DeleteVideo -> deleteVideoFromPlaylist(event.video)
         }
     }
 
@@ -45,21 +47,12 @@ class CategoryViewModel @Inject constructor(
             try {
                 val accounts = getAllAccountsUseCase()
                 val categories = getCategoryUseCase()
-                val savedVideos = getAllSavedVideosUseCase().getOrNull()
+                val savedVideos = getAllSavedVideosUseCase().getOrNull() // нужно сделать flow
                 _uiState.value = CategoryState.Content(
                     activeAccount = accounts.find { it.isActive } ?: accounts.first(),
                     accounts = accounts,
                     category = categories,
-                    savedVideo = listOf(
-                        Video(
-                            id = 0.0,
-                            title = "test",
-                            url = "",
-                            category = null,
-                            description = "",
-                            imageUrl = null
-                        )
-                    )//emptyList()
+                    savedVideo = savedVideos ?: emptyList()
                 )
             } catch (e: Exception) {
                 _uiState.value = CategoryState.Error
@@ -77,6 +70,12 @@ class CategoryViewModel @Inject constructor(
                 }
             }
             activateAccountUseCase(account)
+        }
+    }
+
+    private fun deleteVideoFromPlaylist(video: Video) {
+        viewModelScope.launch {
+            deletePlaylistVideoUseCase(video)
         }
     }
 }

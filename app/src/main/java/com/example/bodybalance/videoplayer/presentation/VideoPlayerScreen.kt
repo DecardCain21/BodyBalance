@@ -43,6 +43,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
@@ -178,34 +179,26 @@ private fun VideoPlayerScreenContent(
         Row() {
             if (isDownloadState) {
                 BodyBalanceActionButton(
-                    onClick = {
-                        removeVideoFromCache()
-                    },
+                    onClick = { removeVideoFromCache() },
                     text = "Удалить с устройства",
                     imageVector = Icons.Default.DeleteOutline
                 )
             } else {
                 BodyBalanceActionButton(
-                    onClick = {
-                        onClickDownload()
-                    },
+                    onClick = { onClickDownload() },
                     text = "Скачать",
                     imageVector = Icons.Default.Download
                 )
             }
             if (isAddPlaylist) {
                 BodyBalanceActionButton(
-                    onClick = {
-                        onClickRemoveFromPlaylist()
-                    },
+                    onClick = { onClickRemoveFromPlaylist() },
                     text = "Добавлено в плейлист",
                     imageVector = Icons.Default.Bookmark
                 )
             } else {
                 BodyBalanceActionButton(
-                    onClick = {
-                        onClickAddToPlaylist()
-                    },
+                    onClick = { onClickAddToPlaylist() },
                     text = "Добавить в плейлист",
                     imageVector = Icons.Default.BookmarkBorder
                 )

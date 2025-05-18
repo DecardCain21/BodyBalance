@@ -43,6 +43,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -122,6 +123,7 @@ fun exoPlayer(
 
         Box(
             modifier = modifier
+                .zIndex(1f)
                 .width(screenWidth)
                 .height(playerHeight)
                 .align(Alignment.Center)
@@ -148,7 +150,6 @@ fun exoPlayer(
             }
         }
     }
-
 
     return exoPlayer
 }

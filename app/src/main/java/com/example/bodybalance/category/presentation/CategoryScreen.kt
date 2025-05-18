@@ -83,7 +83,8 @@ fun CategoryScreen(
     navigateToVideoPlayerScreen: (String) -> Unit,
     navigateToSettingsScreen: () -> Unit,
     navigateToHomeScreen: () -> Unit,
-    changeUser: (Account) -> Unit
+    changeUser: (Account) -> Unit,
+    deleteVideoFromPlaylist: (Video) -> Unit
 ) {
     when (uiState) {
         is CategoryState.Content -> CategoryContentScreen(
@@ -96,7 +97,8 @@ fun CategoryScreen(
             navigateToSettingsScreen = { navigateToSettingsScreen() },
             navigateBackToIntroduction = { navigateBackToIntroduction() },
             navigateToHomeScreen = { navigateToHomeScreen() },
-            changeUser = { changeUser(it) }
+            changeUser = { changeUser(it) },
+            deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) }
         )
 
         is CategoryState.Error -> CategoryErrorScreen(modifier = modifier)
@@ -115,7 +117,8 @@ private fun CategoryContentScreen(
     navigateToSettingsScreen: () -> Unit,
     navigateToHomeScreen: () -> Unit,
     changeUser: (Account) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    deleteVideoFromPlaylist: (Video) -> Unit
 ) {
     var selectedAccount by remember(accounts) {
         mutableStateOf(activeAccount)
@@ -147,7 +150,8 @@ private fun CategoryContentScreen(
         CategoryPages(
             exercise = exercise,
             playlist = playlist,
-            navigateToVideoPlayerScreen = navigateToVideoPlayerScreen
+            navigateToVideoPlayerScreen = navigateToVideoPlayerScreen,
+            deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) }
         )
     }
 }
@@ -276,7 +280,8 @@ private fun ChangeUserBlock(
 private fun CategoryPages(
     exercise: List<String>,
     playlist: List<Video>,
-    navigateToVideoPlayerScreen: (String) -> Unit
+    navigateToVideoPlayerScreen: (String) -> Unit,
+    deleteVideoFromPlaylist: (Video) -> Unit
 ) {
     val tabs = listOf("Плейлист", "Упражнения")
     val pagerState = rememberPagerState { tabs.size }
@@ -315,7 +320,11 @@ private fun CategoryPages(
         state = pagerState,
     ) { page ->
         when (page) {
-            0 -> PlaylistScreen(savedVideo = playlist)
+            0 -> PlaylistScreen(
+                savedVideo = playlist,
+                deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) }
+            )
+
             1 -> ExerciseScreen(
                 category = exercise,
                 navigateToVideoPlayerScreen = navigateToVideoPlayerScreen
@@ -356,7 +365,8 @@ private fun ExerciseScreen(
 @Composable
 private fun PlaylistScreen(
     savedVideo: List<Video>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    deleteVideoFromPlaylist: (Video) -> Unit
 ) {
 
     var showDialog by remember { mutableStateOf(false) }
@@ -415,7 +425,7 @@ private fun PlaylistScreen(
             },
             onConfirm = {
                 videoToDelete?.let { video ->
-                    // todo: вызвать функцию удаления видео
+                    deleteVideoFromPlaylist(video)
                 }
                 showDialog = false
                 videoToDelete = null
@@ -535,7 +545,8 @@ private fun PreviewPlaylist(
             navigateToHomeScreen = {},
             changeUser = {},
             accounts = emptyList(),
-            activeAccount = Account(name = "", isActive = true)
+            activeAccount = Account(name = "", isActive = true),
+            deleteVideoFromPlaylist = {}
         )
     }
 }

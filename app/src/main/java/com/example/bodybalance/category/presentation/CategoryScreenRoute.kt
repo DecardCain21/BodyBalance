@@ -25,6 +25,7 @@ fun CategoryScreenRoute(
         navigateToSettingsScreen = navigateToSettingsScreen,
         navigateBackToIntroduction = navigateBackToIntroduction,
         navigateToHomeScreen = navigateToHomeScreen,
-        changeUser = { viewModel.handleEvent(CategoryScreenUiEvent.ChangeUser(it)) }
+        changeUser = { viewModel.handleEvent(CategoryScreenUiEvent.ChangeUser(it)) },
+        deleteVideoFromPlaylist = { viewModel.handleEvent(CategoryScreenUiEvent.DeleteVideo(it)) }
     )
 }
