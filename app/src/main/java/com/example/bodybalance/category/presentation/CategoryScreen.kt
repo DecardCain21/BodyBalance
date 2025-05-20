@@ -76,7 +76,6 @@ import com.example.bodybalance.ui.theme.TabRowDividerColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.burnoutcrew.reorderable.ReorderableItem
-import org.burnoutcrew.reorderable.detectReorderAfterLongPress
 import org.burnoutcrew.reorderable.rememberReorderableLazyListState
 import org.burnoutcrew.reorderable.reorderable
 
@@ -97,7 +96,7 @@ fun CategoryScreen(
             modifier = modifier,
             accounts = uiState.accounts,
             exercise = uiState.category,
-            playlistVideo = uiState.savedVideo,
+            playlistVideo = uiState.playlistVideo,
             activeAccount = uiState.activeAccount,
             navigateToVideoPlayerScreen = { navigateToVideoPlayerScreen(it) },
             navigateToSettingsScreen = { navigateToSettingsScreen() },
@@ -281,7 +280,8 @@ private fun ChangeUserBlock(
                         onAddAccountClick()
                     }
                 }
-            })
+            }
+        )
     }
 }
 

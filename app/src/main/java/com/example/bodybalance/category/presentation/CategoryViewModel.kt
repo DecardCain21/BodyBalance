@@ -53,12 +53,12 @@ class CategoryViewModel @Inject constructor(
             try {
                 val accounts = getAllAccountsUseCase()
                 val categories = getCategoryUseCase()
-                getAllPlaylistVideosUseCase().collect { playlistVideo ->
+                getAllPlaylistVideosUseCase().collect { playlistVideo -> // Убрать flow
                     _uiState.value = CategoryState.Content(
                         activeAccount = accounts.find { it.isActive } ?: accounts.first(),
                         accounts = accounts,
                         category = categories,
-                        savedVideo = playlistVideo
+                        playlistVideo = playlistVideo
                     )
                 }
 
