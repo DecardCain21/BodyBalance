@@ -14,35 +14,32 @@ class FileDownloader(private val context: Context) {
 
     private val client = OkHttpClient()
 
-    public fun downloadFile(url: String, fileName: String) {
+    public fun downloadFile(url: String, fileName: String , callback: DownloadCallback) {
         val request = Request.Builder().url(url).build()
 
         client.newCall(request).enqueue(object : okhttp3.Callback {
             override fun onFailure(call: okhttp3.Call, e: IOException) {
                 // Обработка ошибки
                 e.printStackTrace()
+                callback.onError(e.message ?: "Network error")
             }
 
             override fun onResponse(call: okhttp3.Call, response: Response) {
-                if (response.isSuccessful) {
-                    // Получаем поток данных
-                    val inputStream = response.body?.byteStream()
+                if (!response.isSuccessful) {
+                    callback.onError("HTTP error: ${response.code}")
+                    return
+                }
 
-                    // Сохраняем файл в приватное хранилище
+                try {
                     val file = File(context.filesDir, fileName)
-                    val outputStream = FileOutputStream(file)
-
-                    inputStream?.use { input ->
-                        outputStream.use { output ->
+                    response.body?.byteStream()?.use { input ->
+                        FileOutputStream(file).use { output ->
                             input.copyTo(output)
                         }
                     }
-
-                    // Файл успешно сохранен
-                    println("Файл сохранен: ${file.absolutePath}")
-                } else {
-                    // Обработка неудачного ответа
-                    println("Ошибка: ${response.code}")
+                    callback.onSuccess(true)
+                } catch (e: Exception) {
+                    callback.onError("File save error: ${e.message}")
                 }
             }
         })
@@ -61,4 +58,9 @@ class FileDownloader(private val context: Context) {
             false
         }
     }
+}
+
+interface DownloadCallback {
+    fun onSuccess(fileDownload:Boolean)
+    fun onError(error: String)
 }
