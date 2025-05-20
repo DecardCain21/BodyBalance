@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -45,7 +44,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
@@ -63,6 +61,7 @@ import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerState
 fun VideoPlayerScreen(
     category: String,
     modifier: Modifier = Modifier,
+    navigateBackToPlaylistScreen: () -> Unit,
     viewModel: VideoPlayerViewModel = hiltViewModel(),
 ) {
 
@@ -76,6 +75,7 @@ fun VideoPlayerScreen(
         is VideoPlayerState.Content -> {
             VideoPlayerScreenContent(
                 modifier = modifier,
+                navigateBackToPlaylistScreen = navigateBackToPlaylistScreen,
                 video = currentState.currentVideo,
                 videoList = currentState.videoList,
                 onItemSelected = {
@@ -138,6 +138,7 @@ private fun VideoPlayerScreenContent(
     videoList: List<Video>,
     onItemSelected: (Video) -> Unit,
     modifier: Modifier = Modifier,
+    navigateBackToPlaylistScreen: () -> Unit,
     onClickDownload: () -> Unit,
     removeVideoFromCache: () -> Unit,
     onClickAddToPlaylist: () -> Unit,
@@ -151,7 +152,7 @@ private fun VideoPlayerScreenContent(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        BaseTopAppBar(navigateBack = {})
+        BaseTopAppBar(navigateBack = { navigateBackToPlaylistScreen() })
 
         if (isPreview) {
             Box(
@@ -273,6 +274,7 @@ fun IntroductionPreview() {
             VideoPlayerScreenContent(
                 video = Video.emptyVideo(),
                 videoList = listOf(Video.emptyVideo(), Video.emptyVideo()),
+                navigateBackToPlaylistScreen = {},
                 onItemSelected = {},
                 onClickDownload = {},
                 onClickAddToPlaylist = {},

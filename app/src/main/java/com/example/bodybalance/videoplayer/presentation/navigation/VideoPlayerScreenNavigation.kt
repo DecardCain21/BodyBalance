@@ -16,13 +16,15 @@ fun NavController.navigateToVideoPlayerScreen(category: String) {
     }
 }
 
-fun NavGraphBuilder.videoPlayerScreen() {
+fun NavGraphBuilder.videoPlayerScreen(navigateBackToPlaylistScreen: () -> Unit) {
     composable(
         route = "$VIDEO_PLAYER_ROUTE/{$CATEGORY_NAME}",
         arguments = listOf(navArgument(CATEGORY_NAME) { type = NavType.StringType })
     ) { backStackEntry ->
-        VideoPlayerScreen( // Возможно стоит подумать как сделать подругому
-            category = backStackEntry.arguments?.getString(CATEGORY_NAME) ?: ""
+        VideoPlayerScreen(
+            // Возможно стоит подумать как сделать подругому
+            category = backStackEntry.arguments?.getString(CATEGORY_NAME) ?: "",
+            navigateBackToPlaylistScreen = navigateBackToPlaylistScreen
         )
     }
 }
