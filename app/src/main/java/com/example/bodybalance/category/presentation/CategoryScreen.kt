@@ -460,6 +460,7 @@ private fun PlaylistScreen(
             },
             onConfirm = {
                 videoToDelete?.let { video ->
+                    list = list.toMutableList().apply { remove(video) }
                     deleteVideoFromPlaylist(video)
                 }
                 showDialog = false
