@@ -27,6 +27,8 @@ import com.example.bodybalance.R
 import com.example.bodybalance.ui.theme.Black
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import com.example.bodybalance.ui.theme.Grey
+import org.burnoutcrew.reorderable.ReorderableLazyListState
+import org.burnoutcrew.reorderable.detectReorderAfterLongPress
 
 @Composable
 public fun VideoItem(
@@ -34,7 +36,8 @@ public fun VideoItem(
     modifier: Modifier = Modifier,
     imageUrl: String = "",
     showIconDrag: Boolean = true,
-    showSelectItem: Boolean = false
+    showSelectItem: Boolean = false,
+    reorderState: ReorderableLazyListState? = null
 ) {
 
     val colorBackground = if (showSelectItem) Grey else Black
@@ -52,7 +55,10 @@ public fun VideoItem(
         ) {
             if (showIconDrag) {
                 Image(
-                    modifier = Modifier.fillMaxHeight(),
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .then(reorderState?.let { Modifier.detectReorderAfterLongPress(it) }
+                            ?: Modifier),
                     painter = painterResource(R.drawable.ic_drag),
                     contentDescription = "Icon drag"
                 )

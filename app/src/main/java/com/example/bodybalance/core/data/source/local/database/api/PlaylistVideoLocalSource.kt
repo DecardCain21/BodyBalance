@@ -18,4 +18,6 @@ interface PlaylistVideoLocalSource {
     suspend fun updatePlaylistVideo(entity: PlaylistVideoEntity)
 
     suspend fun existsPlaylistVideoById(id: Double): Boolean
+
+    suspend fun updateOrderPlaylistVideo(id: Double, order: Int)
 }

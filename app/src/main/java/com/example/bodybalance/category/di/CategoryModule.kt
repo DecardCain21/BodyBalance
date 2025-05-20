@@ -4,10 +4,12 @@ import com.example.bodybalance.category.domain.usecase.ActivateAccountUseCase
 import com.example.bodybalance.category.domain.usecase.GetAllAccountsUseCase
 import com.example.bodybalance.category.domain.usecase.GetAllPlaylistVideosUseCase
 import com.example.bodybalance.category.domain.usecase.GetCategoryUseCase
+import com.example.bodybalance.category.domain.usecase.UpdateOrderPlaylistVideoUseCase
 import com.example.bodybalance.category.domain.usecase.impl.ActivateAccountUseCaseImpl
 import com.example.bodybalance.category.domain.usecase.impl.GetAllAccountsUseCaseImpl
 import com.example.bodybalance.category.domain.usecase.impl.GetAllPlaylistVideosUseCaseImpl
 import com.example.bodybalance.category.domain.usecase.impl.GetCategoryUseCaseImpl
+import com.example.bodybalance.category.domain.usecase.impl.UpdateOrderPlaylistVideoUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -36,4 +38,9 @@ abstract class CategoryModuleBinder {
     abstract fun bindGetAllAccountsUseCaseImpl(
         getAllAccountsUseCaseImpl: GetAllAccountsUseCaseImpl
     ): GetAllAccountsUseCase
+
+    @Binds
+    abstract fun bindUpdateOrderPlaylistVideoUseCaseImpl(
+        updateOrderPlaylistVideoUseCaseImpl: UpdateOrderPlaylistVideoUseCaseImpl
+    ): UpdateOrderPlaylistVideoUseCase
 }

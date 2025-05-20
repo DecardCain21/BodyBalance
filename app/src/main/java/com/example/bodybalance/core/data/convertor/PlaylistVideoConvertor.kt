@@ -10,6 +10,7 @@ fun Video.convertEntity() = PlaylistVideoEntity(
     category = category,
     description = description,
     imageUrl = imageUrl,
+    order = 0
 )
 
 fun PlaylistVideoEntity.convertToVideo() = Video(

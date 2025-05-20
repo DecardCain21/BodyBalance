@@ -42,4 +42,8 @@ class PlaylistVideoRepositoryImpl @Inject constructor(
     override suspend fun existsPlaylistVideoById(id: Double): Boolean {
         return playlistVideoLocalSource.existsPlaylistVideoById(id = id)
     }
+
+    override suspend fun updateOrderPlaylistVideo(id: Double, order: Int) {
+        playlistVideoLocalSource.updateOrderPlaylistVideo(id = id, order = order)
+    }
 }

@@ -9,7 +9,7 @@ sealed interface CategoryState {
         val activeAccount: Account,
         val accounts: List<Account>,
         val category: List<String>,
-        val savedVideo: List<Video>
+        val playlistVideo: List<Video>
     ) : CategoryState
 
     data object Loading : CategoryState
