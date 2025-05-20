@@ -10,11 +10,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -176,7 +178,7 @@ private fun VideoPlayerScreenContent(
             color = MaterialTheme.colorScheme.primary
         )
         //NavItem(videoList = videoList, onItemSelected = { onItemSelected(it) })
-        Row() {
+        Row(modifier = Modifier.padding(start = 16.dp, end = 7.dp)) {
             if (isDownloadState) {
                 BodyBalanceActionButton(
                     onClick = { removeVideoFromCache() },
@@ -190,6 +192,7 @@ private fun VideoPlayerScreenContent(
                     imageVector = Icons.Default.Download
                 )
             }
+            Spacer(modifier = Modifier.padding(horizontal = 3.dp))
             if (isAddPlaylist) {
                 BodyBalanceActionButton(
                     onClick = { onClickRemoveFromPlaylist() },

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.media3.common.util.UnstableApi
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.core.domain.usecase.api.GetVideoByCategoryUseCase
+import com.example.bodybalance.core.util.DownloadCallback
 import com.example.bodybalance.core.util.FileDownloader
 import com.example.bodybalance.core.util.NetworkError
 import com.example.bodybalance.videoplayer.domain.usecase.AddPlaylistVideoUseCase
@@ -105,7 +106,6 @@ class VideoPlayerViewModel @Inject constructor(
             val currentState = _uiState.value
             if (currentState is VideoPlayerState.Content) {
                 setButtonsState(currentState)
-                //_uiState.value = currentState.copy(videoInPlaylist = true)
             }
         }
     }
@@ -116,31 +116,46 @@ class VideoPlayerViewModel @Inject constructor(
             val currentState = _uiState.value
             if (currentState is VideoPlayerState.Content) {
                 setButtonsState(currentState)
-                //_uiState.value = currentState.copy(videoInPlaylist = false)
             }
         }
     }
 
     private fun downloadVideo(url: String, fileName: String) {
-        fileDownloader.downloadFile(url = url, fileName = fileName)
+        fileDownloader.downloadFile(url = url, fileName = fileName, object : DownloadCallback {
+            override fun onSuccess(fileDownload: Boolean) {
+                viewModelScope.launch {
+                    val currentState = _uiState.value
+                    if (currentState is VideoPlayerState.Content) {
+                        setButtonsState(currentState)
+                    }
+                }
+            }
+
+            override fun onError(error: String) {
+                /*TODO("Not yet implemented")*/
+            }
+
+        })
     }
 
     private fun removeVideoFromCache(fileName: String) {
-        fileDownloader.deleteFile(fileName = fileName)
+        fileDownloader.deleteFile(fileName = fileName).let {
+            viewModelScope.launch {
+                val currentState = _uiState.value
+                if (currentState is VideoPlayerState.Content) {
+                    setButtonsState(currentState)
+                }
+            }
+        }
     }
 
     private suspend fun setButtonsState(state: VideoPlayerState.Content) {
         viewModelScope.launch {
-            val enabledAddButton: Boolean = existsPlaylistVideoByIdUseCase(state.currentVideo.id)
-            val enabledDownloadButton: Boolean =
-                fileDownloader.fileExists(state.currentVideo.id.toString())
-            if (enabledAddButton) {
-                _uiState.value =
-                    state.copy(videoInPlaylist = true, videoInCache = enabledDownloadButton)
-            } else {
-                _uiState.value =
-                    state.copy(videoInPlaylist = false, videoInCache = enabledDownloadButton)
-            }
+            _uiState.value =
+                state.copy(
+                    videoInPlaylist = existsPlaylistVideoByIdUseCase(state.currentVideo.id),
+                    videoInCache = fileDownloader.fileExists(state.currentVideo.id.toString())
+                )
         }
     }
 }
