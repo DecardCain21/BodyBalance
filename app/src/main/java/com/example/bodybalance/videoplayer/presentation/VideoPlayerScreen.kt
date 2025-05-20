@@ -1,9 +1,12 @@
 package com.example.bodybalance.videoplayer.presentation
 
+import android.content.res.Configuration
 import androidx.annotation.OptIn
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +22,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
@@ -31,12 +35,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.font.FontWeight
@@ -147,12 +153,16 @@ private fun VideoPlayerScreenContent(
     isAddPlaylist: Boolean
 ) {
     val isPreview = LocalInspectionMode.current
+    val configuration = LocalConfiguration.current
+    val scrollState = rememberScrollState()
 
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        BaseTopAppBar(navigateBack = { navigateBackToPlaylistScreen() })
+        if(configuration.orientation != Configuration.ORIENTATION_LANDSCAPE){
+            BaseTopAppBar(navigateBack = { navigateBackToPlaylistScreen() })
+        }
 
         if (isPreview) {
             Box(
@@ -179,7 +189,7 @@ private fun VideoPlayerScreenContent(
             color = MaterialTheme.colorScheme.primary
         )
         //NavItem(videoList = videoList, onItemSelected = { onItemSelected(it) })
-        Row(modifier = Modifier.padding(start = 16.dp, end = 7.dp)) {
+        Row(modifier = Modifier.padding(start = 16.dp, end = 7.dp).horizontalScroll(scrollState)) {
             if (isDownloadState) {
                 BodyBalanceActionButton(
                     onClick = { removeVideoFromCache() },
