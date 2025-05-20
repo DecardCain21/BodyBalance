@@ -2,11 +2,11 @@ package com.example.bodybalance.category.di
 
 import com.example.bodybalance.category.domain.usecase.ActivateAccountUseCase
 import com.example.bodybalance.category.domain.usecase.GetAllAccountsUseCase
-import com.example.bodybalance.category.domain.usecase.GetAllSavedVideosUseCase
+import com.example.bodybalance.category.domain.usecase.GetAllPlaylistVideosUseCase
 import com.example.bodybalance.category.domain.usecase.GetCategoryUseCase
 import com.example.bodybalance.category.domain.usecase.impl.ActivateAccountUseCaseImpl
 import com.example.bodybalance.category.domain.usecase.impl.GetAllAccountsUseCaseImpl
-import com.example.bodybalance.category.domain.usecase.impl.GetAllSavedVideosUseCaseImpl
+import com.example.bodybalance.category.domain.usecase.impl.GetAllPlaylistVideosUseCaseImpl
 import com.example.bodybalance.category.domain.usecase.impl.GetCategoryUseCaseImpl
 import dagger.Binds
 import dagger.Module
@@ -24,8 +24,8 @@ abstract class CategoryModuleBinder {
 
     @Binds
     abstract fun bindGetAllVideosUseCaseImpl(
-        getAllSavedVideosUseCaseImpl: GetAllSavedVideosUseCaseImpl
-    ): GetAllSavedVideosUseCase
+        getAllSavedVideosUseCaseImpl: GetAllPlaylistVideosUseCaseImpl
+    ): GetAllPlaylistVideosUseCase
 
     @Binds
     abstract fun bindActivateAccountUseCaseImpl(

@@ -91,7 +91,7 @@ fun CategoryScreen(
             modifier = modifier,
             accounts = uiState.accounts,
             exercise = uiState.category,
-            playlist = uiState.savedVideo,
+            playlistVideo = uiState.savedVideo,
             activeAccount = uiState.activeAccount,
             navigateToVideoPlayerScreen = { navigateToVideoPlayerScreen(it) },
             navigateToSettingsScreen = { navigateToSettingsScreen() },
@@ -110,7 +110,7 @@ fun CategoryScreen(
 private fun CategoryContentScreen(
     accounts: List<Account>,
     exercise: List<String>,
-    playlist: List<Video>,
+    playlistVideo: List<Video>,
     activeAccount: Account,
     navigateBackToIntroduction: () -> Unit,
     navigateToVideoPlayerScreen: (String) -> Unit, // String - Название категории
@@ -149,7 +149,7 @@ private fun CategoryContentScreen(
         )
         CategoryPages(
             exercise = exercise,
-            playlist = playlist,
+            playlistVideo = playlistVideo,
             navigateToVideoPlayerScreen = navigateToVideoPlayerScreen,
             deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) }
         )
@@ -279,7 +279,7 @@ private fun ChangeUserBlock(
 @Composable
 private fun CategoryPages(
     exercise: List<String>,
-    playlist: List<Video>,
+    playlistVideo: List<Video>,
     navigateToVideoPlayerScreen: (String) -> Unit,
     deleteVideoFromPlaylist: (Video) -> Unit
 ) {
@@ -321,7 +321,7 @@ private fun CategoryPages(
     ) { page ->
         when (page) {
             0 -> PlaylistScreen(
-                savedVideo = playlist,
+                playlistVideo = playlistVideo,
                 deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) }
             )
 
@@ -364,7 +364,7 @@ private fun ExerciseScreen(
 
 @Composable
 private fun PlaylistScreen(
-    savedVideo: List<Video>,
+    playlistVideo: List<Video>,
     modifier: Modifier = Modifier,
     deleteVideoFromPlaylist: (Video) -> Unit
 ) {
@@ -380,7 +380,7 @@ private fun PlaylistScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            items(items = savedVideo, key = { it.id }) { item ->
+            items(items = playlistVideo, key = { it.id }) { item ->
                 val dismissState = rememberSwipeToDismissBoxState(
                     confirmValueChange = { value ->
                         if (value == SwipeToDismissBoxValue.EndToStart) {
@@ -408,6 +408,7 @@ private fun PlaylistScreen(
                     backgroundContent = { DismissBackground() },
                     content = {
                         VideoItem(
+                            imageUrl = item.imageUrl ?: "",
                             title = item.title,
                             showIconDrag = true
                         )
@@ -530,7 +531,7 @@ private fun PreviewPlaylist(
                 "2",
                 "3"
             ),
-            playlist = listOf(
+            playlistVideo = listOf(
                 Video(
                     title = "Разминка перед упражнениями на отдельную группу мыщц",
                     url = "",

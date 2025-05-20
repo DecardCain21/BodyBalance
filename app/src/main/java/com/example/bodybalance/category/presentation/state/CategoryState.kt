@@ -11,6 +11,7 @@ sealed interface CategoryState {
         val category: List<String>,
         val savedVideo: List<Video>
     ) : CategoryState
+
     data object Loading : CategoryState
     data object Error : CategoryState
 }

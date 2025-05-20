@@ -1,8 +1,9 @@
 package com.example.bodybalance.core.data.source.local.database.di
 
 import com.example.bodybalance.core.data.source.local.database.AppDatabase
+import com.example.bodybalance.core.data.source.local.database.api.PlaylistVideoLocalSource
 import com.example.bodybalance.core.data.source.local.database.api.UserAccountLocalSource
-import com.example.bodybalance.core.data.source.local.database.dao.UserAccountDao
+import com.example.bodybalance.core.data.source.local.database.impl.PlaylistVideoLocalSourceImpl
 import com.example.bodybalance.core.data.source.local.database.impl.UserAccountLocalSourceImpl
 import dagger.Binds
 import dagger.Module
@@ -13,21 +14,20 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class UserAccountBinder {
+abstract class PlaylistVideoBinder {
 
     @Binds
-    abstract fun bindUseAccountLocalSource(
-        useAccountLocalSource: UserAccountLocalSourceImpl
-    ): UserAccountLocalSource
+    abstract fun bindPlaylistVideoLocalSource(
+        playlistVideoLocalSourceImpl: PlaylistVideoLocalSourceImpl
+    ): PlaylistVideoLocalSource
 }
 
 @Module
 @InstallIn(SingletonComponent::class)
-object UserAccountProvider {
+object PlaylistVideoProvider {
 
     @Provides
     @Singleton
-    fun provideUseAccountDao(appDatabase: AppDatabase): UserAccountDao {
-        return appDatabase.useAccountDaoDao()
-    }
+    fun providePlaylistVideoDao(appDatabase: AppDatabase) =
+        appDatabase.playListVideoDao()
 }

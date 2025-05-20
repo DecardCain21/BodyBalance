@@ -8,6 +8,7 @@ import javax.inject.Inject
 class DeletePlaylistVideoUseCaseImpl @Inject constructor(
     private val playlistVideoRepository: PlaylistVideoRepository
 ) : DeletePlaylistVideoUseCase {
+
     override suspend fun invoke(video: Video) {
         playlistVideoRepository.deletePlaylistVideo(video)
     }

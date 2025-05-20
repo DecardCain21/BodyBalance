@@ -1,40 +1,45 @@
 package com.example.bodybalance.core.data.repository
 
-import com.example.bodybalance.core.data.convertor.convertToPlaylistVideo
-import com.example.bodybalance.core.data.source.local.database.dao.PlaylistVideoDao
+import com.example.bodybalance.core.data.convertor.convertEntity
+import com.example.bodybalance.core.data.convertor.convertToVideo
+import com.example.bodybalance.core.data.source.local.database.api.PlaylistVideoLocalSource
 import com.example.bodybalance.core.domain.api.PlaylistVideoRepository
 import com.example.bodybalance.core.domain.models.Video
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class PlaylistVideoRepositoryImpl @Inject constructor(
-    private val playlistVideoDao: PlaylistVideoDao
+    private val playlistVideoLocalSource: PlaylistVideoLocalSource
 ) : PlaylistVideoRepository {
 
+    override fun getAllPlaylistVideos(): Flow<List<Video>> {
+        return playlistVideoLocalSource.getAllPlaylistVideos().map { list ->
+            list.map { entity -> entity.convertToVideo() }
+        }
+    }
+
     override suspend fun insertPlaylistVideo(video: Video) {
-        playlistVideoDao.insertPlaylistVideo(entity = video.convertToPlaylistVideo())
+        playlistVideoLocalSource.insertPlaylistVideo(entity = video.convertEntity())
     }
 
     override suspend fun deletePlaylistVideo(video: Video) {
-        playlistVideoDao.deletePlaylistVideo(entity = video.convertToPlaylistVideo())
+        playlistVideoLocalSource.deletePlaylistVideo(entity = video.convertEntity())
     }
 
     override suspend fun deletePlaylistVideoById(id: Double) {
-        playlistVideoDao.deletePlaylistVideoById(id = id)
+        playlistVideoLocalSource.deletePlaylistVideoById(id = id)
     }
 
-    override suspend fun getPlaylistVideoById(id: Double): Double {
-        return playlistVideoDao.getPlaylistVideoById(id = id)?.id ?: 0.0
-    }
-
-    override suspend fun getPlaylistAllVideos(): List<Double> {
-        return playlistVideoDao.getPlaylistAllVideos().map { it.id }
+    override suspend fun getPlaylistVideoById(id: Double): Video? {
+        return playlistVideoLocalSource.getPlaylistVideoById(id = id)?.convertToVideo()
     }
 
     override suspend fun updatePlaylistVideo(video: Video) {
-        playlistVideoDao.updatePlaylistVideo(entity = video.convertToPlaylistVideo())
+        playlistVideoLocalSource.updatePlaylistVideo(entity = video.convertEntity())
     }
 
     override suspend fun existsPlaylistVideoById(id: Double): Boolean {
-        return playlistVideoDao.existsById(id = id)
+        return playlistVideoLocalSource.existsPlaylistVideoById(id = id)
     }
 }
