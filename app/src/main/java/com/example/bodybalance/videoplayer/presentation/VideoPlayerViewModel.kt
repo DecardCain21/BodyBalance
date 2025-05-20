@@ -123,10 +123,23 @@ class VideoPlayerViewModel @Inject constructor(
 
     private fun downloadVideo(url: String, fileName: String) {
         fileDownloader.downloadFile(url = url, fileName = fileName)
+        //Вызвать после загрузки
+        viewModelScope.launch {
+            val currentState = _uiState.value
+            if (currentState is VideoPlayerState.Content) {
+                setButtonsState(currentState)
+            }
+        }
     }
 
     private fun removeVideoFromCache(fileName: String) {
         fileDownloader.deleteFile(fileName = fileName)
+        viewModelScope.launch {
+            val currentState = _uiState.value
+            if (currentState is VideoPlayerState.Content) {
+                setButtonsState(currentState)
+            }
+        }
     }
 
     private suspend fun setButtonsState(state: VideoPlayerState.Content) {
