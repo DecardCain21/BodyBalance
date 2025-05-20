@@ -37,4 +37,8 @@ class PlaylistVideoLocalSourceImpl @Inject constructor(
     override suspend fun existsPlaylistVideoById(id: Double): Boolean {
         return dao.existsById(id)
     }
+
+    override suspend fun updateOrderPlaylistVideo(id: Double, order: Int) {
+        dao.updateOrder(id = id, order = order)
+    }
 }

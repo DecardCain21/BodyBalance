@@ -6,6 +6,7 @@ import com.example.bodybalance.category.domain.usecase.ActivateAccountUseCase
 import com.example.bodybalance.category.domain.usecase.GetAllAccountsUseCase
 import com.example.bodybalance.category.domain.usecase.GetAllPlaylistVideosUseCase
 import com.example.bodybalance.category.domain.usecase.GetCategoryUseCase
+import com.example.bodybalance.category.domain.usecase.UpdateOrderPlaylistVideoUseCase
 import com.example.bodybalance.category.presentation.state.CategoryScreenUiEvent
 import com.example.bodybalance.category.presentation.state.CategoryState
 import com.example.bodybalance.core.domain.models.Account
@@ -26,6 +27,7 @@ class CategoryViewModel @Inject constructor(
     private val activateAccountUseCase: ActivateAccountUseCase,
     private val getAllAccountsUseCase: GetAllAccountsUseCase,
     private val deletePlaylistVideoUseCase: DeletePlaylistVideoUseCase,
+    private val updateOrderPlaylistVideoUseCase: UpdateOrderPlaylistVideoUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<CategoryState>(CategoryState.Loading)
@@ -39,6 +41,10 @@ class CategoryViewModel @Inject constructor(
         when (event) {
             is CategoryScreenUiEvent.ChangeUser -> changeUserAccount(event.account)
             is CategoryScreenUiEvent.DeleteVideo -> deleteVideoFromPlaylist(event.video)
+            is CategoryScreenUiEvent.UpdateOrderPlaylistVideo -> updateOrderPlaylistVideo(
+                id = event.id,
+                order = event.order
+            )
         }
     }
 
@@ -78,6 +84,12 @@ class CategoryViewModel @Inject constructor(
     private fun deleteVideoFromPlaylist(video: Video) {
         viewModelScope.launch {
             deletePlaylistVideoUseCase(video)
+        }
+    }
+
+    private fun updateOrderPlaylistVideo(id: Double, order: Int) {
+        viewModelScope.launch {
+            updateOrderPlaylistVideoUseCase(id = id, order = order)
         }
     }
 }

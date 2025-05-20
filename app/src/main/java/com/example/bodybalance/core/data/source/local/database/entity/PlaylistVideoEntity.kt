@@ -12,4 +12,5 @@ data class PlaylistVideoEntity(
     val category: String? = "",
     val description: String,
     val imageUrl: String?,
+    val order: Int // поле для управления порядком
 )

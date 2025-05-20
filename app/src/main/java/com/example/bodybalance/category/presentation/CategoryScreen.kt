@@ -73,7 +73,12 @@ import com.example.bodybalance.core.domain.models.Account
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import com.example.bodybalance.ui.theme.TabRowDividerColor
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.burnoutcrew.reorderable.ReorderableItem
+import org.burnoutcrew.reorderable.detectReorderAfterLongPress
+import org.burnoutcrew.reorderable.rememberReorderableLazyListState
+import org.burnoutcrew.reorderable.reorderable
 
 @Composable
 fun CategoryScreen(
@@ -84,7 +89,8 @@ fun CategoryScreen(
     navigateToSettingsScreen: () -> Unit,
     navigateToHomeScreen: () -> Unit,
     changeUser: (Account) -> Unit,
-    deleteVideoFromPlaylist: (Video) -> Unit
+    deleteVideoFromPlaylist: (Video) -> Unit,
+    updateOrderPlaylistVideo: (id: Double, order: Int) -> Unit
 ) {
     when (uiState) {
         is CategoryState.Content -> CategoryContentScreen(
@@ -98,7 +104,8 @@ fun CategoryScreen(
             navigateBackToIntroduction = { navigateBackToIntroduction() },
             navigateToHomeScreen = { navigateToHomeScreen() },
             changeUser = { changeUser(it) },
-            deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) }
+            deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) },
+            updateOrderPlaylistVideo = updateOrderPlaylistVideo
         )
 
         is CategoryState.Error -> CategoryErrorScreen(modifier = modifier)
@@ -118,7 +125,8 @@ private fun CategoryContentScreen(
     navigateToHomeScreen: () -> Unit,
     changeUser: (Account) -> Unit,
     modifier: Modifier = Modifier,
-    deleteVideoFromPlaylist: (Video) -> Unit
+    deleteVideoFromPlaylist: (Video) -> Unit,
+    updateOrderPlaylistVideo: (id: Double, order: Int) -> Unit
 ) {
     var selectedAccount by remember(accounts) {
         mutableStateOf(activeAccount)
@@ -151,7 +159,8 @@ private fun CategoryContentScreen(
             exercise = exercise,
             playlistVideo = playlistVideo,
             navigateToVideoPlayerScreen = navigateToVideoPlayerScreen,
-            deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) }
+            deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) },
+            updateOrderPlaylistVideo = updateOrderPlaylistVideo
         )
     }
 }
@@ -281,7 +290,8 @@ private fun CategoryPages(
     exercise: List<String>,
     playlistVideo: List<Video>,
     navigateToVideoPlayerScreen: (String) -> Unit,
-    deleteVideoFromPlaylist: (Video) -> Unit
+    deleteVideoFromPlaylist: (Video) -> Unit,
+    updateOrderPlaylistVideo: (id: Double, order: Int) -> Unit
 ) {
     val tabs = listOf("Плейлист", "Упражнения")
     val pagerState = rememberPagerState { tabs.size }
@@ -322,7 +332,8 @@ private fun CategoryPages(
         when (page) {
             0 -> PlaylistScreen(
                 playlistVideo = playlistVideo,
-                deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) }
+                deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) },
+                updateOrderPlaylistVideo = updateOrderPlaylistVideo
             )
 
             1 -> ExerciseScreen(
@@ -366,21 +377,36 @@ private fun ExerciseScreen(
 private fun PlaylistScreen(
     playlistVideo: List<Video>,
     modifier: Modifier = Modifier,
-    deleteVideoFromPlaylist: (Video) -> Unit
+    deleteVideoFromPlaylist: (Video) -> Unit,
+    updateOrderPlaylistVideo: (id: Double, order: Int) -> Unit
 ) {
 
     var showDialog by remember { mutableStateOf(false) }
     var videoToDelete by remember { mutableStateOf<Video?>(null) }
 
+    var list by remember { mutableStateOf(playlistVideo) }
+
+    val state = rememberReorderableLazyListState(onMove = { from, to ->
+        list = list.toMutableList().apply {
+            add(to.index, removeAt(from.index))
+        }
+    }, onDragEnd = { _, _ ->
+        list.forEachIndexed { index, video ->
+            updateOrderPlaylistVideo(video.id, index)
+        }
+    })
+
     Box(modifier = modifier.fillMaxSize()) {
         LazyColumn(
+            state = state.listState,
             modifier = modifier
                 .fillMaxSize()
-                .padding(top = 16.dp),
+                .padding(top = 16.dp)
+                .reorderable(state),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            items(items = playlistVideo, key = { it.id }) { item ->
+            items(items = list, key = { it.id }) { item ->
                 val dismissState = rememberSwipeToDismissBoxState(
                     confirmValueChange = { value ->
                         if (value == SwipeToDismissBoxValue.EndToStart) {
@@ -402,16 +428,24 @@ private fun PlaylistScreen(
                     }
                 }
 
+                var showDeleteBackground by remember { mutableStateOf(true) }
+
                 SwipeToDismissBox(
                     state = dismissState,
                     enableDismissFromStartToEnd = false, // Отключаем свайп вправо
-                    backgroundContent = { DismissBackground() },
+                    backgroundContent = {
+                        DismissBackground(showDeleteBackground)
+                    },
                     content = {
-                        VideoItem(
-                            imageUrl = item.imageUrl ?: "",
-                            title = item.title,
-                            showIconDrag = true
-                        )
+                        ReorderableItem(state = state, key = item.id) { isDragging ->
+                            showDeleteBackground = !isDragging
+                            VideoItem(
+                                imageUrl = item.imageUrl ?: "",
+                                title = item.title,
+                                showIconDrag = true,
+                                reorderState = state
+                            )
+                        }
                     }
                 )
             }
@@ -436,19 +470,31 @@ private fun PlaylistScreen(
 }
 
 @Composable
-private fun DismissBackground() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Red)
-            .padding(horizontal = 20.dp),
-        contentAlignment = Alignment.CenterEnd
-    ) {
-        Icon(
-            imageVector = Icons.Default.Delete,
-            contentDescription = "Delete",
-            tint = Color.White,
-        )
+private fun DismissBackground(visible: Boolean) {
+    var show by remember { mutableStateOf(false) }
+
+    LaunchedEffect(visible) {
+        if (visible) {
+            delay(500)
+            show = true
+        } else {
+            show = false
+        }
+    }
+    if (show) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Red)
+                .padding(horizontal = 20.dp),
+            contentAlignment = Alignment.CenterEnd
+        ) {
+            Icon(
+                imageVector = Icons.Default.Delete,
+                contentDescription = "Delete",
+                tint = Color.White,
+            )
+        }
     }
 }
 
@@ -547,7 +593,8 @@ private fun PreviewPlaylist(
             changeUser = {},
             accounts = emptyList(),
             activeAccount = Account(name = "", isActive = true),
-            deleteVideoFromPlaylist = {}
+            deleteVideoFromPlaylist = {},
+            updateOrderPlaylistVideo = { _, _ -> }
         )
     }
 }

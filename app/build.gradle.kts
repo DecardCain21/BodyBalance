@@ -117,4 +117,6 @@ dependencies {
     // StatusBar
     implementation(libs.accompanist.systemuicontroller)
 
+
+    implementation("org.burnoutcrew.composereorderable:reorderable:0.9.6")
 }

@@ -18,4 +18,6 @@ interface PlaylistVideoRepository {
     suspend fun updatePlaylistVideo(video: Video)
 
     suspend fun existsPlaylistVideoById(id: Double): Boolean
+
+    suspend fun updateOrderPlaylistVideo(id: Double, order: Int)
 }
