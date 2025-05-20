@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bodybalance.category.domain.usecase.ActivateAccountUseCase
 import com.example.bodybalance.category.domain.usecase.GetAllAccountsUseCase
-import com.example.bodybalance.category.domain.usecase.GetAllSavedVideosUseCase
+import com.example.bodybalance.category.domain.usecase.GetAllPlaylistVideosUseCase
 import com.example.bodybalance.category.domain.usecase.GetCategoryUseCase
 import com.example.bodybalance.category.presentation.state.CategoryScreenUiEvent
 import com.example.bodybalance.category.presentation.state.CategoryState
@@ -22,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
     private val getCategoryUseCase: GetCategoryUseCase,
-    private val getAllSavedVideosUseCase: GetAllSavedVideosUseCase,
+    private val getAllPlaylistVideosUseCase: GetAllPlaylistVideosUseCase,
     private val activateAccountUseCase: ActivateAccountUseCase,
     private val getAllAccountsUseCase: GetAllAccountsUseCase,
     private val deletePlaylistVideoUseCase: DeletePlaylistVideoUseCase,
@@ -47,13 +47,15 @@ class CategoryViewModel @Inject constructor(
             try {
                 val accounts = getAllAccountsUseCase()
                 val categories = getCategoryUseCase()
-                val savedVideos = getAllSavedVideosUseCase().getOrNull() // нужно сделать flow
-                _uiState.value = CategoryState.Content(
-                    activeAccount = accounts.find { it.isActive } ?: accounts.first(),
-                    accounts = accounts,
-                    category = categories,
-                    savedVideo = savedVideos ?: emptyList()
-                )
+                getAllPlaylistVideosUseCase().collect { playlistVideo ->
+                    _uiState.value = CategoryState.Content(
+                        activeAccount = accounts.find { it.isActive } ?: accounts.first(),
+                        accounts = accounts,
+                        category = categories,
+                        savedVideo = playlistVideo
+                    )
+                }
+
             } catch (e: Exception) {
                 _uiState.value = CategoryState.Error
             }
