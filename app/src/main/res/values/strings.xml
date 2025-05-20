@@ -1,36 +1,49 @@
 <resources>
     <string name="app_name">BodyBalance</string>
-    <string name="sing_in">Войти</string>
-    <string name="password">Пароль</string>
+    <!--exoPlayer-->
+    <string name="enter_code">Ввести кодовое слово</string>
+
+    <!--CategoryScreen-->
+    <string name="add_account">Добавить аккаунт</string>
+    <string name="delete_video_from_playlist">Удалить видео из плейлиста?</string>
+    <string name="delete_video_dilog_message">Видео останется в разделе упражнения</string>
+    <string name="remove">Удалить</string>
+
+    <!--HomeScreen-->
     <string name="login">Логин</string>
-    <string name="forgot_password">Забыли пароль?</string>
-    <string name="body_balance">Balance</string>
-    <string name="download_channel_name">download_channel_name</string>
-    <string name="download_channel_description">download_channel_description</string>
+    <string name="sing_in">Войти</string>
     <string name="get_login">Получить логин</string>
-    <string name="introduction">Введение</string>
-    <string name="error">Ошибка</string>
     <string name="clear">Очистить</string>
+
+    <!--IntroductionScreen-->
+    <string name="introduction">Введение</string>
     <string name="code_word">Кодовое слово</string>
+    <string name="error">Ошибка</string>
     <string name="continue_button">Продолжить</string>
-    <string name="about_app">О приложении</string>
-    <string name="version_app">Версия 0.0.0</string>
-    <string name="exit">Выйти</string>
-    <string name="download_wi_fi_only">Скачивать видео только\nпо Wi-Fi</string>
+
+    <!--SettingsScreen-->
     <string name="settings">Настройки</string>
     <string name="clear_cashe">Очистить кэш</string>
     <string name="clear_cashe_description">Освободите память устройства. Видео останутся в приложении, и вы сможете скачать их заново</string>
+    <string name="download_wi_fi_only">Скачивать видео только\nпо Wi-Fi</string>
+    <string name="about_app">О приложении</string>
+    <string name="version_app">Версия 0.0.0</string>
+    <string name="exit">Выйти</string>
+    <string name="logout_of_account">Выйти из аккаунта?</string>
+    <string name="logout">Выйти</string>
+    <string name="cansel">Отмена</string>
+
+    <!--AboutAppScreen-->
+    <string name="develop">Разработка</string>
+    <string name="interface_design">Проектирование интерфейса</string>
     <string name="vertion">Версия</string>
     <string name="tell_about_body_balance">Рассказать о Body Balance</string>
     <string name="developers">Разработчики</string>
-    <string name="cansel">Отмена</string>
-    <string name="logout">Выйти</string>
-    <string name="remove">Удалить</string>
-    <string name="logout_of_account">Выйти из аккаунта?</string>
-    <string name="develop">Разработка</string>
-    <string name="interface_design">Проектирование интерфейса</string>
-    <string name="enter_code">Ввести кодовое слово</string>
-    <string name="delete_video_from_playlist">Удалить видео из плейлиста?</string>
-    <string name="delete_video_dilog_message">Видео останется в разделе упражнения</string>
-    <string name="add_account">Добавить аккаунт</string>
+
+    <!--VideoPlayerScreen-->
+    <string name="remove_from_device">Удалить с устройства</string>
+    <string name="download">Скачать</string>
+    <string name="added_to_playlist">Добавлено в плейлист</string>
+    <string name="add_to_playlist">Добавить в плейлист</string>
+
 </resources>

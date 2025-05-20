@@ -45,6 +45,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,6 +54,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
+import com.example.bodybalance.R
 import com.example.bodybalance.core.composable.BaseTopAppBar
 import com.example.bodybalance.core.composable.BodyBalanceActionButton
 import com.example.bodybalance.core.composable.exoPlayer
@@ -189,17 +191,19 @@ private fun VideoPlayerScreenContent(
             color = MaterialTheme.colorScheme.primary
         )
         //NavItem(videoList = videoList, onItemSelected = { onItemSelected(it) })
-        Row(modifier = Modifier.padding(start = 16.dp, end = 7.dp).horizontalScroll(scrollState)) {
+        Row(modifier = Modifier
+            .padding(start = 16.dp, end = 7.dp)
+            .horizontalScroll(scrollState)) {
             if (isDownloadState) {
                 BodyBalanceActionButton(
                     onClick = { removeVideoFromCache() },
-                    text = "Удалить с устройства",
+                    text = stringResource(R.string.remove_from_device),
                     imageVector = Icons.Default.DeleteOutline
                 )
             } else {
                 BodyBalanceActionButton(
                     onClick = { onClickDownload() },
-                    text = "Скачать",
+                    text = stringResource(R.string.download),
                     imageVector = Icons.Default.Download
                 )
             }
@@ -207,13 +211,13 @@ private fun VideoPlayerScreenContent(
             if (isAddPlaylist) {
                 BodyBalanceActionButton(
                     onClick = { onClickRemoveFromPlaylist() },
-                    text = "Добавлено в плейлист",
+                    text = stringResource(R.string.added_to_playlist),
                     imageVector = Icons.Default.Bookmark
                 )
             } else {
                 BodyBalanceActionButton(
                     onClick = { onClickAddToPlaylist() },
-                    text = "Добавить в плейлист",
+                    text = stringResource(R.string.add_to_playlist),
                     imageVector = Icons.Default.BookmarkBorder
                 )
             }
