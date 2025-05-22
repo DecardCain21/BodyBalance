@@ -14,10 +14,12 @@ class VideoRepositoryImpl @Inject constructor(
 ) : VideoRepository {
 
     override suspend fun getVideoByCategory(category: String): Result<Category> {
-        return videoNetworkClient.getVideo(
+        /*return videoNetworkClient.getVideo(
             type = userAccountLocalSource.getActiveAccount()?.name ?: "",
             category = category
-        ).map { it.convertToCategory() }
+        ).map { it.convertToCategory() }*/
+        val test = videoNetworkClient.getVideo("", "")
+        return Result.failure(Exception())
     }
 
     override suspend fun getVideoById(id: Double): Result<Video> {
