@@ -1,23 +1,22 @@
 package com.example.bodybalance.core.data.source.network
 
-import com.example.bodybalance.core.data.dto.CategoryResponse
-import com.example.bodybalance.core.data.dto.Test
+import com.example.bodybalance.core.data.dto.VideoDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface BodyBalanceApiService {
 
-    @GET("v1/video")
+    @GET("v1/video_categories")
     suspend fun getCategoryVideo(
         @Query("type") type: String,
         @Query("category") category: String,
-    ): List<Test>
+    ): List<VideoDto>
 
-    @GET("/category")
+    @GET("v1/category")
     suspend fun getCategory(): List<String>
 
-    @GET("/login")
+    @GET("v1/login")
     suspend fun checkAccount(
-        @Query("type") type: String
+        @Query("username") username: String
     ): Boolean
 }

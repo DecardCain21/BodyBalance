@@ -8,7 +8,7 @@ class LoginNetworkClient(
 
     suspend fun checkAccount(login: String): Result<Boolean> {
         return super.doRequest {
-            apiService.checkAccount(type = login)
+            apiService.checkAccount(username = login)
         }
     }
 }

@@ -12,11 +12,3 @@ fun CategoryResponse.convertToCategory() = Category(
         videoDto.convertToVideo()
     }
 )
-
-fun VideoDto.convertToVideo() = Video(
-    id = id,
-    url = url,
-    category = category,
-    title = name,
-    description = description
-)

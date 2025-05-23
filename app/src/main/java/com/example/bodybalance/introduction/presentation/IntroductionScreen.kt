@@ -49,21 +49,16 @@ import com.example.bodybalance.introduction.presentation.state.IntroductionScree
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import kotlinx.coroutines.delay
 
-const val INTRODUCTION = "Introduction"
-
 @SuppressLint("OpaqueUnitKey")
 @androidx.annotation.OptIn(UnstableApi::class)
 @Composable
 fun IntroductionScreen(
     uiState: IntroductionScreenState,
     inputCodeWord: (String) -> Unit,
-    getVideo: (String) -> Unit,
     navToPlaylist: () -> Unit,
     eventContinue: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-
-    LaunchedEffect(Unit) { getVideo(INTRODUCTION) }
 
     Column(
         modifier = modifier.fillMaxSize(),

@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -45,7 +44,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
@@ -171,7 +169,7 @@ private fun VideoPlayerScreenContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(all = 16.dp),
-            text = video.title,
+            text = video.name,
             overflow = TextOverflow.Ellipsis,
             fontWeight = FontWeight(400),
             fontSize = 22.sp,
@@ -231,7 +229,7 @@ private fun VideoList(
     ) {
         itemsIndexed(videoList) { index, item ->
             VideoItem(
-                title = item.title,
+                title = item.name,
                 showIconDrag = false,
                 showSelectItem = selectItemIndex == index,
                 modifier = Modifier

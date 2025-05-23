@@ -87,7 +87,7 @@ class HomeViewModel @Inject constructor(
                                 )
                             }
 
-                            // todo: нигде не задаем эту ошибку
+                            // todo: ни где не задаем эту ошибку
                             is NetworkError.NoData -> {
                                 _snackbarEvent.emit(
                                     SnackbarEventParams("Видео пока недоступно, загляните позже")

@@ -441,7 +441,7 @@ private fun PlaylistScreen(
                             showDeleteBackground = !isDragging
                             VideoItem(
                                 imageUrl = item.imageUrl ?: "",
-                                title = item.title,
+                                title = item.name,
                                 showIconDrag = true,
                                 reorderState = state
                             )
@@ -580,13 +580,13 @@ private fun PreviewPlaylist(
             ),
             playlistVideo = listOf(
                 Video(
-                    title = "Разминка перед упражнениями на отдельную группу мыщц",
+                    name = "Разминка перед упражнениями на отдельную группу мыщц",
                     url = "",
                     id = 0.0,
                     description = "321"
                 ),
-                Video(title = "\"Название видео\"", url = "", id = 0.0, description = "321"),
-                Video(title = "\"Название видео\"", url = "", id = 0.0, description = "321")
+                Video(name = "\"Название видео\"", url = "", id = 0.0, description = "321"),
+                Video(name = "\"Название видео\"", url = "", id = 0.0, description = "321")
             ),
             navigateToVideoPlayerScreen = {},
             navigateBackToIntroduction = {},
