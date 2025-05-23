@@ -89,7 +89,7 @@ fun CategoryScreen(
     navigateToHomeScreen: () -> Unit,
     changeUser: (Account) -> Unit,
     deleteVideoFromPlaylist: (Video) -> Unit,
-    updateOrderPlaylistVideo: (id: Double, order: Int) -> Unit
+    updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit
 ) {
     when (uiState) {
         is CategoryState.Content -> CategoryContentScreen(
@@ -125,7 +125,7 @@ private fun CategoryContentScreen(
     changeUser: (Account) -> Unit,
     modifier: Modifier = Modifier,
     deleteVideoFromPlaylist: (Video) -> Unit,
-    updateOrderPlaylistVideo: (id: Double, order: Int) -> Unit
+    updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit
 ) {
     var selectedAccount by remember(accounts) {
         mutableStateOf(activeAccount)
@@ -291,7 +291,7 @@ private fun CategoryPages(
     playlistVideo: List<Video>,
     navigateToVideoPlayerScreen: (String) -> Unit,
     deleteVideoFromPlaylist: (Video) -> Unit,
-    updateOrderPlaylistVideo: (id: Double, order: Int) -> Unit
+    updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit
 ) {
     val tabs = listOf("Плейлист", "Упражнения")
     val pagerState = rememberPagerState { tabs.size }
@@ -378,7 +378,7 @@ private fun PlaylistScreen(
     playlistVideo: List<Video>,
     modifier: Modifier = Modifier,
     deleteVideoFromPlaylist: (Video) -> Unit,
-    updateOrderPlaylistVideo: (id: Double, order: Int) -> Unit
+    updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit
 ) {
 
     var showDialog by remember { mutableStateOf(false) }
@@ -561,33 +561,8 @@ private fun PreviewPlaylist(
     BodyBalanceTheme(dynamicColor = false) {
         CategoryContentScreen(
             navigateToSettingsScreen = {},
-            exercise = listOf(
-                "1",
-                "2",
-                "3",
-                "1",
-                "2",
-                "3",
-                "1",
-                "2",
-                "3",
-                "1",
-                "2",
-                "3",
-                "1",
-                "2",
-                "3"
-            ),
-            playlistVideo = listOf(
-                Video(
-                    name = "Разминка перед упражнениями на отдельную группу мыщц",
-                    url = "",
-                    id = 0.0,
-                    description = "321"
-                ),
-                Video(name = "\"Название видео\"", url = "", id = 0.0, description = "321"),
-                Video(name = "\"Название видео\"", url = "", id = 0.0, description = "321")
-            ),
+            exercise = listOf("1", "2", "2", "2", "2"),
+            playlistVideo = listOf(Video.emptyVideo(), Video.emptyVideo(), Video.emptyVideo(),),
             navigateToVideoPlayerScreen = {},
             navigateBackToIntroduction = {},
             navigateToHomeScreen = {},

@@ -22,11 +22,11 @@ class PlaylistVideoLocalSourceImpl @Inject constructor(
         dao.deletePlaylistVideo(entity)
     }
 
-    override suspend fun deletePlaylistVideoById(id: Double) {
+    override suspend fun deletePlaylistVideoById(id: Int) {
         dao.deletePlaylistVideoById(id)
     }
 
-    override suspend fun getPlaylistVideoById(id: Double): PlaylistVideoEntity? {
+    override suspend fun getPlaylistVideoById(id: Int): PlaylistVideoEntity? {
         return dao.getPlaylistVideoById(id)
     }
 
@@ -34,11 +34,11 @@ class PlaylistVideoLocalSourceImpl @Inject constructor(
         dao.updatePlaylistVideo(entity)
     }
 
-    override suspend fun existsPlaylistVideoById(id: Double): Boolean {
+    override suspend fun existsPlaylistVideoById(id: Int): Boolean {
         return dao.existsById(id)
     }
 
-    override suspend fun updateOrderPlaylistVideo(id: Double, order: Int) {
+    override suspend fun updateOrderPlaylistVideo(id: Int, order: Int) {
         dao.updateOrder(id = id, order = order)
     }
 }

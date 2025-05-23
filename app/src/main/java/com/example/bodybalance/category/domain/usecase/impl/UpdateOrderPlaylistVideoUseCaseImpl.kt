@@ -8,7 +8,7 @@ class UpdateOrderPlaylistVideoUseCaseImpl @Inject constructor(
     private val playlistVideoRepository: PlaylistVideoRepository
 ) : UpdateOrderPlaylistVideoUseCase {
 
-    override suspend fun invoke(id: Double, order: Int) {
+    override suspend fun invoke(id: Int, order: Int) {
         playlistVideoRepository.updateOrderPlaylistVideo(id = id, order = order)
     }
 }

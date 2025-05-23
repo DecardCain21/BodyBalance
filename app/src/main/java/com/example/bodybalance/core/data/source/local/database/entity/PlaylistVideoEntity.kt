@@ -6,11 +6,11 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "playlist_video")
 data class PlaylistVideoEntity(
     @PrimaryKey
-    val id: Double,
-    val title: String,
+    val id: Int,
+    val name: String,
     val url: String,
-    val category: String? = "",
+    val category: String,
     val description: String,
-    val imageUrl: String?,
+    val imageUrl: String,
     val order: Int // поле для управления порядком
 )

@@ -22,17 +22,17 @@ interface PlaylistVideoDao {
     suspend fun deletePlaylistVideo(entity: PlaylistVideoEntity)
 
     @Query("DELETE FROM playlist_video WHERE id = :id")
-    suspend fun deletePlaylistVideoById(id: Double)
+    suspend fun deletePlaylistVideoById(id: Int)
 
     @Query("SELECT * FROM playlist_video WHERE id = :id")
-    suspend fun getPlaylistVideoById(id: Double): PlaylistVideoEntity?
+    suspend fun getPlaylistVideoById(id: Int): PlaylistVideoEntity?
 
     @Update
     suspend fun updatePlaylistVideo(entity: PlaylistVideoEntity)
 
     @Query("SELECT EXISTS(SELECT 1 FROM playlist_video WHERE id = :id LIMIT 1)")
-    suspend fun existsById(id: Double): Boolean
+    suspend fun existsById(id: Int): Boolean
 
     @Query("UPDATE playlist_video SET `order` = :order WHERE id = :id")
-    suspend fun updateOrder(id: Double, order: Int)
+    suspend fun updateOrder(id: Int, order: Int)
 }

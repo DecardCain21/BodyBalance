@@ -11,13 +11,13 @@ interface PlaylistVideoRepository {
 
     suspend fun deletePlaylistVideo(video: Video)
 
-    suspend fun deletePlaylistVideoById(id: Double)
+    suspend fun deletePlaylistVideoById(id: Int)
 
-    suspend fun getPlaylistVideoById(id: Double): Video?
+    suspend fun getPlaylistVideoById(id: Int): Video?
 
     suspend fun updatePlaylistVideo(video: Video)
 
-    suspend fun existsPlaylistVideoById(id: Double): Boolean
+    suspend fun existsPlaylistVideoById(id: Int): Boolean
 
-    suspend fun updateOrderPlaylistVideo(id: Double, order: Int)
+    suspend fun updateOrderPlaylistVideo(id: Int, order: Int)
 }
