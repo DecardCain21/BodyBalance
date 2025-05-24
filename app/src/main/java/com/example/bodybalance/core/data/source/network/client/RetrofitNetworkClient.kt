@@ -1,9 +1,6 @@
 package com.example.bodybalance.core.data.source.network.client
 
-import android.net.http.HttpException
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresExtension
 import com.example.bodybalance.core.data.source.network.NetworkClient
 import com.example.bodybalance.core.util.NetworkError
 import com.example.bodybalance.core.util.getConnected
@@ -12,7 +9,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.net.SocketTimeoutException
 
-@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 abstract class RetrofitNetworkClient : NetworkClient {
 
     private val maxRetries = 10
@@ -20,9 +16,7 @@ abstract class RetrofitNetworkClient : NetworkClient {
 
     override suspend fun <T> doRequest(request: suspend () -> T): Result<T> {
 
-        if (!getConnected()) {
-            return Result.failure(NetworkError.NoInternet())
-        }
+        if (!getConnected()) { return Result.failure(NetworkError.NoInternet()) }
 
         var currentAttempt = 0
 
@@ -31,23 +25,28 @@ abstract class RetrofitNetworkClient : NetworkClient {
             while (currentAttempt < maxRetries) {
                 try {
                     return@withContext Result.success(request())
-                } catch (e: HttpException) {
-                    return@withContext Result.failure(NetworkError.ServerError("", e.toString()))
+                } catch (e: retrofit2.HttpException) {
+                    return@withContext when (e.code()) {
+                        500 -> Result.failure(NetworkError.ServerError(e.message()))
+                        404 -> Result.failure(NetworkError.NoData())
+                        400 -> Result.failure(NetworkError.BadRequest())
+                        else -> Result.failure(e)
+                    }
                 } catch (e: SocketTimeoutException) {
                     Log.e("SocketTimeoutException", "Попытка № $currentAttempt")
                     currentAttempt++
                     if (currentAttempt >= maxRetries) {
                         return@withContext Result.failure(
-                            NetworkError.ServerError("", e.toString())
+                            NetworkError.ServerError(e.message ?: "")
                         )
                     } else {
                         delay(retryDelayMillis)
                     }
                 } catch (e: Exception) {
-                    return@withContext Result.failure(NetworkError.ServerError("", e.toString()))
+                    return@withContext Result.failure(NetworkError.ServerError(e.message ?: ""))
                 }
             }
-            Result.failure(NetworkError.ServerError("", ""))
+            Result.failure(NetworkError.ServerError(""))
         }
     }
 }
