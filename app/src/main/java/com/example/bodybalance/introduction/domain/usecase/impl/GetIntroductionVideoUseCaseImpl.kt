@@ -1,0 +1,16 @@
+package com.example.bodybalance.introduction.domain.usecase.impl
+
+import com.example.bodybalance.core.data.source.local.IntroProvider
+import com.example.bodybalance.introduction.domain.usecase.GetIntroductionVideoUseCase
+import javax.inject.Inject
+
+class GetIntroductionVideoUseCaseImpl @Inject constructor(private val introProvider: IntroProvider) :
+    GetIntroductionVideoUseCase {
+    override operator fun invoke(): String {
+        return introProvider.getVideoUri().toString()
+    }
+
+    public override fun unpackVideoIfNeeded(): Boolean {
+        return introProvider.unpackVideoIfNeeded()
+    }
+}

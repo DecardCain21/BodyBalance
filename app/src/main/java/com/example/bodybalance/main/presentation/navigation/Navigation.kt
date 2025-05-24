@@ -50,6 +50,6 @@ fun Navigation(isAuthenticated: Boolean) {
                 navController.popBackStack()
             })
 
-        videoPlayerScreen()
+        videoPlayerScreen(navigateBackToPlaylistScreen = { navController.popBackStack() })
     }
 }

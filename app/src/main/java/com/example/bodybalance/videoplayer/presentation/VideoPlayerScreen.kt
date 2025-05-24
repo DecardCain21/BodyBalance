@@ -1,9 +1,12 @@
 package com.example.bodybalance.videoplayer.presentation
 
+import android.content.res.Configuration
 import androidx.annotation.OptIn
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +22,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
@@ -31,14 +35,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,6 +54,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
+import com.example.bodybalance.R
 import com.example.bodybalance.core.composable.BaseTopAppBar
 import com.example.bodybalance.core.composable.BodyBalanceActionButton
 import com.example.bodybalance.core.composable.exoPlayer
@@ -61,6 +69,7 @@ import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerState
 fun VideoPlayerScreen(
     categoryId: Int,
     modifier: Modifier = Modifier,
+    navigateBackToPlaylistScreen: () -> Unit,
     viewModel: VideoPlayerViewModel = hiltViewModel(),
 ) {
 
@@ -73,6 +82,7 @@ fun VideoPlayerScreen(
         is VideoPlayerState.Content -> {
             VideoPlayerScreenContent(
                 modifier = modifier,
+                navigateBackToPlaylistScreen = navigateBackToPlaylistScreen,
                 video = currentState.currentVideo,
                 videoList = currentState.videoList,
                 onItemSelected = {
@@ -135,6 +145,7 @@ private fun VideoPlayerScreenContent(
     videoList: List<Video>,
     onItemSelected: (Video) -> Unit,
     modifier: Modifier = Modifier,
+    navigateBackToPlaylistScreen: () -> Unit,
     onClickDownload: () -> Unit,
     removeVideoFromCache: () -> Unit,
     onClickAddToPlaylist: () -> Unit,
@@ -143,12 +154,16 @@ private fun VideoPlayerScreenContent(
     isAddPlaylist: Boolean
 ) {
     val isPreview = LocalInspectionMode.current
+    val configuration = LocalConfiguration.current
+    val scrollState = rememberScrollState()
 
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        BaseTopAppBar(navigateBack = {})
+        if(configuration.orientation != Configuration.ORIENTATION_LANDSCAPE){
+            BaseTopAppBar(navigateBack = { navigateBackToPlaylistScreen() })
+        }
 
         if (isPreview) {
             Box(
@@ -175,17 +190,19 @@ private fun VideoPlayerScreenContent(
             color = MaterialTheme.colorScheme.primary
         )
         //NavItem(videoList = videoList, onItemSelected = { onItemSelected(it) })
-        Row(modifier = Modifier.padding(start = 16.dp, end = 7.dp)) {
+        Row(modifier = Modifier
+            .padding(start = 16.dp, end = 7.dp)
+            .horizontalScroll(scrollState)) {
             if (isDownloadState) {
                 BodyBalanceActionButton(
                     onClick = { removeVideoFromCache() },
-                    text = "Удалить с устройства",
+                    text = stringResource(R.string.remove_from_device),
                     imageVector = Icons.Default.DeleteOutline
                 )
             } else {
                 BodyBalanceActionButton(
                     onClick = { onClickDownload() },
-                    text = "Скачать",
+                    text = stringResource(R.string.download),
                     imageVector = Icons.Default.Download
                 )
             }
@@ -193,13 +210,13 @@ private fun VideoPlayerScreenContent(
             if (isAddPlaylist) {
                 BodyBalanceActionButton(
                     onClick = { onClickRemoveFromPlaylist() },
-                    text = "Добавлено в плейлист",
+                    text = stringResource(R.string.added_to_playlist),
                     imageVector = Icons.Default.Bookmark
                 )
             } else {
                 BodyBalanceActionButton(
                     onClick = { onClickAddToPlaylist() },
-                    text = "Добавить в плейлист",
+                    text = stringResource(R.string.add_to_playlist),
                     imageVector = Icons.Default.BookmarkBorder
                 )
             }
@@ -270,6 +287,7 @@ fun IntroductionPreview() {
             VideoPlayerScreenContent(
                 video = Video.emptyVideo(),
                 videoList = listOf(Video.emptyVideo(), Video.emptyVideo()),
+                navigateBackToPlaylistScreen = {},
                 onItemSelected = {},
                 onClickDownload = {},
                 onClickAddToPlaylist = {},

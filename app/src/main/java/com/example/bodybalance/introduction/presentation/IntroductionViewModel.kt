@@ -6,6 +6,7 @@ import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.core.domain.usecase.api.GetVideoByCategoryUseCase
 import com.example.bodybalance.core.util.NetworkError
 import com.example.bodybalance.introduction.domain.usecase.GetIntroductionCodeUseCase
+import com.example.bodybalance.introduction.domain.usecase.GetIntroductionVideoUseCase
 import com.example.bodybalance.introduction.domain.usecase.SetIntroductionCodeUseCase
 import com.example.bodybalance.introduction.presentation.state.IntroductionScreenState
 import com.example.bodybalance.introduction.presentation.state.IntroductionScreenState.Input
@@ -24,7 +25,8 @@ import javax.inject.Inject
 class IntroductionViewModel @Inject constructor(
     private val getVideoByCategoryUseCase: GetVideoByCategoryUseCase,
     private val getIntroductionCodeUseCase: GetIntroductionCodeUseCase,
-    private val setIntroductionCodeUseCase: SetIntroductionCodeUseCase
+    private val setIntroductionCodeUseCase: SetIntroductionCodeUseCase,
+    private val getIntroductionVideoUseCase: GetIntroductionVideoUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -50,6 +52,25 @@ class IntroductionViewModel @Inject constructor(
     }
 
     private fun getIntroductionVideo() {
+    fun getIntro() {
+        viewModelScope.launch(Dispatchers.IO) {
+            getIntroductionVideoUseCase.unpackVideoIfNeeded()
+            _uiState.value = IntroductionScreenState(
+                inputValue = Input.Text("Marat"), IntroductionPlayerState.Content(
+                    video = Video(
+                        url = getIntroductionVideoUseCase(),
+                        id = 0.0,
+                        title = "Введение",
+                        imageUrl = "",
+                        category = "Введение",
+                        description = "Это видео поможет вам быстро разобраться, как всё работает\n" + "\n" + "После просмотра введите кодовое слово из видео, чтобы продолжить"
+                    )
+                ), buttonIsEnabled = true
+            )
+        }
+    }
+
+    fun getVideo(category: String) {
         if (isInitialized) return
         isInitialized = true
 
@@ -57,23 +78,18 @@ class IntroductionViewModel @Inject constructor(
             val code = getIntroductionCodeUseCase()
             val inputState = if (code.isNotEmpty()) Input.Text(code) else Input.Empty
 
-            // todo: необходимо получать архивированное видео вступления
-            /*val result = getVideoByCategoryUseCase(category)
+            val result = getVideoByCategoryUseCase(category)
             val newState = when (result.exceptionOrNull()) {
-                is NetworkError.ServerError,
-                is NetworkError.NoData,
-                is NetworkError.NoInternet -> IntroductionScreenState(
-                    inputValue = inputState,
-                    videoState = IntroductionPlayerState.Empty
+                is NetworkError.ServerError, is NetworkError.NoData, is NetworkError.NoInternet -> IntroductionScreenState(
+                    inputValue = inputState, videoState = IntroductionPlayerState.Empty
                 )
 
                 else -> result.getOrNull()?.let {
-                    *//*IntroductionScreenState(
+                    /*IntroductionScreenState(
                         inputValue = inputState, IntroductionPlayerState.Content(
                             videoUrl = it.videoItems.map { video -> video.url }.first()
                         )
-                    )*//*
-                    *//*savedVideoUseCase(
+                    )*//*savedVideoUseCase(
                         video = Video(
                             id = 1.2,
                             url = it.videoItems[0].url,
@@ -81,14 +97,12 @@ class IntroductionViewModel @Inject constructor(
                             title = "test name",
                             description = "test description"
                         )
-                    )*//*
+                    )*/
                     hardCode(result.getOrNull()!!.videoItems)
                 } ?: IntroductionScreenState(
                     inputValue = Input.Empty, IntroductionPlayerState.Empty
                 )
-            }*/
-
-            val newState = hardCode(listOf(Video.emptyVideo()))
+            }
             _uiState.value = newState
         }
     }
@@ -121,12 +135,9 @@ class IntroductionViewModel @Inject constructor(
                 false
             }
         }
-        _uiState.value =
-            uiState.value.copy(
-                inputValue = Input.Text(input),
-                buttonIsEnabled = isEnabled,
-                supportText = supportText
-            )
+        _uiState.value = uiState.value.copy(
+            inputValue = Input.Text(input), buttonIsEnabled = isEnabled, supportText = supportText
+        )
     }
 
     companion object {
