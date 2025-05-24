@@ -37,7 +37,6 @@ class VideoPlayerViewModel @Inject constructor(
     private var isInitialized = false
 
     fun handleEvent(event: VideoPlayerScreenUiEvent) {
-        //Проверить есть ли видео в кэше и плейлисте
         when (event) {
             is VideoPlayerScreenUiEvent.DownloadVideo -> {
                 downloadVideo(url = event.url, fileName = event.fileName)
@@ -61,12 +60,12 @@ class VideoPlayerViewModel @Inject constructor(
         }
     }
 
-    fun getVideo(category: String) {
+    fun getVideo(categoryId: Int) {
         if (isInitialized) return
         isInitialized = true
 
         viewModelScope.launch {
-            val result = getVideoByCategoryUseCase(category)
+            val result = getVideoByCategoryUseCase(categoryId)
             val newState = when (result.exceptionOrNull()) {
                 is NetworkError.ServerError,
                 is NetworkError.NoData,
@@ -74,8 +73,8 @@ class VideoPlayerViewModel @Inject constructor(
 
                 else -> result.getOrNull()?.let {
                     VideoPlayerState.Content(
-                        currentVideo = it.videoItems.map { video -> video }.first(),
-                        videoList = it.videoItems,
+                        currentVideo = it.map { video -> video }.first(),
+                        videoList = it,
                     )
                 } ?: VideoPlayerState.Empty
             }
@@ -97,7 +96,6 @@ class VideoPlayerViewModel @Inject constructor(
                 setButtonsState(currentState)
             }
         }
-
     }
 
     private fun addToPlaylist(video: Video) {
@@ -134,7 +132,6 @@ class VideoPlayerViewModel @Inject constructor(
             override fun onError(error: String) {
                 /*TODO("Not yet implemented")*/
             }
-
         })
     }
 

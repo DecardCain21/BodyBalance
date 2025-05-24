@@ -6,10 +6,10 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "saved_video")
 data class SavedVideoEntity(
     @PrimaryKey
-    val id: Double,
-    val title: String,
+    val id: Int,
+    val name: String,
     val videoUrl: String,
     val description: String,
-    val category: String? = "",
+    val category: String = "",
     val imageUrl: String? = ""
 )

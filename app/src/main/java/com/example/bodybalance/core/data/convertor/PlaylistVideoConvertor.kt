@@ -5,7 +5,7 @@ import com.example.bodybalance.core.domain.models.Video
 
 fun Video.convertEntity() = PlaylistVideoEntity(
     id = id,
-    title = title,
+    name = name,
     url = url,
     category = category,
     description = description,
@@ -15,7 +15,7 @@ fun Video.convertEntity() = PlaylistVideoEntity(
 
 fun PlaylistVideoEntity.convertToVideo() = Video(
     id = id,
-    title = title,
+    name = name,
     url = url,
     category = category,
     description = description,

@@ -8,7 +8,7 @@ class CheckLoginUseCaseImpl @Inject constructor(
     private val loginRepository: LoginRepository
 ) : CheckLoginUseCase {
 
-    override suspend fun invoke(login: String): Result<Boolean> {
+    override suspend fun invoke(login: String): Result<Unit> {
         return loginRepository.checkAccount(login)
     }
 }

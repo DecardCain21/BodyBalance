@@ -3,8 +3,6 @@ package com.example.bodybalance.introduction.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bodybalance.core.domain.models.Video
-import com.example.bodybalance.core.domain.usecase.api.GetVideoByCategoryUseCase
-import com.example.bodybalance.core.util.NetworkError
 import com.example.bodybalance.introduction.domain.usecase.GetIntroductionCodeUseCase
 import com.example.bodybalance.introduction.domain.usecase.GetIntroductionVideoUseCase
 import com.example.bodybalance.introduction.domain.usecase.SetIntroductionCodeUseCase
@@ -23,7 +21,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class IntroductionViewModel @Inject constructor(
-    private val getVideoByCategoryUseCase: GetVideoByCategoryUseCase,
     private val getIntroductionCodeUseCase: GetIntroductionCodeUseCase,
     private val setIntroductionCodeUseCase: SetIntroductionCodeUseCase,
     private val getIntroductionVideoUseCase: GetIntroductionVideoUseCase
@@ -38,7 +35,9 @@ class IntroductionViewModel @Inject constructor(
     val uiState: StateFlow<IntroductionScreenState>
         get() = _uiState.asStateFlow()
 
-    private var isInitialized = false
+    init {
+        getIntroductionVideo()
+    }
 
     fun handleEvent(event: IntroductionScreenUiEvent) {
         when (event) {
@@ -47,71 +46,32 @@ class IntroductionViewModel @Inject constructor(
         }
     }
 
-    fun getIntro() {
+    private fun getIntroductionVideo() {
         viewModelScope.launch(Dispatchers.IO) {
+            val code = getIntroductionCodeUseCase()
+            val inputState = if (code.isNotEmpty()) Input.Text(code) else Input.Empty
             getIntroductionVideoUseCase.unpackVideoIfNeeded()
             _uiState.value = IntroductionScreenState(
-                inputValue = Input.Text("Marat"), IntroductionPlayerState.Content(
+                inputValue = inputState, IntroductionPlayerState.Content(
                     video = Video(
                         url = getIntroductionVideoUseCase(),
-                        id = 0.0,
-                        title = "Введение",
+                        id = 0,
                         imageUrl = "",
                         category = "Введение",
-                        description = "Это видео поможет вам быстро разобраться, как всё работает\n" + "\n" + "После просмотра введите кодовое слово из видео, чтобы продолжить"
+                        description = """
+                            Это видео поможет вам быстро разобраться, как всё работает. 
+                            После просмотра введите кодовое слово из видео, чтобы продолжить
+                        """.trimIndent(),
+                        name = "Введение"
                     )
-                ), buttonIsEnabled = true
+                ), buttonIsEnabled = code.isNotEmpty()
             )
         }
     }
 
-    fun getVideo(category: String) {
-        if (isInitialized) return
-        isInitialized = true
-
-        viewModelScope.launch(Dispatchers.IO) {
-            val code = getIntroductionCodeUseCase()
-            val inputState = if (code.isNotEmpty()) Input.Text(code) else Input.Empty
-
-            val result = getVideoByCategoryUseCase(category)
-            val newState = when (result.exceptionOrNull()) {
-                is NetworkError.ServerError, is NetworkError.NoData, is NetworkError.NoInternet -> IntroductionScreenState(
-                    inputValue = inputState, videoState = IntroductionPlayerState.Empty
-                )
-
-                else -> result.getOrNull()?.let {
-                    /*IntroductionScreenState(
-                        inputValue = inputState, IntroductionPlayerState.Content(
-                            videoUrl = it.videoItems.map { video -> video.url }.first()
-                        )
-                    )*//*savedVideoUseCase(
-                        video = Video(
-                            id = 1.2,
-                            url = it.videoItems[0].url,
-                            category = "test",
-                            title = "test name",
-                            description = "test description"
-                        )
-                    )*/
-                    hardCode(result.getOrNull()!!.videoItems)
-                } ?: IntroductionScreenState(
-                    inputValue = Input.Empty, IntroductionPlayerState.Empty
-                )
-            }
-            _uiState.value = newState
-        }
-    }
-
     private fun eventContinue() {
-        setIntroductionCodeUseCase(CODE)
-    }
-
-    private fun hardCode(result: List<Video>): IntroductionScreenState {
-        return IntroductionScreenState(
-            inputValue = Input.Text("Marat"), IntroductionPlayerState.Content(
-                video = result.map { video -> video }.first()
-            ), buttonIsEnabled = true
-        )
+        val code = (_uiState.value.inputValue as Input.Text).value
+        setIntroductionCodeUseCase(code)
     }
 
     private fun enterCodeWord(input: String) {
@@ -131,11 +91,9 @@ class IntroductionViewModel @Inject constructor(
             }
         }
         _uiState.value = uiState.value.copy(
-            inputValue = Input.Text(input), buttonIsEnabled = isEnabled, supportText = supportText
+            inputValue = Input.Text(input),
+            buttonIsEnabled = isEnabled,
+            supportText = supportText
         )
-    }
-
-    companion object {
-        const val CODE = "1234"
     }
 }

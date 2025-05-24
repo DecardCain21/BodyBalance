@@ -70,6 +70,7 @@ import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.core.composable.items.ExerciseItem
 import com.example.bodybalance.core.composable.items.VideoItem
 import com.example.bodybalance.core.domain.models.Account
+import com.example.bodybalance.core.domain.models.Category
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import com.example.bodybalance.ui.theme.TabRowDividerColor
@@ -84,12 +85,12 @@ fun CategoryScreen(
     modifier: Modifier = Modifier,
     uiState: CategoryState,
     navigateBackToIntroduction: () -> Unit,
-    navigateToVideoPlayerScreen: (String) -> Unit,
+    navigateToVideoPlayerScreen: (Int) -> Unit,
     navigateToSettingsScreen: () -> Unit,
     navigateToHomeScreen: () -> Unit,
     changeUser: (Account) -> Unit,
     deleteVideoFromPlaylist: (Video) -> Unit,
-    updateOrderPlaylistVideo: (id: Double, order: Int) -> Unit
+    updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit
 ) {
     when (uiState) {
         is CategoryState.Content -> CategoryContentScreen(
@@ -115,17 +116,17 @@ fun CategoryScreen(
 @Composable
 private fun CategoryContentScreen(
     accounts: List<Account>,
-    exercise: List<String>,
+    exercise: List<Category>,
     playlistVideo: List<Video>,
     activeAccount: Account,
     navigateBackToIntroduction: () -> Unit,
-    navigateToVideoPlayerScreen: (String) -> Unit, // String - Название категории
+    navigateToVideoPlayerScreen: (Int) -> Unit, // Int - Id категории
     navigateToSettingsScreen: () -> Unit,
     navigateToHomeScreen: () -> Unit,
     changeUser: (Account) -> Unit,
     modifier: Modifier = Modifier,
     deleteVideoFromPlaylist: (Video) -> Unit,
-    updateOrderPlaylistVideo: (id: Double, order: Int) -> Unit
+    updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit
 ) {
     var selectedAccount by remember(accounts) {
         mutableStateOf(activeAccount)
@@ -287,11 +288,11 @@ private fun ChangeUserBlock(
 
 @Composable
 private fun CategoryPages(
-    exercise: List<String>,
+    exercise: List<Category>,
     playlistVideo: List<Video>,
-    navigateToVideoPlayerScreen: (String) -> Unit,
+    navigateToVideoPlayerScreen: (Int) -> Unit,
     deleteVideoFromPlaylist: (Video) -> Unit,
-    updateOrderPlaylistVideo: (id: Double, order: Int) -> Unit
+    updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit
 ) {
     val tabs = listOf("Плейлист", "Упражнения")
     val pagerState = rememberPagerState { tabs.size }
@@ -349,25 +350,26 @@ private fun CategoryPages(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ExerciseScreen(
-    category: List<String>,
+    category: List<Category>,
     modifier: Modifier = Modifier,
-    navigateToVideoPlayerScreen: (String) -> Unit
+    navigateToVideoPlayerScreen: (Int) -> Unit
 ) {
     Box {
         LazyColumn(
-            modifier = modifier
-                .fillMaxWidth(),
+            modifier = modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(16.dp),
             state = rememberLazyListState()
         ) {
             items(category) { item ->
-                ExerciseItem(modifier = Modifier.combinedClickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() },
-                    onClick = { navigateToVideoPlayerScreen(item) }
-                ), title = item)
+                ExerciseItem(
+                    modifier = Modifier.combinedClickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClick = { navigateToVideoPlayerScreen(item.id) }
+                    ), title = item.name
+                )
             }
         }
     }
@@ -378,7 +380,7 @@ private fun PlaylistScreen(
     playlistVideo: List<Video>,
     modifier: Modifier = Modifier,
     deleteVideoFromPlaylist: (Video) -> Unit,
-    updateOrderPlaylistVideo: (id: Double, order: Int) -> Unit
+    updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit
 ) {
 
     var showDialog by remember { mutableStateOf(false) }
@@ -440,8 +442,8 @@ private fun PlaylistScreen(
                         ReorderableItem(state = state, key = item.id) { isDragging ->
                             showDeleteBackground = !isDragging
                             VideoItem(
-                                imageUrl = item.imageUrl ?: "",
-                                title = item.title,
+                                imageUrl = item.imageUrl,
+                                title = item.name,
                                 showIconDrag = true,
                                 reorderState = state
                             )
@@ -561,39 +563,14 @@ private fun PreviewPlaylist(
     BodyBalanceTheme(dynamicColor = false) {
         CategoryContentScreen(
             navigateToSettingsScreen = {},
-            exercise = listOf(
-                "1",
-                "2",
-                "3",
-                "1",
-                "2",
-                "3",
-                "1",
-                "2",
-                "3",
-                "1",
-                "2",
-                "3",
-                "1",
-                "2",
-                "3"
-            ),
-            playlistVideo = listOf(
-                Video(
-                    title = "Разминка перед упражнениями на отдельную группу мыщц",
-                    url = "",
-                    id = 0.0,
-                    description = "321"
-                ),
-                Video(title = "\"Название видео\"", url = "", id = 0.0, description = "321"),
-                Video(title = "\"Название видео\"", url = "", id = 0.0, description = "321")
-            ),
+            exercise = listOf(Category.empty(), Category.empty()),
+            playlistVideo = listOf(Video.emptyVideo(), Video.emptyVideo(), Video.emptyVideo()),
             navigateToVideoPlayerScreen = {},
             navigateBackToIntroduction = {},
             navigateToHomeScreen = {},
             changeUser = {},
             accounts = emptyList(),
-            activeAccount = Account(name = "", isActive = true),
+            activeAccount = Account.empty(),
             deleteVideoFromPlaylist = {},
             updateOrderPlaylistVideo = { _, _ -> }
         )

@@ -27,11 +27,11 @@ class PlaylistVideoRepositoryImpl @Inject constructor(
         playlistVideoLocalSource.deletePlaylistVideo(entity = video.convertEntity())
     }
 
-    override suspend fun deletePlaylistVideoById(id: Double) {
+    override suspend fun deletePlaylistVideoById(id: Int) {
         playlistVideoLocalSource.deletePlaylistVideoById(id = id)
     }
 
-    override suspend fun getPlaylistVideoById(id: Double): Video? {
+    override suspend fun getPlaylistVideoById(id: Int): Video? {
         return playlistVideoLocalSource.getPlaylistVideoById(id = id)?.convertToVideo()
     }
 
@@ -39,11 +39,11 @@ class PlaylistVideoRepositoryImpl @Inject constructor(
         playlistVideoLocalSource.updatePlaylistVideo(entity = video.convertEntity())
     }
 
-    override suspend fun existsPlaylistVideoById(id: Double): Boolean {
+    override suspend fun existsPlaylistVideoById(id: Int): Boolean {
         return playlistVideoLocalSource.existsPlaylistVideoById(id = id)
     }
 
-    override suspend fun updateOrderPlaylistVideo(id: Double, order: Int) {
+    override suspend fun updateOrderPlaylistVideo(id: Int, order: Int) {
         playlistVideoLocalSource.updateOrderPlaylistVideo(id = id, order = order)
     }
 }

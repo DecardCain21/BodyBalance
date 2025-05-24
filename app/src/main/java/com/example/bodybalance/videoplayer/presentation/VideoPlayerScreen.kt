@@ -67,7 +67,7 @@ import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerState
 @OptIn(UnstableApi::class)
 @Composable
 fun VideoPlayerScreen(
-    category: String,
+    categoryId: Int,
     modifier: Modifier = Modifier,
     navigateBackToPlaylistScreen: () -> Unit,
     viewModel: VideoPlayerViewModel = hiltViewModel(),
@@ -76,8 +76,7 @@ fun VideoPlayerScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val currentState = uiState
 
-    LaunchedEffect(Unit) { viewModel.getVideo(category) }
-
+    LaunchedEffect(Unit) { viewModel.getVideo(categoryId) }
 
     when (currentState) {
         is VideoPlayerState.Content -> {
@@ -184,7 +183,7 @@ private fun VideoPlayerScreenContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(all = 16.dp),
-            text = video.title,
+            text = video.name,
             overflow = TextOverflow.Ellipsis,
             fontWeight = FontWeight(400),
             fontSize = 22.sp,
@@ -246,7 +245,7 @@ private fun VideoList(
     ) {
         itemsIndexed(videoList) { index, item ->
             VideoItem(
-                title = item.title,
+                title = item.name,
                 showIconDrag = false,
                 showSelectItem = selectItemIndex == index,
                 modifier = Modifier

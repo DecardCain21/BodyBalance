@@ -10,7 +10,7 @@ import com.example.bodybalance.category.presentation.state.CategoryScreenUiEvent
 @Composable
 fun CategoryScreenRoute(
     modifier: Modifier = Modifier,
-    navigateToVideoPlayerScreen: (String) -> Unit,
+    navigateToVideoPlayerScreen: (Int) -> Unit,
     navigateToSettingsScreen: () -> Unit,
     navigateBackToIntroduction: () -> Unit,
     navigateToHomeScreen: () -> Unit,

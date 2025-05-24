@@ -7,7 +7,8 @@ import javax.inject.Inject
 class ExistsPlaylistVideoByIdUseCaseImpl @Inject constructor(
     private val playlistVideoRepository: PlaylistVideoRepository
 ) : ExistsPlaylistVideoByIdUseCase {
-    override suspend operator fun invoke(id: Double): Boolean {
+
+    override suspend operator fun invoke(id: Int): Boolean {
         return playlistVideoRepository.existsPlaylistVideoById(id = id)
     }
 }

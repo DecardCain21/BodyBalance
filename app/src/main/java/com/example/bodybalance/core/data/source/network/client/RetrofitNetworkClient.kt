@@ -43,6 +43,8 @@ abstract class RetrofitNetworkClient : NetworkClient {
                     } else {
                         delay(retryDelayMillis)
                     }
+                } catch (e: Exception) {
+                    return@withContext Result.failure(NetworkError.ServerError("", e.toString()))
                 }
             }
             Result.failure(NetworkError.ServerError("", ""))

@@ -1,8 +1,8 @@
 package com.example.bodybalance.core.domain.api
 
-import kotlinx.coroutines.flow.Flow
+import com.example.bodybalance.core.domain.models.Category
 
 interface CategoryRepository {
 
-    fun getCategory(): Flow<List<String>>
+    suspend fun getCategory(): Result<List<Category>>
 }

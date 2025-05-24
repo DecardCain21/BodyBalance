@@ -11,13 +11,13 @@ interface PlaylistVideoLocalSource {
 
     suspend fun deletePlaylistVideo(entity: PlaylistVideoEntity)
 
-    suspend fun deletePlaylistVideoById(id: Double)
+    suspend fun deletePlaylistVideoById(id: Int)
 
-    suspend fun getPlaylistVideoById(id: Double): PlaylistVideoEntity?
+    suspend fun getPlaylistVideoById(id: Int): PlaylistVideoEntity?
 
     suspend fun updatePlaylistVideo(entity: PlaylistVideoEntity)
 
-    suspend fun existsPlaylistVideoById(id: Double): Boolean
+    suspend fun existsPlaylistVideoById(id: Int): Boolean
 
-    suspend fun updateOrderPlaylistVideo(id: Double, order: Int)
+    suspend fun updateOrderPlaylistVideo(id: Int, order: Int)
 }

@@ -18,15 +18,15 @@ interface VideoCacheDao {
     suspend fun delete(savedVideoEntity: SavedVideoEntity)
 
     @Query("DELETE FROM saved_video WHERE id = :id")
-    suspend fun deleteById(id: Double)
+    suspend fun deleteById(id: Int)
 
     @Query("SELECT * FROM saved_video WHERE id = :id")
-    suspend fun getById(id: Double): SavedVideoEntity?
+    suspend fun getById(id: Int): SavedVideoEntity?
 
     @Query("SELECT * FROM saved_video")
     suspend fun getAll(): List<SavedVideoEntity>
 
-    @Query("SELECT * FROM saved_video WHERE title = :category")
+    @Query("SELECT * FROM saved_video WHERE name = :category")
     suspend fun getByCategory(category: String): List<SavedVideoEntity>
 
     @Update

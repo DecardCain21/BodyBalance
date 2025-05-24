@@ -52,12 +52,12 @@ class CategoryViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val accounts = getAllAccountsUseCase()
-                val categories = getCategoryUseCase()
+                val categories = getCategoryUseCase().getOrNull()
                 getAllPlaylistVideosUseCase().collect { playlistVideo ->
                     _uiState.value = CategoryState.Content(
                         activeAccount = accounts.find { it.isActive } ?: accounts.first(),
                         accounts = accounts,
-                        category = categories,
+                        category = categories ?: emptyList(),
                         playlistVideo = playlistVideo
                     )
                 }
@@ -87,7 +87,7 @@ class CategoryViewModel @Inject constructor(
         }
     }
 
-    private fun updateOrderPlaylistVideo(id: Double, order: Int) {
+    private fun updateOrderPlaylistVideo(id: Int, order: Int) {
         viewModelScope.launch {
             updateOrderPlaylistVideoUseCase(id = id, order = order)
         }

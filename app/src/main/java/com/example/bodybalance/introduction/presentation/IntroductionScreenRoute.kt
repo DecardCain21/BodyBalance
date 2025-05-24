@@ -1,7 +1,6 @@
 package com.example.bodybalance.introduction.presentation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -21,7 +20,6 @@ fun IntroductionScreenRoute(
         modifier = modifier,
         uiState = uiState,
         inputCodeWord = { viewModel.handleEvent(IntroductionScreenUiEvent.InputLogin(it)) },
-        getVideo = { viewModel.getIntro() },
         navToPlaylist = navToPlaylist,
         eventContinue = {viewModel.handleEvent(IntroductionScreenUiEvent.Continue)},
     )
