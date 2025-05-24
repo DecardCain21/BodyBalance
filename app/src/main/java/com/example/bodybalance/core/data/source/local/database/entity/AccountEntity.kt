@@ -9,8 +9,8 @@ import androidx.room.PrimaryKey
     indices = [Index(value = ["name"], unique = true)]
 )
 data class AccountEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0L,
+    @PrimaryKey(autoGenerate = false)
+    val id: Int,
     val name: String,
     val isActive: Boolean
 )

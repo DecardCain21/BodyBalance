@@ -11,7 +11,11 @@ import com.example.bodybalance.core.data.source.local.database.entity.SavedVideo
 
 @Database(
     version = 1,
-    entities = [SavedVideoEntity::class, AccountEntity::class, PlaylistVideoEntity::class]
+    entities = [
+        SavedVideoEntity::class,
+        AccountEntity::class,
+        PlaylistVideoEntity::class
+    ]
 )
 abstract class AppDatabase : RoomDatabase() {
 

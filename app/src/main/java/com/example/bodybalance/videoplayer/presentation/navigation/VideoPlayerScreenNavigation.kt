@@ -8,10 +8,10 @@ import androidx.navigation.navArgument
 import com.example.bodybalance.videoplayer.presentation.VideoPlayerScreen
 
 const val CATEGORY_NAME = "category"
-const val VIDEO_PLAYER_ROUTE = "videoplayer"
+const val VIDEO_PLAYER_ROUTE = "video_player"
 
-fun NavController.navigateToVideoPlayerScreen(category: String) {
-    navigate(route = "$VIDEO_PLAYER_ROUTE/$category") {
+fun NavController.navigateToVideoPlayerScreen(categoryId: Int) {
+    navigate(route = "$VIDEO_PLAYER_ROUTE/$categoryId") {
         launchSingleTop
     }
 }
@@ -19,10 +19,10 @@ fun NavController.navigateToVideoPlayerScreen(category: String) {
 fun NavGraphBuilder.videoPlayerScreen() {
     composable(
         route = "$VIDEO_PLAYER_ROUTE/{$CATEGORY_NAME}",
-        arguments = listOf(navArgument(CATEGORY_NAME) { type = NavType.StringType })
+        arguments = listOf(navArgument(CATEGORY_NAME) { type = NavType.IntType })
     ) { backStackEntry ->
         VideoPlayerScreen( // Возможно стоит подумать как сделать подругому
-            category = backStackEntry.arguments?.getString(CATEGORY_NAME) ?: ""
+            categoryId = backStackEntry.arguments?.getInt(CATEGORY_NAME) ?: 0
         )
     }
 }

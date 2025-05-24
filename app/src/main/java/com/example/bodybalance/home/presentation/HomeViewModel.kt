@@ -70,16 +70,12 @@ class HomeViewModel @Inject constructor(
         } else {
             viewModelScope.launch {
                 checkLoginUseCase(uiState.value.inputValue)
-                    .onSuccess { isValid ->
-                        if (isValid) {
-                            _navigationEvent.emit(Unit)
-                        } else {
-                            _uiState.value = uiState.value.copy(
-                                inputError = true,
-                                supportText = SupportTextHome.INVALID_LOGIN
-                            )
-                        }
-                    }.onFailure { error ->
+                    .onSuccess { _navigationEvent.emit(Unit) }
+                    .onFailure { error ->
+                        _uiState.value = uiState.value.copy(
+                            inputError = true,
+                            supportText = SupportTextHome.INVALID_LOGIN)
+
                         when (error) {
                             is NetworkError.ServerError -> {
                                 _snackbarEvent.emit(

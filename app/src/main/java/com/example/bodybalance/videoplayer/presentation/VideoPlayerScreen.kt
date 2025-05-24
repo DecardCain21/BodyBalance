@@ -59,7 +59,7 @@ import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerState
 @OptIn(UnstableApi::class)
 @Composable
 fun VideoPlayerScreen(
-    category: String,
+    categoryId: Int,
     modifier: Modifier = Modifier,
     viewModel: VideoPlayerViewModel = hiltViewModel(),
 ) {
@@ -67,8 +67,7 @@ fun VideoPlayerScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val currentState = uiState
 
-    LaunchedEffect(Unit) { viewModel.getVideo(category) }
-
+    LaunchedEffect(Unit) { viewModel.getVideo(categoryId) }
 
     when (currentState) {
         is VideoPlayerState.Content -> {

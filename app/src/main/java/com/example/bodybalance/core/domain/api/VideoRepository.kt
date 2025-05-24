@@ -4,7 +4,7 @@ import com.example.bodybalance.core.domain.models.Video
 
 interface VideoRepository {
 
-    suspend fun getVideoByCategory(category: String): Result<List<Video>>
+    suspend fun getVideoByCategory(categoryId: Int): Result<List<Video>>
 
-    suspend fun getVideoById(id: Double): Result<Video>
+    suspend fun getVideoById(id: Int): Result<Video>
 }

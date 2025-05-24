@@ -8,6 +8,11 @@ sealed class AccountTypeTherapy() {
 }
 
 data class Account(
+    val id: Int,
     val name: String,
     val isActive: Boolean
-)
+) {
+    companion object {
+        fun empty() = Account(id = 0, name = "", isActive = true)
+    }
+}

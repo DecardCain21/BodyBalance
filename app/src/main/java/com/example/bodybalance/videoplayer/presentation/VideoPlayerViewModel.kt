@@ -60,12 +60,12 @@ class VideoPlayerViewModel @Inject constructor(
         }
     }
 
-    fun getVideo(category: String) {
+    fun getVideo(categoryId: Int) {
         if (isInitialized) return
         isInitialized = true
 
         viewModelScope.launch {
-            val result = getVideoByCategoryUseCase(category)
+            val result = getVideoByCategoryUseCase(categoryId)
             val newState = when (result.exceptionOrNull()) {
                 is NetworkError.ServerError,
                 is NetworkError.NoData,

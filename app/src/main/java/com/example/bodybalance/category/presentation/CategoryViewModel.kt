@@ -57,7 +57,7 @@ class CategoryViewModel @Inject constructor(
                     _uiState.value = CategoryState.Content(
                         activeAccount = accounts.find { it.isActive } ?: accounts.first(),
                         accounts = accounts,
-                        category = categories?.map { it.name } ?: emptyList(),
+                        category = categories ?: emptyList(),
                         playlistVideo = playlistVideo
                     )
                 }

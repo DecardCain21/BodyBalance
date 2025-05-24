@@ -6,7 +6,7 @@ interface UserAccountRepository {
 
     suspend fun getAllAccounts(): List<Account>
 
-    suspend fun deleteAccount()
+    suspend fun deleteActiveAccount()
 
     suspend fun activateAccount(account: Account)
 }

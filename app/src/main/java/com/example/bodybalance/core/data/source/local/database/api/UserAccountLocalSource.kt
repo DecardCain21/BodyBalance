@@ -1,16 +1,16 @@
 package com.example.bodybalance.core.data.source.local.database.api
 
-import com.example.bodybalance.core.domain.models.Account
+import com.example.bodybalance.core.data.source.local.database.entity.AccountEntity
 
 interface UserAccountLocalSource {
 
-    suspend fun getAllAccounts(): List<Account>
+    suspend fun getAllAccounts(): List<AccountEntity>
 
-    suspend fun insertAccount(account: Account)
+    suspend fun insertAccount(account: AccountEntity)
 
-    suspend fun deleteAccount(account: Account)
+    suspend fun deleteActiveAccount()
 
-    suspend fun getActiveAccount(): Account?
+    suspend fun getActiveAccount(): AccountEntity?
 
-    suspend fun activateAccount(account: Account)
+    suspend fun activateAccount(account: AccountEntity)
 }

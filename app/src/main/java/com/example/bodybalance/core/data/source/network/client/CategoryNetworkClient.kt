@@ -11,7 +11,7 @@ class CategoryNetworkClient(
     private val apiService: BodyBalanceApiService
 ) : RetrofitNetworkClient() {
 
-    suspend fun getCategory(type: String): Result<List<CategoryDto>> {
-        return doRequest { apiService.getCategory(type) }
+    suspend fun getCategory(accountTypeId: Int): Result<List<CategoryDto>> {
+        return doRequest { apiService.getCategory(accountTypeId) }
     }
 }

@@ -29,6 +29,13 @@ interface UserAccountDao {
     suspend fun setActiveAccount(name: String)
 
     @Transaction
+    suspend fun deleteActiveAccount() {
+        getActiveAccount()?.let {
+            deleteAccount(it.name)
+        }
+    }
+
+    @Transaction
     suspend fun activateAccount(account: AccountEntity) {
         clearActiveFlags()
         setActiveAccount(account.name)

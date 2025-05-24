@@ -8,5 +8,5 @@ class LogOutOfAccountUseCaseUseCaseImpl @Inject constructor(
     private val userAccountRepository: UserAccountRepository
 ) : LogOutOfAccountUseCase {
 
-    override suspend fun invoke() = userAccountRepository.deleteAccount()
+    override suspend fun invoke() = userAccountRepository.deleteActiveAccount()
 }
