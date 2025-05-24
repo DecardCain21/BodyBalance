@@ -20,7 +20,6 @@ fun IntroductionScreenRoute(
         modifier = modifier,
         uiState = uiState,
         inputCodeWord = { viewModel.handleEvent(IntroductionScreenUiEvent.InputLogin(it)) },
-        getVideo = { viewModel.getIntro() },
         navToPlaylist = navToPlaylist,
         eventContinue = {viewModel.handleEvent(IntroductionScreenUiEvent.Continue)},
     )

@@ -356,8 +356,7 @@ private fun ExerciseScreen(
 ) {
     Box {
         LazyColumn(
-            modifier = modifier
-                .fillMaxWidth(),
+            modifier = modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(16.dp),
@@ -443,7 +442,7 @@ private fun PlaylistScreen(
                         ReorderableItem(state = state, key = item.id) { isDragging ->
                             showDeleteBackground = !isDragging
                             VideoItem(
-                                imageUrl = item.imageUrl ?: "",
+                                imageUrl = item.imageUrl,
                                 title = item.name,
                                 showIconDrag = true,
                                 reorderState = state

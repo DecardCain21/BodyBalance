@@ -22,7 +22,7 @@ fun NavGraphBuilder.videoPlayerScreen(navigateBackToPlaylistScreen: () -> Unit) 
         arguments = listOf(navArgument(CATEGORY_NAME) { type = NavType.IntType })
     ) { backStackEntry ->
         VideoPlayerScreen( // Возможно стоит подумать как сделать подругому
-            category = backStackEntry.arguments?.getInt(CATEGORY_NAME) ?: "",
+            categoryId = backStackEntry.arguments?.getInt(CATEGORY_NAME) ?: 0,
             navigateBackToPlaylistScreen = navigateBackToPlaylistScreen
         )
     }
