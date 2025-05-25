@@ -30,7 +30,7 @@ class CategoryViewModel @Inject constructor(
     private val updateOrderPlaylistVideoUseCase: UpdateOrderPlaylistVideoUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<CategoryState>(CategoryState.Loading)
+    private val _uiState = MutableStateFlow<CategoryState>(CategoryState.Content())
     val uiState: StateFlow<CategoryState> = _uiState.asStateFlow()
 
     init {

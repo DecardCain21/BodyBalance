@@ -7,12 +7,11 @@ import com.example.bodybalance.core.domain.models.Video
 sealed interface CategoryState {
 
     data class Content(
-        val activeAccount: Account,
-        val accounts: List<Account>,
-        val category: List<Category>,
-        val playlistVideo: List<Video>
+        val activeAccount: Account = Account.empty(),
+        val accounts: List<Account> = emptyList(),
+        val category: List<Category> = emptyList(),
+        val playlistVideo: List<Video> = emptyList()
     ) : CategoryState
 
-    data object Loading : CategoryState
     data object Error : CategoryState
 }

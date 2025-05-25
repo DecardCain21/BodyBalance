@@ -109,7 +109,6 @@ fun CategoryScreen(
         )
 
         is CategoryState.Error -> CategoryErrorScreen(modifier = modifier)
-        is CategoryState.Loading -> CategoryScreenLoading(modifier = modifier)
     }
 }
 
@@ -388,6 +387,10 @@ private fun PlaylistScreen(
 
     var list by remember { mutableStateOf(playlistVideo) }
 
+    LaunchedEffect(playlistVideo) {
+        list = playlistVideo
+    }
+
     val state = rememberReorderableLazyListState(onMove = { from, to ->
         list = list.toMutableList().apply {
             add(to.index, removeAt(from.index))
@@ -544,15 +547,6 @@ private fun CategoryErrorScreen(
     modifier: Modifier = Modifier
 ) {
     Text(text = stringResource(R.string.error))
-}
-
-@Composable
-private fun CategoryScreenLoading(
-    modifier: Modifier = Modifier
-) {
-    Box(modifier = modifier.fillMaxSize()) {
-        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-    }
 }
 
 @Preview
