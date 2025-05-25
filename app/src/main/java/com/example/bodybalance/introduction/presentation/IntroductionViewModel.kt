@@ -29,7 +29,7 @@ class IntroductionViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(
         IntroductionScreenState(
             inputValue = Input.Empty,
-            videoState = IntroductionPlayerState.Loading,
+            videoState = IntroductionPlayerState.Content(),
         )
     )
     val uiState: StateFlow<IntroductionScreenState>

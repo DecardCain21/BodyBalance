@@ -85,7 +85,6 @@ fun IntroductionScreen(
             }
 
             is IntroductionPlayerState.Empty -> Unit
-            is IntroductionPlayerState.Loading -> IntroductionScreenLoading()
         }
     }
 }
@@ -221,13 +220,6 @@ fun IntroductionScreenContent(
             },
             isEnabled = isEnabledButton
         )
-    }
-}
-
-@Composable
-private fun IntroductionScreenLoading(modifier: Modifier = Modifier) {
-    Box(modifier = modifier.fillMaxSize()) {
-        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
     }
 }
 

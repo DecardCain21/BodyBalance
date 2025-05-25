@@ -15,8 +15,7 @@ data class IntroductionScreenState(
 
     sealed interface IntroductionPlayerState {
         data object Empty : IntroductionPlayerState
-        data object Loading : IntroductionPlayerState
-        data class Content(val video: Video) : IntroductionPlayerState
+        data class Content(val video: Video = Video.emptyVideo()) : IntroductionPlayerState
     }
 }
 

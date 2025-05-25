@@ -77,25 +77,19 @@ class HomeViewModel @Inject constructor(
                             supportText = SupportTextHome.INVALID_LOGIN)
 
                         when (error) {
-                            is NetworkError.ServerError -> {
-                                _snackbarEvent.emit(
-                                    SnackbarEventParams("Что-то не так, попробуйте ещё раз")
-                                )
-                            }
-
-                            // todo: ни где не задаем эту ошибку
-                            is NetworkError.NoData -> {
-                                _snackbarEvent.emit(
-                                    SnackbarEventParams("Видео пока недоступно, загляните позже")
-                                )
-                            }
 
                             is NetworkError.NoInternet -> {
                                 _snackbarEvent.emit(
                                     SnackbarEventParams(
                                         message = "Нет интернета",
-                                        actionLabel = "Обновить" // todo: нужна ли эта кнопка ?
+                                        actionLabel = "" // todo: нужна ли эта кнопка ?
                                     )
+                                )
+                            }
+
+                            else -> {
+                                _snackbarEvent.emit(
+                                    SnackbarEventParams("Что-то не так, попробуйте ещё раз")
                                 )
                             }
                         }
