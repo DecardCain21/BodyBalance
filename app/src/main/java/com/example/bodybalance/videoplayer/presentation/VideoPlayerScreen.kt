@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import com.example.bodybalance.R
 import com.example.bodybalance.core.composable.BaseTopAppBar
@@ -264,7 +265,10 @@ private fun VideoList(
 }
 
 @Composable
-private fun ExoPlayer(modifier: Modifier = Modifier, video: Video) {
+private fun ExoPlayer(
+    video: Video,
+    modifier: Modifier = Modifier,
+) {
     exoPlayer(
         modifier = modifier,
         context = LocalContext.current,

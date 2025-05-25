@@ -4,9 +4,11 @@ import com.example.bodybalance.core.data.source.local.IntroProvider
 import com.example.bodybalance.introduction.domain.usecase.GetIntroductionVideoUseCase
 import javax.inject.Inject
 
-class GetIntroductionVideoUseCaseImpl @Inject constructor(private val introProvider: IntroProvider) :
-    GetIntroductionVideoUseCase {
-    override operator fun invoke(): String {
+class GetIntroductionVideoUseCaseImpl @Inject constructor(
+    private val introProvider: IntroProvider
+) : GetIntroductionVideoUseCase {
+
+    public override operator fun invoke(): String {
         return introProvider.getVideoUri().toString()
     }
 

@@ -112,7 +112,6 @@ fun IntroductionScreenContent(
         }
     }
 
-
     val isPreview = LocalInspectionMode.current
     var isFocused by remember { mutableStateOf(false) }
     val interactionSource = remember { MutableInteractionSource() }
@@ -152,8 +151,7 @@ fun IntroductionScreenContent(
                 Text("ExoPlayer Placeholder", color = Color.White)
             }
         } else {
-            exoPlayer(
-                context = LocalContext.current,
+            ExoPlayer(
                 video = video,
                 listener = listener,
                 showButton = true,
@@ -221,6 +219,24 @@ fun IntroductionScreenContent(
             isEnabled = isEnabledButton
         )
     }
+}
+
+@Composable
+private fun ExoPlayer(
+    video: Video,
+    listener: Player.Listener,
+    showButton: Boolean,
+    shouldRequestFocus: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    exoPlayer(
+        modifier = modifier,
+        context = LocalContext.current,
+        video = video,
+        listener = listener,
+        showButton = showButton,
+        shouldRequestFocus = shouldRequestFocus
+    )
 }
 
 @Preview(backgroundColor = 0xFF141218, showBackground = true)
