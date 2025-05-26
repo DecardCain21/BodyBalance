@@ -3,7 +3,6 @@ package com.example.bodybalance.videoplayer.presentation
 import android.content.res.Configuration
 import androidx.annotation.OptIn
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.horizontalScroll
@@ -35,7 +34,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -69,6 +67,7 @@ import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerState
 @Composable
 fun VideoPlayerScreen(
     categoryId: Int,
+    videoId: Int,
     modifier: Modifier = Modifier,
     navigateBackToPlaylistScreen: () -> Unit,
     viewModel: VideoPlayerViewModel = hiltViewModel(),
@@ -77,7 +76,13 @@ fun VideoPlayerScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val currentState = uiState
 
-    LaunchedEffect(Unit) { viewModel.getVideo(categoryId) }
+    LaunchedEffect(Unit) {
+        if (categoryId != -1) {
+            viewModel.getVideo(categoryId)
+        } else {
+            viewModel.getPlaylistVideos(videoId)
+        }
+    }
 
     when (currentState) {
         is VideoPlayerState.Content -> {
@@ -162,7 +167,7 @@ private fun VideoPlayerScreenContent(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if(configuration.orientation != Configuration.ORIENTATION_LANDSCAPE){
+        if (configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
             BaseTopAppBar(navigateBack = { navigateBackToPlaylistScreen() })
         }
 
@@ -191,9 +196,11 @@ private fun VideoPlayerScreenContent(
             color = MaterialTheme.colorScheme.primary
         )
         //NavItem(videoList = videoList, onItemSelected = { onItemSelected(it) })
-        Row(modifier = Modifier
-            .padding(start = 16.dp, end = 7.dp)
-            .horizontalScroll(scrollState)) {
+        Row(
+            modifier = Modifier
+                .padding(start = 16.dp, end = 7.dp)
+                .horizontalScroll(scrollState)
+        ) {
             if (isDownloadState) {
                 BodyBalanceActionButton(
                     onClick = { removeVideoFromCache() },
@@ -222,18 +229,23 @@ private fun VideoPlayerScreenContent(
                 )
             }
         }
-        VideoList(videoList = videoList, onItemSelected = onItemSelected)
+        VideoList(videoList = videoList, onItemSelected = onItemSelected, currentVideo = video)
     }
 }
 
 @kotlin.OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun VideoList(
+    currentVideo: Video,
     videoList: List<Video>,
     onItemSelected: (Video) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var selectItemIndex by rememberSaveable { mutableIntStateOf(0) }
+    val currentIndex = videoList.indexOfFirst { it.id == currentVideo.id }
+    var selectItemIndex by rememberSaveable { mutableIntStateOf(currentIndex) }
+    val scrollStateOfVideo = rememberLazyListState()
+
+    LaunchedEffect(videoList) { scrollStateOfVideo.animateScrollToItem(selectItemIndex) }
 
     LazyColumn(
         modifier = modifier
@@ -242,7 +254,7 @@ private fun VideoList(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(4.dp),
         contentPadding = PaddingValues(vertical = 16.dp),
-        state = rememberLazyListState()
+        state = scrollStateOfVideo
     ) {
         itemsIndexed(videoList) { index, item ->
             VideoItem(

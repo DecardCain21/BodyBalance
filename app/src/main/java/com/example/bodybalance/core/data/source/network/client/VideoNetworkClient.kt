@@ -12,4 +12,10 @@ class VideoNetworkClient(
             apiService.getCategoryVideo(type = accountTypeId, category = categoryId)
         }
     }
+
+    suspend fun getVideoById(videoId:Int): Result<VideoDto> {
+        return super.doRequest{
+            apiService.getVideoById(videoId = videoId)
+        }
+    }
 }

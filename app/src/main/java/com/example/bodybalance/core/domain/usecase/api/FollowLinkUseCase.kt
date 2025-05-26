@@ -1,6 +1,6 @@
 package com.example.bodybalance.core.domain.usecase.api
 
-interface FollowTheLinkUseCase {
+interface FollowLinkUseCase {
 
     operator fun invoke(url: String)
 }

@@ -1,14 +1,14 @@
 package com.example.bodybalance.settings.presentation.about
 
 import androidx.lifecycle.ViewModel
-import com.example.bodybalance.core.domain.usecase.api.FollowTheLinkUseCase
+import com.example.bodybalance.core.domain.usecase.api.FollowLinkUseCase
 import com.example.bodybalance.core.domain.usecase.api.ShareContentUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class AboutAppViewModel @Inject constructor(
-    private val followTheLinkUseCase: FollowTheLinkUseCase,
+    private val followLinkUseCase: FollowLinkUseCase,
     private val shareContentUseCase: ShareContentUseCase
 ) : ViewModel() {
 
@@ -27,6 +27,6 @@ class AboutAppViewModel @Inject constructor(
     }
 
     private fun openContributorLink(url: String) {
-        followTheLinkUseCase(url)
+        followLinkUseCase(url)
     }
 }

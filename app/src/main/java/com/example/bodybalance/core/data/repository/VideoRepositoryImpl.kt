@@ -21,6 +21,6 @@ class VideoRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getVideoById(id: Int): Result<Video> {
-        TODO("Not yet implemented")
+        return videoNetworkClient.getVideoById(id).map { videoDto -> videoDto.convertToVideo() }
     }
 }

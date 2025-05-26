@@ -8,7 +8,7 @@ import com.example.bodybalance.category.presentation.CategoryScreenRoute
 const val PLAYLIST_ROUTE = "playlist"
 
 fun NavGraphBuilder.playlistScreen(
-    navigateToVideoPlayerScreen: (Int) -> Unit,
+    navigateToVideoPlayerScreen: (Int,Int) -> Unit,
     navigateToSettingsScreen: () -> Unit,
     navigateBackToIntroduction: () -> Unit,
     navigateToHomeScreen: () -> Unit

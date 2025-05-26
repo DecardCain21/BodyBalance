@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bodybalance.category.domain.usecase.ActivateAccountUseCase
 import com.example.bodybalance.category.domain.usecase.GetAllAccountsUseCase
-import com.example.bodybalance.category.domain.usecase.GetAllPlaylistVideosUseCase
+import com.example.bodybalance.core.domain.usecase.api.GetAllPlaylistVideosUseCase
 import com.example.bodybalance.category.domain.usecase.GetCategoryUseCase
 import com.example.bodybalance.category.domain.usecase.UpdateOrderPlaylistVideoUseCase
 import com.example.bodybalance.category.presentation.state.CategoryScreenUiEvent

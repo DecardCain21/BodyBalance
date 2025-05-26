@@ -1,6 +1,6 @@
-package com.example.bodybalance.category.domain.usecase.impl
+package com.example.bodybalance.core.domain.usecase.impl
 
-import com.example.bodybalance.category.domain.usecase.GetAllPlaylistVideosUseCase
+import com.example.bodybalance.core.domain.usecase.api.GetAllPlaylistVideosUseCase
 import com.example.bodybalance.core.domain.api.PlaylistVideoRepository
 import com.example.bodybalance.core.domain.models.Video
 import kotlinx.coroutines.flow.Flow

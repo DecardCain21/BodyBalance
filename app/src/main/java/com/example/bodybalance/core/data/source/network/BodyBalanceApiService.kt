@@ -23,4 +23,9 @@ interface BodyBalanceApiService {
     suspend fun checkAccount(
         @Query("username") username: String
     ): AccountDto
+
+    @GET("v1/video")
+    suspend fun getVideoById(
+        @Query("video_id") videoId:Int
+    ) : VideoDto
 }

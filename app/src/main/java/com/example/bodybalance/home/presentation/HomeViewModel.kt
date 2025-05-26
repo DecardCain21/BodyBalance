@@ -2,7 +2,7 @@ package com.example.bodybalance.home.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.bodybalance.core.domain.usecase.api.FollowTheLinkUseCase
+import com.example.bodybalance.core.domain.usecase.api.FollowLinkUseCase
 import com.example.bodybalance.core.util.NetworkError
 import com.example.bodybalance.core.util.SnackbarEventParams
 import com.example.bodybalance.home.domain.usecase.CheckLoginUseCase
@@ -21,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val checkLoginUseCase: CheckLoginUseCase,
-    private val followTheLinkUseCase: FollowTheLinkUseCase
+    private val followLinkUseCase: FollowLinkUseCase
 ) : ViewModel() {
 
     private val _navigationEvent = MutableSharedFlow<Unit>()
@@ -100,7 +100,7 @@ class HomeViewModel @Inject constructor(
 
     // todo: заменить ссылку
     private fun requestLogin() {
-        followTheLinkUseCase("")
+        followLinkUseCase("")
     }
 
     private fun clearAll() {

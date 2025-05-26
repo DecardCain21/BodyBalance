@@ -34,7 +34,12 @@ fun Navigation(isAuthenticated: Boolean) {
         introductionScreen { navController.navigateToPlaylist() }
 
         playlistScreen(
-            navigateToVideoPlayerScreen = { navController.navigateToVideoPlayerScreen(it) },
+            navigateToVideoPlayerScreen = { categoryId, videoId ->
+                navController.navigateToVideoPlayerScreen(
+                    categoryId = categoryId,
+                    videoId = videoId
+                )
+            },
             navigateToSettingsScreen = { navController.navigateToSettingsScreen() },
             navigateBackToIntroduction = { navController.popBackStack() },
             navigateToHomeScreen = { navController.navigateToHomeScreen() }

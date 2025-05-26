@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.util.UnstableApi
 import com.example.bodybalance.core.domain.models.Video
+import com.example.bodybalance.core.domain.usecase.api.GetAllPlaylistVideosUseCase
 import com.example.bodybalance.core.domain.usecase.api.GetVideoByCategoryUseCase
+import com.example.bodybalance.core.domain.usecase.api.GetVideoByIdUseCase
 import com.example.bodybalance.core.util.DownloadCallback
 import com.example.bodybalance.core.util.FileDownloader
 import com.example.bodybalance.core.util.NetworkError
@@ -28,7 +30,9 @@ class VideoPlayerViewModel @Inject constructor(
     private val getVideoByCategoryUseCase: GetVideoByCategoryUseCase,
     private val addPlaylistVideoUseCase: AddPlaylistVideoUseCase,
     private val deletePlaylistVideoUseCase: DeletePlaylistVideoUseCase,
-    private val existsPlaylistVideoByIdUseCase: ExistsPlaylistVideoByIdUseCase
+    private val existsPlaylistVideoByIdUseCase: ExistsPlaylistVideoByIdUseCase,
+    private val getAllPlaylistVideosUseCase: GetAllPlaylistVideosUseCase,
+    private val getVideoByIdUseCase: GetVideoByIdUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<VideoPlayerState>(VideoPlayerState.Loading)
@@ -56,6 +60,20 @@ class VideoPlayerViewModel @Inject constructor(
 
             is VideoPlayerScreenUiEvent.RemoveFromPlaylist -> {
                 removeFromPlaylist(event.video)
+            }
+        }
+    }
+
+    fun getPlaylistVideos(videoId: Int) {
+        viewModelScope.launch {
+            getAllPlaylistVideosUseCase().collect { playlistVideos ->
+                val newState =
+                    VideoPlayerState.Content(
+                        currentVideo = playlistVideos.find { it.id == videoId }
+                            ?: Video.emptyVideo(),
+                        videoList = playlistVideos,
+                    )
+                setButtonsState(newState)
             }
         }
     }

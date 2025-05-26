@@ -2,6 +2,7 @@ package com.example.bodybalance.category.presentation
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -85,7 +86,7 @@ fun CategoryScreen(
     modifier: Modifier = Modifier,
     uiState: CategoryState,
     navigateBackToIntroduction: () -> Unit,
-    navigateToVideoPlayerScreen: (Int) -> Unit,
+    navigateToVideoPlayerScreen: (categoryId: Int, videoId: Int) -> Unit,
     navigateToSettingsScreen: () -> Unit,
     navigateToHomeScreen: () -> Unit,
     changeUser: (Account) -> Unit,
@@ -99,7 +100,8 @@ fun CategoryScreen(
             exercise = uiState.category,
             playlistVideo = uiState.playlistVideo,
             activeAccount = uiState.activeAccount,
-            navigateToVideoPlayerScreen = { navigateToVideoPlayerScreen(it) },
+            navigateToVideoPlayerScreen = { navigateToVideoPlayerScreen(it, -1) },
+            navigateToVideoPlayerScreenFromPlaylist = { navigateToVideoPlayerScreen(-1, it) },
             navigateToSettingsScreen = { navigateToSettingsScreen() },
             navigateBackToIntroduction = { navigateBackToIntroduction() },
             navigateToHomeScreen = { navigateToHomeScreen() },
@@ -120,6 +122,7 @@ private fun CategoryContentScreen(
     activeAccount: Account,
     navigateBackToIntroduction: () -> Unit,
     navigateToVideoPlayerScreen: (Int) -> Unit, // Int - Id категории
+    navigateToVideoPlayerScreenFromPlaylist: (Int) -> Unit, // Int - Id видео
     navigateToSettingsScreen: () -> Unit,
     navigateToHomeScreen: () -> Unit,
     changeUser: (Account) -> Unit,
@@ -158,6 +161,7 @@ private fun CategoryContentScreen(
             exercise = exercise,
             playlistVideo = playlistVideo,
             navigateToVideoPlayerScreen = navigateToVideoPlayerScreen,
+            navigateToVideoPlayerScreenFromPlaylist = navigateToVideoPlayerScreenFromPlaylist,
             deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) },
             updateOrderPlaylistVideo = updateOrderPlaylistVideo
         )
@@ -290,6 +294,7 @@ private fun CategoryPages(
     exercise: List<Category>,
     playlistVideo: List<Video>,
     navigateToVideoPlayerScreen: (Int) -> Unit,
+    navigateToVideoPlayerScreenFromPlaylist: (Int) -> Unit,
     deleteVideoFromPlaylist: (Video) -> Unit,
     updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit
 ) {
@@ -332,6 +337,7 @@ private fun CategoryPages(
         when (page) {
             0 -> PlaylistScreen(
                 playlistVideo = playlistVideo,
+                navigateToVideoPlayerScreenFromPlaylist = navigateToVideoPlayerScreenFromPlaylist,
                 deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) },
                 updateOrderPlaylistVideo = updateOrderPlaylistVideo
             )
@@ -378,6 +384,7 @@ private fun ExerciseScreen(
 private fun PlaylistScreen(
     playlistVideo: List<Video>,
     modifier: Modifier = Modifier,
+    navigateToVideoPlayerScreenFromPlaylist: (Int) -> Unit,
     deleteVideoFromPlaylist: (Video) -> Unit,
     updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit
 ) {
@@ -445,6 +452,9 @@ private fun PlaylistScreen(
                         ReorderableItem(state = state, key = item.id) { isDragging ->
                             showDeleteBackground = !isDragging
                             VideoItem(
+                                modifier = Modifier.clickable {
+                                    navigateToVideoPlayerScreenFromPlaylist(item.id)
+                                },
                                 imageUrl = item.imageUrl,
                                 title = item.name,
                                 showIconDrag = true,
@@ -560,6 +570,7 @@ private fun PreviewPlaylist(
             exercise = listOf(Category.empty(), Category.empty()),
             playlistVideo = listOf(Video.emptyVideo(), Video.emptyVideo(), Video.emptyVideo()),
             navigateToVideoPlayerScreen = {},
+            navigateToVideoPlayerScreenFromPlaylist = {},
             navigateBackToIntroduction = {},
             navigateToHomeScreen = {},
             changeUser = {},
