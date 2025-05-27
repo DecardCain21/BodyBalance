@@ -61,7 +61,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bodybalance.R
@@ -75,6 +77,7 @@ import com.example.bodybalance.core.domain.models.Category
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import com.example.bodybalance.ui.theme.TabRowDividerColor
+import com.example.bodybalance.ui.theme.White
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.burnoutcrew.reorderable.ReorderableItem
@@ -335,12 +338,18 @@ private fun CategoryPages(
         state = pagerState,
     ) { page ->
         when (page) {
-            0 -> PlaylistScreen(
-                playlistVideo = playlistVideo,
-                navigateToVideoPlayerScreenFromPlaylist = navigateToVideoPlayerScreenFromPlaylist,
-                deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) },
-                updateOrderPlaylistVideo = updateOrderPlaylistVideo
-            )
+            0 -> {
+                if (playlistVideo.isEmpty()) {
+                    PlaylistEmptyScreen()
+                } else {
+                    PlaylistScreen(
+                        playlistVideo = playlistVideo,
+                        navigateToVideoPlayerScreenFromPlaylist = navigateToVideoPlayerScreenFromPlaylist,
+                        deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) },
+                        updateOrderPlaylistVideo = updateOrderPlaylistVideo
+                    )
+                }
+            }
 
             1 -> ExerciseScreen(
                 category = exercise,
@@ -381,6 +390,31 @@ private fun ExerciseScreen(
 }
 
 @Composable
+private fun PlaylistEmptyScreen(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = stringResource(id = R.string.do_not_have_video),
+            fontSize = 22.sp,
+            color = White,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        Text(
+            text = stringResource(id = R.string.placeholder_subtext_playlist),
+            fontSize = 14.sp,
+            color = White,
+            textAlign = TextAlign.Center,
+            letterSpacing = 0.25.sp,
+            lineHeight = 20.sp
+        )
+    }
+}
+
+@Composable
 private fun PlaylistScreen(
     playlistVideo: List<Video>,
     modifier: Modifier = Modifier,
@@ -388,7 +422,6 @@ private fun PlaylistScreen(
     deleteVideoFromPlaylist: (Video) -> Unit,
     updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit
 ) {
-
     var showDialog by remember { mutableStateOf(false) }
     var videoToDelete by remember { mutableStateOf<Video?>(null) }
 
