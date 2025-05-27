@@ -3,7 +3,8 @@ package com.example.bodybalance.home.presentation.state
 data class HomeScreenState(
     val inputError: Boolean = false,
     val inputValue: String = "base",
-    val supportText: SupportTextHome = SupportTextHome.EMPTY
+    val supportText: SupportTextHome = SupportTextHome.EMPTY,
+    val isLoading: Boolean = false
 )
 
 enum class SupportTextHome(val message: String) {

@@ -7,13 +7,20 @@ import androidx.compose.foundation.interaction.FocusInteraction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.HighlightOff
 import androidx.compose.material3.BottomSheetDefaults
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -44,7 +51,9 @@ import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.core.composable.CustomTextField
 import com.example.bodybalance.core.composable.snackbar.CustomSnackbar
 import com.example.bodybalance.home.presentation.state.HomeScreenState
+import com.example.bodybalance.ui.theme.Black
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
+import com.example.bodybalance.ui.theme.OnSurfaceOpacity12
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,9 +68,9 @@ fun HomeScreen(
     inputLogin: (String) -> Unit,
     clearAll: () -> Unit,
     accountEnter: () -> Unit,
-    getLogin: () -> Unit
+    getLogin: () -> Unit,
+    isLoading: Boolean
 ) {
-
     var isFocused by remember { mutableStateOf(false) }
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -120,13 +129,33 @@ fun HomeScreen(
             }
         }
         Column(modifier = Modifier.align(Alignment.BottomCenter)) {
-            BasicButton(
+            Button(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 6.dp),
-                text = stringResource(R.string.sing_in),
-                onClick = { accountEnter() }
-            )
+                onClick = { accountEnter() },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    disabledContainerColor = OnSurfaceOpacity12,
+                    disabledContentColor = OnSurfaceOpacity12,
+                ),
+                shape = RoundedCornerShape(12.dp),
+                contentPadding = PaddingValues(top = 18.dp, bottom = 18.dp)
+            ) {
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(18.dp),
+                        strokeWidth = 2.dp,
+                        color = Black
+                    )
+                }
+                Spacer(modifier = Modifier.padding(end = 8.dp))
+                Text(
+                    text = stringResource(R.string.sing_in),
+                    fontSize = 14.sp,
+                )
+            }
+
             BasicButton(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -248,7 +277,8 @@ private fun HomeScreenPreview() {
                 clearAll = {},
                 getLogin = {},
                 navigateToIntroductionScreen = {},
-                navEvent = null
+                navEvent = null,
+                isLoading = false
             )
         }
     }

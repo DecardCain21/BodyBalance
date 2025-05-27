@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -69,15 +70,17 @@ class HomeViewModel @Inject constructor(
                 uiState.value.copy(inputError = true, supportText = SupportTextHome.ENTER_LOGIN)
         } else {
             viewModelScope.launch {
+                _uiState.update { it.copy(isLoading = true) }
                 checkLoginUseCase(uiState.value.inputValue)
                     .onSuccess { _navigationEvent.emit(Unit) }
                     .onFailure { error ->
                         _uiState.value = uiState.value.copy(
                             inputError = true,
-                            supportText = SupportTextHome.INVALID_LOGIN)
+                            supportText = SupportTextHome.INVALID_LOGIN,
+                            isLoading = false
+                        )
 
                         when (error) {
-
                             is NetworkError.NoInternet -> {
                                 _snackbarEvent.emit(
                                     SnackbarEventParams(

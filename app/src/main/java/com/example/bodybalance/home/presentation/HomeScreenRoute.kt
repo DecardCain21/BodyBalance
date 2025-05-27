@@ -54,6 +54,7 @@ fun HomeScreenRoute(
         inputLogin = { viewModel.handleEvent(InputLogin(it)) },
         clearAll = { viewModel.handleEvent(ClearAll) },
         accountEnter = { viewModel.handleEvent(Enter) },
-        getLogin = { viewModel.handleEvent(GetLogin) }
+        getLogin = { viewModel.handleEvent(GetLogin) },
+        isLoading = uiState.isLoading
     )
 }
