@@ -337,28 +337,30 @@ private fun CategoryPages(
     HorizontalPager(
         state = pagerState,
     ) { page ->
-        when (page) {
-            0 -> {
-                if (playlistVideo.isEmpty()) {
-                    PlaylistEmptyScreen()
-                } else {
-                    PlaylistScreen(
-                        playlistVideo = playlistVideo,
-                        navigateToVideoPlayerScreenFromPlaylist = navigateToVideoPlayerScreenFromPlaylist,
-                        deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) },
-                        updateOrderPlaylistVideo = updateOrderPlaylistVideo
-                    )
+
+            when (page) {
+                0 -> {
+                    if (playlistVideo.isEmpty()) {
+                        PlaylistEmptyScreen(modifier = Modifier.padding(bottom = 56.dp))
+                    } else {
+                        PlaylistScreen(
+                            playlistVideo = playlistVideo,
+                            navigateToVideoPlayerScreenFromPlaylist = navigateToVideoPlayerScreenFromPlaylist,
+                            deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) },
+                            updateOrderPlaylistVideo = updateOrderPlaylistVideo
+                        )
+                    }
                 }
+
+                1 -> ExerciseScreen(
+                    category = exercise,
+                    navigateToVideoPlayerScreen = navigateToVideoPlayerScreen
+                )
+
+                else -> Text("Неизвестная страница")
             }
-
-            1 -> ExerciseScreen(
-                category = exercise,
-                navigateToVideoPlayerScreen = navigateToVideoPlayerScreen
-            )
-
-            else -> Text("Неизвестная страница")
         }
-    }
+
 }
 
 @OptIn(ExperimentalFoundationApi::class)

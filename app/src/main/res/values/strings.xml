@@ -9,7 +9,7 @@
     <string name="delete_video_dilog_message">Видео останется в разделе упражнения</string>
     <string name="remove">Удалить</string>
     <string name="do_not_have_video">Видео пока нет</string>
-    <string name="placeholder_subtext_playlist">Здесь будут храниться упражнения,\nкоторые вы добавили в плейлист</string>
+    <string name="placeholder_subtext_playlist">Здесь будут храниться упражнения,\nкоторые вы добавите в плейлист</string>
 
     <!--HomeScreen-->
     <string name="login">Логин</string>
