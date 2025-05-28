@@ -1,7 +1,8 @@
 package com.example.bodybalance.core.util.di
 
 import android.content.Context
-import com.example.bodybalance.core.util.FileDownloader
+import com.example.bodybalance.core.util.api.FileDownloader
+import com.example.bodybalance.core.util.FileDownloaderImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,6 +18,6 @@ object UtilModuleProvider {
     @Singleton
     fun provideFileDownloader(
         @ApplicationContext context: Context
-    ): FileDownloader = FileDownloader(context = context)
+    ): FileDownloader = FileDownloaderImpl(context = context)
 
 }

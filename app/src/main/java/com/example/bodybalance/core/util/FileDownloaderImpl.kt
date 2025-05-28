@@ -1,8 +1,7 @@
 package com.example.bodybalance.core.util
 
 import android.content.Context
-import androidx.compose.ui.platform.LocalContext
-import com.example.bodybalance.videoplayer.presentation.VideoPlayerViewModel
+import com.example.bodybalance.core.util.api.FileDownloader
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -10,11 +9,11 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-class FileDownloader(private val context: Context) {
+class FileDownloaderImpl(private val context: Context) : FileDownloader {
 
     private val client = OkHttpClient()
 
-    public fun downloadFile(url: String, fileName: String , callback: DownloadCallback) {
+    override fun downloadFile(url: String, fileName: String, callback: DownloadCallback) {
         val request = Request.Builder().url(url).build()
 
         client.newCall(request).enqueue(object : okhttp3.Callback {
@@ -45,12 +44,12 @@ class FileDownloader(private val context: Context) {
         })
     }
 
-    fun fileExists(fileName: String): Boolean {
+    override fun fileExists(fileName: String): Boolean {
         val file = File(context.filesDir, fileName)
         return file.exists()
     }
 
-    fun deleteFile(fileName: String): Boolean {
+    override fun deleteFile(fileName: String): Boolean {
         val file = File(context.filesDir, fileName)
         return if (file.exists()) {
             file.delete()
@@ -58,9 +57,27 @@ class FileDownloader(private val context: Context) {
             false
         }
     }
+
+    override fun deleteAllDownloadedFiles(): Boolean {
+        val filesDir = context.filesDir
+        val files = filesDir.listFiles()
+
+        if (files == null || files.isEmpty()) {
+            return false // Нет файлов для удаления
+        }
+
+        var allDeleted = true
+        for (file in files) {
+            if (!file.delete()) {
+                allDeleted = false
+            }
+        }
+
+        return allDeleted
+    }
 }
 
 interface DownloadCallback {
-    fun onSuccess(fileDownload:Boolean)
+    fun onSuccess(fileDownload: Boolean)
     fun onError(error: String)
 }

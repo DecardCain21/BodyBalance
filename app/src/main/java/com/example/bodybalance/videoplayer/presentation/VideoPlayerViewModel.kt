@@ -3,12 +3,11 @@ package com.example.bodybalance.videoplayer.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.util.UnstableApi
+import com.example.bodybalance.core.util.api.FileDownloader
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.core.domain.usecase.api.GetAllPlaylistVideosUseCase
 import com.example.bodybalance.core.domain.usecase.api.GetVideoByCategoryUseCase
-import com.example.bodybalance.core.domain.usecase.api.GetVideoByIdUseCase
 import com.example.bodybalance.core.util.DownloadCallback
-import com.example.bodybalance.core.util.FileDownloader
 import com.example.bodybalance.core.util.NetworkError
 import com.example.bodybalance.videoplayer.domain.usecase.AddPlaylistVideoUseCase
 import com.example.bodybalance.videoplayer.domain.usecase.DeletePlaylistVideoUseCase
@@ -26,13 +25,12 @@ import javax.inject.Inject
 @UnstableApi
 @HiltViewModel
 class VideoPlayerViewModel @Inject constructor(
-    private val fileDownloader: FileDownloader,
+    private val fileDownloaderImpl: FileDownloader,
     private val getVideoByCategoryUseCase: GetVideoByCategoryUseCase,
     private val addPlaylistVideoUseCase: AddPlaylistVideoUseCase,
     private val deletePlaylistVideoUseCase: DeletePlaylistVideoUseCase,
     private val existsPlaylistVideoByIdUseCase: ExistsPlaylistVideoByIdUseCase,
     private val getAllPlaylistVideosUseCase: GetAllPlaylistVideosUseCase,
-    private val getVideoByIdUseCase: GetVideoByIdUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<VideoPlayerState>(VideoPlayerState.Loading)
@@ -137,7 +135,7 @@ class VideoPlayerViewModel @Inject constructor(
     }
 
     private fun downloadVideo(url: String, fileName: String) {
-        fileDownloader.downloadFile(url = url, fileName = fileName, object : DownloadCallback {
+        fileDownloaderImpl.downloadFile(url = url, fileName = fileName, object : DownloadCallback {
             override fun onSuccess(fileDownload: Boolean) {
                 viewModelScope.launch {
                     val currentState = _uiState.value
@@ -154,7 +152,7 @@ class VideoPlayerViewModel @Inject constructor(
     }
 
     private fun removeVideoFromCache(fileName: String) {
-        fileDownloader.deleteFile(fileName = fileName).let {
+        fileDownloaderImpl.deleteFile(fileName = fileName).let {
             viewModelScope.launch {
                 val currentState = _uiState.value
                 if (currentState is VideoPlayerState.Content) {
@@ -169,7 +167,7 @@ class VideoPlayerViewModel @Inject constructor(
             _uiState.value =
                 state.copy(
                     videoInPlaylist = existsPlaylistVideoByIdUseCase(state.currentVideo.id),
-                    videoInCache = fileDownloader.fileExists(state.currentVideo.id.toString())
+                    videoInCache = fileDownloaderImpl.fileExists(state.currentVideo.id.toString())
                 )
         }
     }

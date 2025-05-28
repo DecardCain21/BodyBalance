@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
@@ -196,38 +197,39 @@ private fun VideoPlayerScreenContent(
             color = MaterialTheme.colorScheme.primary
         )
         //NavItem(videoList = videoList, onItemSelected = { onItemSelected(it) })
-        Row(
-            modifier = Modifier
-                .padding(start = 16.dp, end = 7.dp)
-                .horizontalScroll(scrollState)
+        LazyRow(
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp)
         ) {
-            if (isDownloadState) {
-                BodyBalanceActionButton(
-                    onClick = { removeVideoFromCache() },
-                    text = stringResource(R.string.remove_from_device),
-                    imageVector = Icons.Default.DeleteOutline
-                )
-            } else {
-                BodyBalanceActionButton(
-                    onClick = { onClickDownload() },
-                    text = stringResource(R.string.download),
-                    imageVector = Icons.Default.Download
-                )
+            item {
+                if (isDownloadState) {
+                    BodyBalanceActionButton(
+                        onClick = { removeVideoFromCache() },
+                        text = stringResource(R.string.remove_from_device),
+                        imageVector = Icons.Default.DeleteOutline
+                    )
+                } else {
+                    BodyBalanceActionButton(
+                        onClick = { onClickDownload() },
+                        text = stringResource(R.string.download),
+                        imageVector = Icons.Default.Download
+                    )
+                }
+                Spacer(modifier = Modifier.padding(horizontal = 3.dp))
+                if (isAddPlaylist) {
+                    BodyBalanceActionButton(
+                        onClick = { onClickRemoveFromPlaylist() },
+                        text = stringResource(R.string.added_to_playlist),
+                        imageVector = Icons.Default.Bookmark
+                    )
+                } else {
+                    BodyBalanceActionButton(
+                        onClick = { onClickAddToPlaylist() },
+                        text = stringResource(R.string.add_to_playlist),
+                        imageVector = Icons.Default.BookmarkBorder
+                    )
+                }
             }
-            Spacer(modifier = Modifier.padding(horizontal = 3.dp))
-            if (isAddPlaylist) {
-                BodyBalanceActionButton(
-                    onClick = { onClickRemoveFromPlaylist() },
-                    text = stringResource(R.string.added_to_playlist),
-                    imageVector = Icons.Default.Bookmark
-                )
-            } else {
-                BodyBalanceActionButton(
-                    onClick = { onClickAddToPlaylist() },
-                    text = stringResource(R.string.add_to_playlist),
-                    imageVector = Icons.Default.BookmarkBorder
-                )
-            }
+
         }
         VideoList(videoList = videoList, onItemSelected = onItemSelected, currentVideo = video)
     }
