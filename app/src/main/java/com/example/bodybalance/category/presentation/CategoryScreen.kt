@@ -36,6 +36,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonColors
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
@@ -94,60 +95,33 @@ internal fun CategoryScreen(
     deleteVideoFromPlaylist: (Video) -> Unit,
     updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit,
 ) {
-    CategoryContentScreen(
-        modifier = modifier,
-        accounts = uiState.accounts,
-        exercise = uiState.category,
-        playlistVideo = uiState.playlistVideo,
-        activeAccount = uiState.activeAccount,
-        navigateToVideoPlayerScreen = { navigateToVideoPlayerScreen(it, -1) },
-        navigateToVideoPlayerScreenFromPlaylist = { navigateToVideoPlayerScreen(-1, it) },
-        navigateToSettingsScreen = { navigateToSettingsScreen() },
-        navigateBackToIntroduction = { navigateBackToIntroduction() },
-        navigateToHomeScreen = { navigateToHomeScreen() },
-        changeUser = { changeUser(it) },
-        deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) },
-        updateOrderPlaylistVideo = updateOrderPlaylistVideo,
-    )
-}
-
-@Composable
-private fun CategoryContentScreen(
-    accounts: List<Account>,
-    exercise: List<Category>,
-    playlistVideo: List<Video>,
-    activeAccount: Account,
-    navigateBackToIntroduction: () -> Unit,
-    navigateToVideoPlayerScreen: (Int) -> Unit, // Int - Id категории
-    navigateToVideoPlayerScreenFromPlaylist: (Int) -> Unit, // Int - Id видео
-    navigateToSettingsScreen: () -> Unit,
-    navigateToHomeScreen: () -> Unit,
-    changeUser: (Account) -> Unit,
-    modifier: Modifier = Modifier,
-    deleteVideoFromPlaylist: (Video) -> Unit,
-    updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit,
-) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.background)
-    ) {
-        TopAppBar(
-            accounts = accounts,
-            activeAccount = activeAccount,
-            onAccountSelected = changeUser,
-            navigateToSettingsScreen = navigateToSettingsScreen,
-            navigateBackToIntroduction = navigateBackToIntroduction,
-            navigateToHomeScreen = navigateToHomeScreen,
-        )
-        CategoryPages(
-            exercise = exercise,
-            playlistVideo = playlistVideo,
-            navigateToVideoPlayerScreen = navigateToVideoPlayerScreen,
-            navigateToVideoPlayerScreenFromPlaylist = navigateToVideoPlayerScreenFromPlaylist,
-            deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) },
-            updateOrderPlaylistVideo = updateOrderPlaylistVideo
-        )
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                accounts = uiState.accounts,
+                activeAccount = uiState.activeAccount,
+                onAccountSelected = changeUser,
+                navigateToSettingsScreen = navigateToSettingsScreen,
+                navigateBackToIntroduction = navigateBackToIntroduction,
+                navigateToHomeScreen = navigateToHomeScreen,
+            )
+        }
+    ) { paddingValue ->
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(paddingValue)
+                .background(color = MaterialTheme.colorScheme.background)
+        ) {
+            CategoryPages(
+                exercise = uiState.category,
+                playlistVideo = uiState.playlistVideo,
+                navigateToVideoPlayerScreen = { navigateToVideoPlayerScreen(it, -1) },
+                navigateToVideoPlayerScreenFromPlaylist = { navigateToVideoPlayerScreen(-1, it) },
+                deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) },
+                updateOrderPlaylistVideo = updateOrderPlaylistVideo
+            )
+        }
     }
 }
 
@@ -274,8 +248,8 @@ private fun ChangeUserBlock(
 private fun CategoryPages(
     exercise: List<Category>,
     playlistVideo: List<Video>,
-    navigateToVideoPlayerScreen: (Int) -> Unit,
-    navigateToVideoPlayerScreenFromPlaylist: (Int) -> Unit,
+    navigateToVideoPlayerScreen: (Int) -> Unit, // Int - Id категории
+    navigateToVideoPlayerScreenFromPlaylist: (Int) -> Unit, // Int - Id видео
     deleteVideoFromPlaylist: (Video) -> Unit,
     updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit
 ) {
@@ -567,21 +541,18 @@ private fun PreviewPlaylist(
     modifier: Modifier = Modifier,
 ) {
     BodyBalanceTheme(dynamicColor = false) {
-        CategoryContentScreen(
-            navigateToSettingsScreen = {},
-            exercise = listOf(Category.empty(), Category.empty()),
-            playlistVideo = listOf(
-                Video.emptyVideo().copy(id = 1),
-                Video.emptyVideo().copy(id = 2),
-                Video.emptyVideo().copy(id = 3)
+        CategoryScreen(
+            uiState = CategoryState().copy(
+                playlistVideo = listOf(
+                    Video.emptyVideo(1),
+                    Video.emptyVideo(2),
+                )
             ),
-            navigateToVideoPlayerScreen = {},
-            navigateToVideoPlayerScreenFromPlaylist = {},
+            navigateToSettingsScreen = {},
+            navigateToVideoPlayerScreen = { _, _ -> },
             navigateBackToIntroduction = {},
             navigateToHomeScreen = {},
             changeUser = {},
-            accounts = emptyList(),
-            activeAccount = Account.empty(),
             deleteVideoFromPlaylist = {},
             updateOrderPlaylistVideo = { _, _ -> }
         )

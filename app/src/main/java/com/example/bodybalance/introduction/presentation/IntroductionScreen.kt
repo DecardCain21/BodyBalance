@@ -244,7 +244,7 @@ private fun ExoPlayer(
 fun IntroductionPreview() {
     BodyBalanceTheme {
         IntroductionScreenContent(
-            video = Video.emptyVideo(),
+            video = Video.emptyVideo(1),
             navToPlaylist = { },
             inputValue = "",
             inputCodeWord = { },

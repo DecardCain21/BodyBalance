@@ -53,7 +53,7 @@ class IntroductionViewModel @Inject constructor(
             getIntroductionVideoUseCase.unpackVideoIfNeeded()
             _uiState.value = IntroductionScreenState(
                 inputValue = inputState, IntroductionPlayerState.Content(
-                    video = Video.emptyVideo().copy(
+                    video = Video.emptyVideo(1).copy(
                         url = getIntroductionVideoUseCase(),
                         category = "Введение",
                         description = """

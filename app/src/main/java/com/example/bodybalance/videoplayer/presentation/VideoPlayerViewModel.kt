@@ -69,7 +69,7 @@ class VideoPlayerViewModel @Inject constructor(
                 val newState =
                     VideoPlayerState.Content(
                         currentVideo = playlistVideos.find { it.id == videoId }
-                            ?: Video.emptyVideo(),
+                            ?: Video.emptyVideo(1),
                         videoList = playlistVideos,
                     )
                 setButtonsState(newState)

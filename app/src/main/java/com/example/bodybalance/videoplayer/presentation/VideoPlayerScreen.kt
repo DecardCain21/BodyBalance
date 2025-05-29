@@ -303,8 +303,8 @@ fun IntroductionPreview() {
     BodyBalanceTheme {
         Box {
             VideoPlayerScreenContent(
-                video = Video.emptyVideo(),
-                videoList = listOf(Video.emptyVideo(), Video.emptyVideo()),
+                video = Video.emptyVideo(1),
+                videoList = listOf(Video.emptyVideo(1), Video.emptyVideo(2)),
                 navigateBackToPlaylistScreen = {},
                 onItemSelected = {},
                 onClickDownload = {},

@@ -10,8 +10,8 @@ data class Video(
 ) {
 
     companion object {
-        fun emptyVideo() = Video(
-            id = 0,
+        fun emptyVideo(id: Int) = Video(
+            id = id,
             url = "",
             category = "",
             name = "Разминка перед упражнениями на отдельную группу мыщц",
