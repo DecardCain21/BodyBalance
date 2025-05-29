@@ -10,4 +10,6 @@ interface FileDownloader {
     fun deleteFile(fileName: String): Boolean
 
     fun deleteAllDownloadedFiles(): Boolean
+
+    fun getFilesCacheSize(): Long
 }

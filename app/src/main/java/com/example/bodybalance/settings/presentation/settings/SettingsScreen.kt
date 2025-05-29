@@ -1,9 +1,7 @@
 package com.example.bodybalance.settings.presentation.settings
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -39,12 +37,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.bodybalance.R
 import com.example.bodybalance.core.composable.BaseTopAppBar
 import com.example.bodybalance.core.composable.BasicButton
+import com.example.bodybalance.core.util.convertToFileSize
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
@@ -54,6 +53,7 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     var showDialog by remember { mutableStateOf(false) }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Column(
         modifier = modifier.fillMaxSize(),
@@ -68,9 +68,7 @@ fun SettingsScreen(
         Row(
             modifier = Modifier
                 .padding(top = 16.dp, start = 16.dp, end = 16.dp)
-                .combinedClickable {
-                    viewModel.clearCache()
-                },
+                .clickable { viewModel.clearCache() },
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
@@ -103,7 +101,7 @@ fun SettingsScreen(
                 modifier = Modifier
                     .padding(vertical = 12.dp)
                     .align(Alignment.Top),
-                text = "5 Гб",
+                text = uiState.cacheSize.convertToFileSize(),
                 fontSize = 11.sp,
                 color = colorResource(R.color.white),
                 textAlign = TextAlign.End

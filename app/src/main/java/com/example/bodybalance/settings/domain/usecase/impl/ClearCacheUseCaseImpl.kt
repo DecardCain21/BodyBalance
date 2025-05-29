@@ -7,6 +7,7 @@ import javax.inject.Inject
 class ClearCacheUseCaseImpl @Inject constructor(
     private val fileDownloaderImpl: FileDownloader
 ) : ClearCacheUseCase {
+
     override fun invoke() {
         fileDownloaderImpl.deleteAllDownloadedFiles()
     }
