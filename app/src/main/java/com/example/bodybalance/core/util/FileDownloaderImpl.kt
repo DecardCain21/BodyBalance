@@ -1,21 +1,31 @@
 package com.example.bodybalance.core.util
 
 import android.content.Context
+import com.example.bodybalance.core.domain.api.SettingsToolsRepository
 import com.example.bodybalance.core.util.api.FileDownloader
+import dagger.hilt.android.qualifiers.ApplicationContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import javax.inject.Inject
 
-class FileDownloaderImpl(private val context: Context) : FileDownloader {
+class FileDownloaderImpl @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val settingsToolsRepository: SettingsToolsRepository
+) : FileDownloader {
 
     private val client = OkHttpClient()
 
     override fun downloadFile(url: String, fileName: String, callback: DownloadCallback) {
         val request = Request.Builder().url(url).build()
-
+        val downloadOnlyWifi = settingsToolsRepository.getDownloadWifiFlag()
+        if (downloadOnlyWifi && !isConnectedToWifi()) {
+            callback.onError("Нет активного соединения с Wi-Fi")
+            return
+        }
         client.newCall(request).enqueue(object : okhttp3.Callback {
             override fun onFailure(call: okhttp3.Call, e: IOException) {
                 // Обработка ошибки

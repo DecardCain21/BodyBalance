@@ -6,11 +6,8 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 
 fun getConnected(): Boolean {
-    val connectivityManager = BodyBalanceApp
-        .applicationContext()
-        .getSystemService(
-            Context.CONNECTIVITY_SERVICE
-        ) as ConnectivityManager
+    val connectivityManager = BodyBalanceApp.applicationContext()
+        .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
     return if (capabilities != null) {
         with(capabilities) {
@@ -24,4 +21,12 @@ fun getConnected(): Boolean {
     } else {
         false
     }
+}
+
+fun isConnectedToWifi(): Boolean {
+    val connectivityManager = BodyBalanceApp.applicationContext()
+        .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val network = connectivityManager.activeNetwork ?: return false
+    val networkCapabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+    return networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
 }

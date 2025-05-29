@@ -3,9 +3,11 @@ package com.example.bodybalance.settings.di
 import com.example.bodybalance.settings.domain.usecase.ClearCacheUseCase
 import com.example.bodybalance.settings.domain.usecase.GetFilesCacheSizeUseCase
 import com.example.bodybalance.settings.domain.usecase.LogOutOfAccountUseCase
+import com.example.bodybalance.settings.domain.usecase.SettingsToolsUseCase
 import com.example.bodybalance.settings.domain.usecase.impl.ClearCacheUseCaseImpl
 import com.example.bodybalance.settings.domain.usecase.impl.GetFilesCacheSizeUseCaseImpl
 import com.example.bodybalance.settings.domain.usecase.impl.LogOutOfAccountUseCaseUseCaseImpl
+import com.example.bodybalance.settings.domain.usecase.impl.SettingsToolsUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -29,4 +31,9 @@ abstract class SettingsModuleBinder {
     abstract fun bindGetFilesCacheSizeUseCase(
         getFilesCacheSizeUseCase: GetFilesCacheSizeUseCaseImpl
     ): GetFilesCacheSizeUseCase
+
+    @Binds
+    abstract fun bindSettingsToolsUseCase(
+        settingsToolsUseCase: SettingsToolsUseCaseImpl
+    ): SettingsToolsUseCase
 }

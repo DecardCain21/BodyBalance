@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.bodybalance.settings.presentation.settings.SettingsScreen
+import com.example.bodybalance.settings.presentation.settings.SettingsScreenRoute
 
 const val SETTINGS_NAME = "settings"
 
@@ -37,7 +38,7 @@ fun NavGraphBuilder.settingsScreen(
     navigateToHomeScreen: () -> Unit
 ) {
     composable(route = SETTINGS_NAME) {
-        SettingsScreen(
+        SettingsScreenRoute(
             navigateToAboutAppScreen = navigateToAboutAppScreen,
             navigateBackToPlaylistScreen = navigateBackToPlaylistScreen,
             navigateToHomeScreen = navigateToHomeScreen
