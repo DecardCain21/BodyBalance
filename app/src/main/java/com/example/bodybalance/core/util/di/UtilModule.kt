@@ -9,6 +9,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
 import javax.inject.Singleton
 
 @Module
@@ -19,9 +20,11 @@ object UtilModuleProvider {
     @Singleton
     fun provideFileDownloader(
         @ApplicationContext context: Context,
-        settingsToolsRepository: SettingsToolsRepository
+        settingsToolsRepository: SettingsToolsRepository,
+        okHttpClient: OkHttpClient
     ): FileDownloader = FileDownloaderImpl(
         context = context,
-        settingsToolsRepository = settingsToolsRepository
+        settingsToolsRepository = settingsToolsRepository,
+        okHttpClient = okHttpClient
     )
 }

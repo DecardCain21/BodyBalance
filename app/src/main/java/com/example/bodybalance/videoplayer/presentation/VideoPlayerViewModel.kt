@@ -8,6 +8,7 @@ import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.core.domain.usecase.api.GetAllPlaylistVideosUseCase
 import com.example.bodybalance.core.domain.usecase.api.GetVideoByCategoryUseCase
 import com.example.bodybalance.core.util.DownloadCallback
+import com.example.bodybalance.core.util.FileDownloaderError
 import com.example.bodybalance.core.util.NetworkError
 import com.example.bodybalance.videoplayer.domain.usecase.AddPlaylistVideoUseCase
 import com.example.bodybalance.videoplayer.domain.usecase.DeletePlaylistVideoUseCase
@@ -145,7 +146,7 @@ class VideoPlayerViewModel @Inject constructor(
                 }
             }
 
-            override fun onError(error: String) {
+            override fun onError(error: FileDownloaderError) {
                 /*TODO("Not yet implemented")*/
             }
         })

@@ -8,6 +8,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -18,6 +19,10 @@ const val BODY_BALANCE_BASE_URL = "https://api.7375.org/"
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModuleProvider {
+
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(): OkHttpClient = OkHttpClient()
 
     @Provides
     @Singleton

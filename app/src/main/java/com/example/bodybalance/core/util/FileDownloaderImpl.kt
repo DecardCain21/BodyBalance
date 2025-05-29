@@ -14,28 +14,27 @@ import javax.inject.Inject
 
 class FileDownloaderImpl @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val settingsToolsRepository: SettingsToolsRepository
+    private val settingsToolsRepository: SettingsToolsRepository,
+    private val okHttpClient: OkHttpClient
 ) : FileDownloader {
-
-    private val client = OkHttpClient()
 
     override fun downloadFile(url: String, fileName: String, callback: DownloadCallback) {
         val request = Request.Builder().url(url).build()
         val downloadOnlyWifi = settingsToolsRepository.getDownloadWifiFlag()
         if (downloadOnlyWifi && !isConnectedToWifi()) {
-            callback.onError("Нет активного соединения с Wi-Fi")
+            callback.onError(FileDownloaderError.WIFI_ERROR)
             return
         }
-        client.newCall(request).enqueue(object : okhttp3.Callback {
+        okHttpClient.newCall(request).enqueue(object : okhttp3.Callback {
             override fun onFailure(call: okhttp3.Call, e: IOException) {
                 // Обработка ошибки
                 e.printStackTrace()
-                callback.onError(e.message ?: "Network error")
+                callback.onError(FileDownloaderError.NETWORK_ERROR)
             }
 
             override fun onResponse(call: okhttp3.Call, response: Response) {
-                if (!response.isSuccessful) {
-                    callback.onError("HTTP error: ${response.code}")
+                if (!response.isSuccessful) { // todo: зачем это нужно, если есть проверка ниже??
+                    callback.onError(FileDownloaderError.HTTP_ERROR)
                     return
                 }
 
@@ -48,7 +47,7 @@ class FileDownloaderImpl @Inject constructor(
                     }
                     callback.onSuccess(true)
                 } catch (e: Exception) {
-                    callback.onError("File save error: ${e.message}")
+                    callback.onError(FileDownloaderError.FILE_SAVE_ERROR)
                 }
             }
         })
@@ -96,5 +95,12 @@ class FileDownloaderImpl @Inject constructor(
 
 interface DownloadCallback {
     fun onSuccess(fileDownload: Boolean)
-    fun onError(error: String)
+    fun onError(error: FileDownloaderError)
+}
+
+enum class FileDownloaderError(error: String) {
+    HTTP_ERROR("Ошибка сервера"),
+    WIFI_ERROR("Нет активного соединения с Wi-Fi"),
+    NETWORK_ERROR("Ошибка сети"),
+    FILE_SAVE_ERROR("Ошибка сохранения файла")
 }
