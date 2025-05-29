@@ -29,7 +29,7 @@
     <string name="clear_cashe_description">Освободите память устройства. Видео останутся в приложении, и вы сможете скачать их заново</string>
     <string name="download_wi_fi_only">Скачивать видео только\nпо Wi-Fi</string>
     <string name="about_app">О приложении</string>
-    <string name="version_app">Версия 0.0.0</string>
+    <string name="version_app">Версия %1$s</string>
     <string name="exit">Выйти</string>
     <string name="logout_of_account">Выйти из аккаунта?</string>
     <string name="logout">Выйти</string>

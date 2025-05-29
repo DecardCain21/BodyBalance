@@ -89,7 +89,6 @@ fun exoPlayer(
         currentPosition = 0L
     }
 
-
     val lifecycleOwner = LocalLifecycleOwner.current
     val configuration = LocalConfiguration.current
     var isLandscape by rememberSaveable {

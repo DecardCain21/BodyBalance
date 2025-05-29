@@ -11,7 +11,12 @@ class PreferencesStorage @Inject constructor(
         get() = sharedPreferences.getString(KEY_CODE, "") ?: ""
         set(value) = sharedPreferences.edit().putString(KEY_CODE, value).apply()
 
+    var useOnlyWifi: Boolean
+        get() = sharedPreferences.getBoolean(KEY_WIFI, false)
+        set(value) = sharedPreferences.edit().putBoolean(KEY_WIFI, value).apply()
+
     companion object {
         private const val KEY_CODE = "is_authenticated"
+        private const val KEY_WIFI = "download_only_with_wifi"
     }
 }
