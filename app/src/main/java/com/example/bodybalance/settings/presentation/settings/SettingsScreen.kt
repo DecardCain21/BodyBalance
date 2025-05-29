@@ -111,10 +111,11 @@ private fun ClearCacheRow(
 ) {
     Row(
         modifier = Modifier
-            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+            .padding(top = 16.dp)
             .clickable { onClear() },
         verticalAlignment = Alignment.CenterVertically
     ) {
+        Spacer(modifier = Modifier.padding(start = 16.dp))
         Image(
             modifier = Modifier
                 .padding(vertical = 12.dp)
@@ -150,6 +151,7 @@ private fun ClearCacheRow(
             color = colorResource(R.color.white),
             textAlign = TextAlign.End
         )
+        Spacer(modifier = Modifier.padding(end = 16.dp))
     }
 }
 
@@ -199,10 +201,10 @@ fun AboutAppRow(onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
             .clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically
     ) {
+        Spacer(modifier = Modifier.padding(start = 16.dp))
         Image(
             modifier = Modifier.size(24.dp),
             imageVector = Icons.Default.Info,
@@ -222,6 +224,7 @@ fun AboutAppRow(onClick: () -> Unit) {
             fontSize = 16.sp,
             color = colorResource(R.color.white),
         )
+        Spacer(modifier = Modifier.padding(end = 16.dp))
     }
 }
 
