@@ -75,6 +75,13 @@ class FileDownloaderImpl(private val context: Context) : FileDownloader {
 
         return allDeleted
     }
+
+    override fun getFilesCacheSize(): Long {
+        val files = context.filesDir.listFiles() ?: return 0L
+
+        return files.sumOf { it.length() }
+    }
+
 }
 
 interface DownloadCallback {
