@@ -68,7 +68,7 @@ fun exoPlayer(
     shouldRequestFocus: () -> Unit = {}
 ): ExoPlayer {
 
-    val exoPlayer = remember {
+    val exoPlayer = remember(context) {
         ExoPlayer.Builder(context).build().apply {
             playWhenReady = false
             if (listener != null) {
@@ -76,12 +76,19 @@ fun exoPlayer(
             }
         }
     }
-    exoPlayer.apply {
-        val mediaItem = MediaItem.fromUri(Uri.parse(video.url))
-        setMediaItem(mediaItem)
-        prepare()
-    }
+
     var currentPosition by rememberSaveable { mutableLongStateOf(0L) }
+
+    LaunchedEffect(video.url) {
+        exoPlayer.apply {
+            val mediaItem = MediaItem.fromUri(Uri.parse(video.url))
+            setMediaItem(mediaItem)
+            seekTo(currentPosition)
+            prepare()
+        }
+        currentPosition = 0L
+    }
+
 
     val lifecycleOwner = LocalLifecycleOwner.current
     val configuration = LocalConfiguration.current
