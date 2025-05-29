@@ -83,7 +83,7 @@ import org.burnoutcrew.reorderable.rememberReorderableLazyListState
 import org.burnoutcrew.reorderable.reorderable
 
 @Composable
-fun CategoryScreen(
+internal fun CategoryScreen(
     modifier: Modifier = Modifier,
     uiState: CategoryState,
     navigateBackToIntroduction: () -> Unit,
@@ -127,20 +127,6 @@ private fun CategoryContentScreen(
     deleteVideoFromPlaylist: (Video) -> Unit,
     updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit,
 ) {
-    var selectedAccount by remember(accounts) {
-        mutableStateOf(activeAccount)
-    }
-
-    var isFirstLaunch by remember { mutableStateOf(true) }
-
-    LaunchedEffect(selectedAccount) {
-        if (isFirstLaunch) {
-            isFirstLaunch = false
-        } else {
-            changeUser(selectedAccount)
-        }
-    }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -148,8 +134,8 @@ private fun CategoryContentScreen(
     ) {
         TopAppBar(
             accounts = accounts,
-            selectedAccount = selectedAccount,
-            onAccountSelected = { selectedAccount = it },
+            activeAccount = activeAccount,
+            onAccountSelected = changeUser,
             navigateToSettingsScreen = navigateToSettingsScreen,
             navigateBackToIntroduction = navigateBackToIntroduction,
             navigateToHomeScreen = navigateToHomeScreen,
@@ -169,7 +155,7 @@ private fun CategoryContentScreen(
 @Composable
 private fun TopAppBar(
     accounts: List<Account>,
-    selectedAccount: Account,
+    activeAccount: Account,
     onAccountSelected: (Account) -> Unit,
     navigateToSettingsScreen: () -> Unit,
     navigateBackToIntroduction: () -> Unit,
@@ -212,7 +198,7 @@ private fun TopAppBar(
         ) {
             ChangeUserBlock(
                 accounts = accounts,
-                selectedAccount = selectedAccount,
+                activeAccount = activeAccount,
                 onAccountSelected = { onAccountSelected(it) },
                 onAddAccountClick = {
                     navigateToHomeScreen()
@@ -228,7 +214,7 @@ private fun TopAppBar(
 @Composable
 private fun ChangeUserBlock(
     accounts: List<Account>,
-    selectedAccount: Account,
+    activeAccount: Account,
     onAccountSelected: (Account) -> Unit,
     onAddAccountClick: () -> Unit,
     sheetState: SheetState,
@@ -236,9 +222,7 @@ private fun ChangeUserBlock(
 ) {
     val scope = rememberCoroutineScope()
 
-    Column(
-        modifier = modifier.fillMaxWidth()
-    ) {
+    Column(modifier = modifier.fillMaxWidth()) {
         accounts.forEach { account ->
             Row(
                 modifier = Modifier
@@ -254,7 +238,7 @@ private fun ChangeUserBlock(
             ) {
                 Text(text = account.name, fontSize = 16.sp)
                 RadioButton(
-                    selected = selectedAccount == account,
+                    selected = activeAccount == account,
                     onClick = { onAccountSelected(account) },
                     colors = RadioButtonColors(
                         selectedColor = MaterialTheme.colorScheme.onPrimary,

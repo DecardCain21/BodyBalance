@@ -165,10 +165,11 @@ class VideoPlayerViewModel @Inject constructor(
 
     private suspend fun setButtonsState(state: VideoPlayerState.Content) {
         viewModelScope.launch {
+            val test = fileDownloaderImpl.fileExists(state.currentVideo.id.toString())
             _uiState.value =
                 state.copy(
                     videoInPlaylist = existsPlaylistVideoByIdUseCase(state.currentVideo.id),
-                    videoInCache = fileDownloaderImpl.fileExists(state.currentVideo.id.toString())
+                    videoInCache = test
                 )
         }
     }

@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class SettingsToolsRepositoryImpl @Inject constructor(
     private val preferencesStorage: PreferencesStorage
-): SettingsToolsRepository {
+) : SettingsToolsRepository {
 
     override fun getDownloadWifiFlag(): Boolean {
         return preferencesStorage.useOnlyWifi
