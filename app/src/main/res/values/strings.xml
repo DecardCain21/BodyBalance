@@ -5,6 +5,8 @@
 
     <!--CategoryScreen-->
     <string name="add_account">Добавить аккаунт</string>
+    <string name="playlist">Плейлист</string>
+    <string name="exercises">Упражнения</string>
     <string name="delete_video_from_playlist">Удалить видео из плейлиста?</string>
     <string name="delete_video_dilog_message">Видео останется в разделе упражнения</string>
     <string name="remove">Удалить</string>

@@ -28,7 +28,6 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -63,7 +62,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bodybalance.R
@@ -94,27 +92,23 @@ fun CategoryScreen(
     navigateToHomeScreen: () -> Unit,
     changeUser: (Account) -> Unit,
     deleteVideoFromPlaylist: (Video) -> Unit,
-    updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit
+    updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit,
 ) {
-    when (uiState) {
-        is CategoryState.Content -> CategoryContentScreen(
-            modifier = modifier,
-            accounts = uiState.accounts,
-            exercise = uiState.category,
-            playlistVideo = uiState.playlistVideo,
-            activeAccount = uiState.activeAccount,
-            navigateToVideoPlayerScreen = { navigateToVideoPlayerScreen(it, -1) },
-            navigateToVideoPlayerScreenFromPlaylist = { navigateToVideoPlayerScreen(-1, it) },
-            navigateToSettingsScreen = { navigateToSettingsScreen() },
-            navigateBackToIntroduction = { navigateBackToIntroduction() },
-            navigateToHomeScreen = { navigateToHomeScreen() },
-            changeUser = { changeUser(it) },
-            deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) },
-            updateOrderPlaylistVideo = updateOrderPlaylistVideo
-        )
-
-        is CategoryState.Error -> CategoryErrorScreen(modifier = modifier)
-    }
+    CategoryContentScreen(
+        modifier = modifier,
+        accounts = uiState.accounts,
+        exercise = uiState.category,
+        playlistVideo = uiState.playlistVideo,
+        activeAccount = uiState.activeAccount,
+        navigateToVideoPlayerScreen = { navigateToVideoPlayerScreen(it, -1) },
+        navigateToVideoPlayerScreenFromPlaylist = { navigateToVideoPlayerScreen(-1, it) },
+        navigateToSettingsScreen = { navigateToSettingsScreen() },
+        navigateBackToIntroduction = { navigateBackToIntroduction() },
+        navigateToHomeScreen = { navigateToHomeScreen() },
+        changeUser = { changeUser(it) },
+        deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) },
+        updateOrderPlaylistVideo = updateOrderPlaylistVideo,
+    )
 }
 
 @Composable
@@ -131,7 +125,7 @@ private fun CategoryContentScreen(
     changeUser: (Account) -> Unit,
     modifier: Modifier = Modifier,
     deleteVideoFromPlaylist: (Video) -> Unit,
-    updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit
+    updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit,
 ) {
     var selectedAccount by remember(accounts) {
         mutableStateOf(activeAccount)
@@ -158,7 +152,7 @@ private fun CategoryContentScreen(
             onAccountSelected = { selectedAccount = it },
             navigateToSettingsScreen = navigateToSettingsScreen,
             navigateBackToIntroduction = navigateBackToIntroduction,
-            navigateToHomeScreen = navigateToHomeScreen
+            navigateToHomeScreen = navigateToHomeScreen,
         )
         CategoryPages(
             exercise = exercise,
@@ -179,7 +173,7 @@ private fun TopAppBar(
     onAccountSelected: (Account) -> Unit,
     navigateToSettingsScreen: () -> Unit,
     navigateBackToIntroduction: () -> Unit,
-    navigateToHomeScreen: () -> Unit
+    navigateToHomeScreen: () -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -188,8 +182,8 @@ private fun TopAppBar(
         navigateBack = navigateBackToIntroduction,
         actions = {
             IconButton(
-                onClick = { showBottomSheet = true })
-            {
+                onClick = { showBottomSheet = true }
+            ) {
                 Icon(
                     imageVector = Icons.Default.AccountCircle,
                     contentDescription = "Localized description",
@@ -224,7 +218,7 @@ private fun TopAppBar(
                     navigateToHomeScreen()
                     showBottomSheet = false
                 },
-                sheetState = sheetState
+                sheetState = sheetState,
             )
         }
     }
@@ -301,7 +295,7 @@ private fun CategoryPages(
     deleteVideoFromPlaylist: (Video) -> Unit,
     updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit
 ) {
-    val tabs = listOf("Плейлист", "Упражнения")
+    val tabs = listOf(stringResource(R.string.playlist), stringResource(R.string.exercises))
     val pagerState = rememberPagerState { tabs.size }
     val scope = rememberCoroutineScope()
 
@@ -334,33 +328,29 @@ private fun CategoryPages(
         }
     }
 
-    HorizontalPager(
-        state = pagerState,
-    ) { page ->
-
-            when (page) {
-                0 -> {
-                    if (playlistVideo.isEmpty()) {
-                        PlaylistEmptyScreen(modifier = Modifier.padding(bottom = 56.dp))
-                    } else {
-                        PlaylistScreen(
-                            playlistVideo = playlistVideo,
-                            navigateToVideoPlayerScreenFromPlaylist = navigateToVideoPlayerScreenFromPlaylist,
-                            deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) },
-                            updateOrderPlaylistVideo = updateOrderPlaylistVideo
-                        )
-                    }
+    HorizontalPager(state = pagerState) { page ->
+        when (page) {
+            0 -> {
+                if (playlistVideo.isEmpty()) {
+                    PlaylistEmptyScreen(modifier = Modifier.padding(bottom = 56.dp))
+                } else {
+                    PlaylistScreen(
+                        playlistVideo = playlistVideo,
+                        navigateToVideoPlayerScreenFromPlaylist = navigateToVideoPlayerScreenFromPlaylist,
+                        deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) },
+                        updateOrderPlaylistVideo = updateOrderPlaylistVideo
+                    )
                 }
-
-                1 -> ExerciseScreen(
-                    category = exercise,
-                    navigateToVideoPlayerScreen = navigateToVideoPlayerScreen
-                )
-
-                else -> Text("Неизвестная страница")
             }
-        }
 
+            1 -> ExerciseScreen(
+                category = exercise,
+                navigateToVideoPlayerScreen = navigateToVideoPlayerScreen
+            )
+
+            else -> Unit
+        }
+    }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -378,7 +368,7 @@ private fun ExerciseScreen(
             contentPadding = PaddingValues(16.dp),
             state = rememberLazyListState()
         ) {
-            items(category) { item ->
+            items(items = category, key = { it.id }) { item ->
                 ExerciseItem(
                     modifier = Modifier.combinedClickable(
                         indication = null,
@@ -587,13 +577,6 @@ private fun DeleteVideoDialog(
     )
 }
 
-@Composable
-private fun CategoryErrorScreen(
-    modifier: Modifier = Modifier
-) {
-    Text(text = stringResource(R.string.error))
-}
-
 @Preview
 @Composable
 private fun PreviewPlaylist(
@@ -603,7 +586,11 @@ private fun PreviewPlaylist(
         CategoryContentScreen(
             navigateToSettingsScreen = {},
             exercise = listOf(Category.empty(), Category.empty()),
-            playlistVideo = listOf(Video.emptyVideo(), Video.emptyVideo(), Video.emptyVideo()),
+            playlistVideo = listOf(
+                Video.emptyVideo().copy(id = 1),
+                Video.emptyVideo().copy(id = 2),
+                Video.emptyVideo().copy(id = 3)
+            ),
             navigateToVideoPlayerScreen = {},
             navigateToVideoPlayerScreenFromPlaylist = {},
             navigateBackToIntroduction = {},

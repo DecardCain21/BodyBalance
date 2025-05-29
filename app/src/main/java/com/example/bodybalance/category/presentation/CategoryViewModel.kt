@@ -4,13 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bodybalance.category.domain.usecase.ActivateAccountUseCase
 import com.example.bodybalance.category.domain.usecase.GetAllAccountsUseCase
-import com.example.bodybalance.core.domain.usecase.api.GetAllPlaylistVideosUseCase
 import com.example.bodybalance.category.domain.usecase.GetCategoryUseCase
 import com.example.bodybalance.category.domain.usecase.UpdateOrderPlaylistVideoUseCase
 import com.example.bodybalance.category.presentation.state.CategoryScreenUiEvent
 import com.example.bodybalance.category.presentation.state.CategoryState
 import com.example.bodybalance.core.domain.models.Account
 import com.example.bodybalance.core.domain.models.Video
+import com.example.bodybalance.core.domain.usecase.api.GetAllPlaylistVideosUseCase
 import com.example.bodybalance.videoplayer.domain.usecase.DeletePlaylistVideoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,11 +30,11 @@ class CategoryViewModel @Inject constructor(
     private val updateOrderPlaylistVideoUseCase: UpdateOrderPlaylistVideoUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<CategoryState>(CategoryState.Content())
+    private val _uiState = MutableStateFlow(CategoryState())
     val uiState: StateFlow<CategoryState> = _uiState.asStateFlow()
 
     init {
-        loadCategories()
+        loadInformation()
     }
 
     fun handleEvent(event: CategoryScreenUiEvent) {
@@ -48,36 +48,39 @@ class CategoryViewModel @Inject constructor(
         }
     }
 
-    private fun loadCategories() {
+    private fun loadInformation() {
         viewModelScope.launch {
             try {
                 val accounts = getAllAccountsUseCase()
                 val categories = getCategoryUseCase().getOrNull()
-                getAllPlaylistVideosUseCase().collect { playlistVideo ->
-                    _uiState.value = CategoryState.Content(
-                        activeAccount = accounts.find { it.isActive } ?: accounts.first(),
-                        accounts = accounts,
-                        category = categories ?: emptyList(),
-                        playlistVideo = playlistVideo
-                    )
-                }
 
+                getAllPlaylistVideosUseCase().collect { playlistVideo ->
+                    _uiState.update { currentState ->
+                        val activeAccount = accounts.find { it.isActive } ?: accounts.first()
+                        currentState.copy(
+                            activeAccount = activeAccount,
+                            accounts = accounts,
+                            category = categories ?: emptyList(),
+                            playlistVideo = playlistVideo
+                        )
+                    }
+                }
             } catch (e: Exception) {
-                _uiState.value = CategoryState.Error
+                _uiState.update { CategoryState() }
             }
         }
     }
 
     private fun changeUserAccount(account: Account) {
         viewModelScope.launch {
-            _uiState.update { state ->
-                if (state is CategoryState.Content) {
-                    state.copy(activeAccount = account)
-                } else {
-                    state
-                }
-            }
             activateAccountUseCase(account)
+            val categories = getCategoryUseCase().getOrNull()
+            _uiState.update { state ->
+                state.copy(
+                    activeAccount = account,
+                    category = categories ?: emptyList()
+                )
+            }
         }
     }
 
