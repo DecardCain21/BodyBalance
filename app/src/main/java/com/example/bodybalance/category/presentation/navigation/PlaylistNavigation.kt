@@ -4,11 +4,12 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.bodybalance.category.presentation.CategoryScreenRoute
+import com.example.bodybalance.videoplayer.presentation.navigation.VideoPlayerNavigateScreenId
 
 const val PLAYLIST_ROUTE = "playlist"
 
 fun NavGraphBuilder.playlistScreen(
-    navigateToVideoPlayerScreen: (Int,Int) -> Unit,
+    navigateToVideoPlayerScreen: (VideoPlayerNavigateScreenId, Int) -> Unit,
     navigateToSettingsScreen: () -> Unit,
     navigateBackToIntroduction: () -> Unit,
     navigateToHomeScreen: () -> Unit

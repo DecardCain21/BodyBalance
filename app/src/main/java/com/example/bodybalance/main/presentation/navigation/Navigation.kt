@@ -34,10 +34,10 @@ fun Navigation(isAuthenticated: Boolean) {
         introductionScreen { navController.navigateToPlaylist() }
 
         playlistScreen(
-            navigateToVideoPlayerScreen = { categoryId, videoId ->
+            navigateToVideoPlayerScreen = { routeId, itemId ->
                 navController.navigateToVideoPlayerScreen(
-                    categoryId = categoryId,
-                    videoId = videoId
+                    routeId = routeId,
+                    itemId = itemId
                 )
             },
             navigateToSettingsScreen = { navController.navigateToSettingsScreen() },

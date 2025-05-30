@@ -77,6 +77,7 @@ import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import com.example.bodybalance.ui.theme.TabRowDividerColor
 import com.example.bodybalance.ui.theme.White
+import com.example.bodybalance.videoplayer.presentation.navigation.VideoPlayerNavigateScreenId
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.burnoutcrew.reorderable.ReorderableItem
@@ -88,7 +89,7 @@ internal fun CategoryScreen(
     modifier: Modifier = Modifier,
     uiState: CategoryState,
     navigateBackToIntroduction: () -> Unit,
-    navigateToVideoPlayerScreen: (categoryId: Int, videoId: Int) -> Unit,
+    navigateToVideoPlayerScreen: (routeId: VideoPlayerNavigateScreenId, itemId: Int) -> Unit,
     navigateToSettingsScreen: () -> Unit,
     navigateToHomeScreen: () -> Unit,
     changeUser: (Account) -> Unit,
@@ -116,8 +117,12 @@ internal fun CategoryScreen(
             CategoryPages(
                 exercise = uiState.category,
                 playlistVideo = uiState.playlistVideo,
-                navigateToVideoPlayerScreen = { navigateToVideoPlayerScreen(it, -1) },
-                navigateToVideoPlayerScreenFromPlaylist = { navigateToVideoPlayerScreen(-1, it) },
+                navigateToVideoPlayerScreen = {
+                    navigateToVideoPlayerScreen(VideoPlayerNavigateScreenId.CATEGORY, it)
+                },
+                navigateToVideoPlayerScreenFromPlaylist = {
+                    navigateToVideoPlayerScreen(VideoPlayerNavigateScreenId.PLAYLIST, it)
+                },
                 deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) },
                 updateOrderPlaylistVideo = updateOrderPlaylistVideo
             )

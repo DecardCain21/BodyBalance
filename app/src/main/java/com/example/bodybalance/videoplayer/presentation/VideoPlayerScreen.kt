@@ -5,13 +5,11 @@ import androidx.annotation.OptIn
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -52,7 +50,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import com.example.bodybalance.R
 import com.example.bodybalance.core.composable.BaseTopAppBar
@@ -61,14 +58,15 @@ import com.example.bodybalance.core.composable.exoPlayer
 import com.example.bodybalance.core.composable.items.VideoItem
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
+import com.example.bodybalance.videoplayer.presentation.navigation.VideoPlayerNavigateScreenId
 import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerScreenUiEvent
 import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerState
 
 @OptIn(UnstableApi::class)
 @Composable
 fun VideoPlayerScreen(
-    categoryId: Int,
-    videoId: Int,
+    routeLabel: VideoPlayerNavigateScreenId,
+    itemId: Int,
     modifier: Modifier = Modifier,
     navigateBackToPlaylistScreen: () -> Unit,
     viewModel: VideoPlayerViewModel = hiltViewModel(),
@@ -78,10 +76,9 @@ fun VideoPlayerScreen(
     val currentState = uiState
 
     LaunchedEffect(Unit) {
-        if (categoryId != -1) {
-            viewModel.getVideo(categoryId)
-        } else {
-            viewModel.getPlaylistVideos(videoId)
+        when (routeLabel) {
+            VideoPlayerNavigateScreenId.CATEGORY -> viewModel.getVideo(itemId)
+            VideoPlayerNavigateScreenId.PLAYLIST -> viewModel.getPlaylistVideos(itemId)
         }
     }
 

@@ -90,7 +90,7 @@ class VideoPlayerViewModel @Inject constructor(
 
                 else -> result.getOrNull()?.let {
                     VideoPlayerState.Content(
-                        currentVideo = it.map { video -> video }.first(),
+                        currentVideo = it.first(),
                         videoList = it,
                     )
                 } ?: VideoPlayerState.Empty

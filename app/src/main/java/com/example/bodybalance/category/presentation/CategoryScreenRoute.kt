@@ -6,11 +6,12 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.bodybalance.category.presentation.state.CategoryScreenUiEvent
+import com.example.bodybalance.videoplayer.presentation.navigation.VideoPlayerNavigateScreenId
 
 @Composable
 fun CategoryScreenRoute(
     modifier: Modifier = Modifier,
-    navigateToVideoPlayerScreen: (Int, Int) -> Unit,
+    navigateToVideoPlayerScreen: (VideoPlayerNavigateScreenId, Int) -> Unit,
     navigateToSettingsScreen: () -> Unit,
     navigateBackToIntroduction: () -> Unit,
     navigateToHomeScreen: () -> Unit,
@@ -21,11 +22,8 @@ fun CategoryScreenRoute(
     CategoryScreen(
         modifier = modifier,
         uiState = uiState,
-        navigateToVideoPlayerScreen = { categoryId, videoId ->
-            navigateToVideoPlayerScreen(
-                categoryId,
-                videoId
-            )
+        navigateToVideoPlayerScreen = { routeId, itemId ->
+            navigateToVideoPlayerScreen(routeId, itemId)
         },
         navigateToSettingsScreen = navigateToSettingsScreen,
         navigateBackToIntroduction = navigateBackToIntroduction,
@@ -35,8 +33,7 @@ fun CategoryScreenRoute(
         updateOrderPlaylistVideo = { id, order ->
             viewModel.handleEvent(
                 CategoryScreenUiEvent.UpdateOrderPlaylistVideo(
-                    id = id,
-                    order = order
+                    id = id, order = order
                 )
             )
         }

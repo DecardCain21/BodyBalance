@@ -7,34 +7,41 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.bodybalance.videoplayer.presentation.VideoPlayerScreen
 
-const val CATEGORY_ID = "category"
+const val ROUTE_ID = "route id"
+const val ITEM_ID = "item id"
 const val VIDEO_PLAYER_ROUTE = "video_player"
-const val VIDEO_ID = "videos_playlist"
 
-fun NavController.navigateToVideoPlayerScreen(categoryId: Int = -1, videoId: Int = -1) {
-    navigate(route = "$VIDEO_PLAYER_ROUTE/${categoryId}/${videoId}") {
+fun NavController.navigateToVideoPlayerScreen(routeId: VideoPlayerNavigateScreenId, itemId: Int) {
+    navigate(route = "$VIDEO_PLAYER_ROUTE/${routeId.label}/${itemId}") {
         launchSingleTop
     }
 }
 
 fun NavGraphBuilder.videoPlayerScreen(navigateBackToPlaylistScreen: () -> Unit) {
     composable(
-        route = "$VIDEO_PLAYER_ROUTE/{$CATEGORY_ID}/{$VIDEO_ID}",
+        route = "$VIDEO_PLAYER_ROUTE/{$ROUTE_ID}/{$ITEM_ID}",
         arguments = listOf(
-            navArgument(CATEGORY_ID) {
-                type = NavType.IntType
-                defaultValue = -1
-            },
-            navArgument(VIDEO_ID) {
-                type = NavType.IntType
-                defaultValue = -1
-            }
+            navArgument(ROUTE_ID) { type = NavType.StringType },
+            navArgument(ITEM_ID) { type = NavType.IntType },
         )
     ) { backStackEntry ->
+        val routeLabel = backStackEntry.arguments?.getString(ROUTE_ID) ?: ""
+        val itemId = backStackEntry.arguments?.getInt(ITEM_ID) ?: 0
         VideoPlayerScreen( // Возможно стоит подумать как сделать подругому
-            categoryId = backStackEntry.arguments?.getInt(CATEGORY_ID)?:-1,
-            videoId = backStackEntry.arguments?.getInt(VIDEO_ID)?:-1,
+            routeLabel = VideoPlayerNavigateScreenId.fromLabel(routeLabel),
+            itemId = itemId,
             navigateBackToPlaylistScreen = navigateBackToPlaylistScreen
         )
+    }
+}
+
+enum class VideoPlayerNavigateScreenId(val label: String) {
+    CATEGORY("category"),
+    PLAYLIST("playlist");
+
+    companion object {
+        fun fromLabel(label: String): VideoPlayerNavigateScreenId {
+            return entries.find { it.label == label } ?: CATEGORY
+        }
     }
 }
