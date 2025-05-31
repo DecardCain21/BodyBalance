@@ -45,6 +45,8 @@ fun VideoPlayerScreenRoute(
             }
         }
     }
+    //Другой подход?
+    val video = (currentState.videoState as? VideoPlayerState.VideoState.Content)?.video
 
     VideoPlayerScreen(
         routeLabel = routeLabel,
@@ -63,7 +65,7 @@ fun VideoPlayerScreenRoute(
             )
         },
         onClickDownload = {
-            if (currentState.videoState is VideoPlayerState.VideoState.Content)
+            video?.let {
                 with(currentState.videoState.video) {
                     viewModel.handleEvent(
                         VideoPlayerScreenUiEvent.DownloadVideo(
@@ -72,9 +74,10 @@ fun VideoPlayerScreenRoute(
                         )
                     )
                 }
+            }
         },
         removeVideoFromCache = {
-            if (currentState.videoState is VideoPlayerState.VideoState.Content)
+            video?.let {
                 with(currentState.videoState.video) {
                     viewModel.handleEvent(
                         VideoPlayerScreenUiEvent.RemoveVideoFromCache(
@@ -82,9 +85,10 @@ fun VideoPlayerScreenRoute(
                         )
                     )
                 }
+            }
         },
         onClickAddToPlaylist = {
-            if (currentState.videoState is VideoPlayerState.VideoState.Content)
+            video?.let {
                 with(currentState.videoState.video) {
                     viewModel.handleEvent(
                         VideoPlayerScreenUiEvent.AddToPlaylist(
@@ -92,9 +96,10 @@ fun VideoPlayerScreenRoute(
                         )
                     )
                 }
+            }
         },
         onClickRemoveFromPlaylist = {
-            if (currentState.videoState is VideoPlayerState.VideoState.Content)
+            video?.let {
                 with(currentState.videoState.video) {
                     viewModel.handleEvent(
                         VideoPlayerScreenUiEvent.RemoveFromPlaylist(
@@ -102,7 +107,7 @@ fun VideoPlayerScreenRoute(
                         )
                     )
                 }
+            }
         }
-
     )
 }
