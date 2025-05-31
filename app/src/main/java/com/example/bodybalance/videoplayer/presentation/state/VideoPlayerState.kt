@@ -2,14 +2,19 @@ package com.example.bodybalance.videoplayer.presentation.state
 
 import com.example.bodybalance.core.domain.models.Video
 
-sealed interface VideoPlayerState {
+data class VideoPlayerState(
+    val videoState: VideoState,
+    val videoListState: VideoListState,
+    val videoInCache: Boolean = false,
+    val videoInPlaylist: Boolean = false
+) {
+    sealed interface VideoState {
+        data object Empty : VideoState
+        data class Content(val video: Video) : VideoState
+    }
 
-    data object Empty : VideoPlayerState
-    data object Loading : VideoPlayerState
-    data class Content(
-        val currentVideo: Video,
-        val videoList: List<Video>,
-        val videoInCache: Boolean = false,
-        val videoInPlaylist: Boolean = false
-    ) : VideoPlayerState
+    sealed interface VideoListState {
+        data object Empty : VideoListState
+        data class Content(val videoList: List<Video>) : VideoListState
+    }
 }

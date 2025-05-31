@@ -28,7 +28,6 @@ import androidx.compose.material.icons.filled.Download
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -37,7 +36,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -62,12 +60,12 @@ import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import com.example.bodybalance.videoplayer.presentation.navigation.VideoPlayerNavigateScreenId
 import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerState
-import kotlinx.coroutines.launch
 
 @OptIn(UnstableApi::class)
 @Composable
 fun VideoPlayerScreen(
     routeLabel: VideoPlayerNavigateScreenId,
+    snackBarHostState: SnackbarHostState,
     itemId: Int,
     modifier: Modifier = Modifier,
     navigateBackToPlaylistScreen: () -> Unit,
@@ -87,42 +85,48 @@ fun VideoPlayerScreen(
             VideoPlayerNavigateScreenId.PLAYLIST -> getPlaylistVideos(itemId)
         }
     }
-
-    when (currentState) {
-        is VideoPlayerState.Content -> {
-            VideoPlayerScreenContent(
-                modifier = modifier,
-                navigateBackToPlaylistScreen = navigateBackToPlaylistScreen,
-                video = currentState.currentVideo,
-                videoList = currentState.videoList,
-                onItemSelected = {
-                    onItemSelected(it)
-                },
-                onClickDownload = {
-                    onClickDownload()
-                },
-                removeVideoFromCache = {
-                    removeVideoFromCache()
-                },
-                onClickAddToPlaylist = {
-                    onClickAddToPlaylist()
-                },
-                onClickRemoveFromPlaylist = {
-                    onClickRemoveFromPlaylist()
-                },
-                isDownloadState = currentState.videoInCache,
-                isAddPlaylist = currentState.videoInPlaylist
-            )
-        }
-
-        is VideoPlayerState.Loading -> VideoPlayerScreenLoading()
-        is VideoPlayerState.Empty -> Unit
+    val videoState = when (currentState.videoState) {
+        is VideoPlayerState.VideoState.Content -> currentState.videoState.video
+        VideoPlayerState.VideoState.Empty -> Video.emptyVideo(0)
     }
+
+    val videoListState = when (currentState.videoListState) {
+        is VideoPlayerState.VideoListState.Content -> currentState.videoListState.videoList
+        VideoPlayerState.VideoListState.Empty -> emptyList()
+    }
+
+    VideoPlayerScreenContent(
+        modifier = modifier,
+        snackBarHostState = snackBarHostState,
+        navigateBackToPlaylistScreen = navigateBackToPlaylistScreen,
+        video = videoState,
+        videoList = videoListState,
+        onItemSelected = {
+            onItemSelected(it)
+        },
+        onClickDownload = {
+            onClickDownload()
+        },
+        removeVideoFromCache = {
+            removeVideoFromCache()
+        },
+        onClickAddToPlaylist = {
+            onClickAddToPlaylist()
+        },
+        onClickRemoveFromPlaylist = {
+            onClickRemoveFromPlaylist()
+        },
+        isDownloadState = currentState.videoInCache,
+        isAddPlaylist = currentState.videoInPlaylist
+    )
+
+
 }
 
 @Composable
 private fun VideoPlayerScreenContent(
     video: Video,
+    snackBarHostState: SnackbarHostState,
     videoList: List<Video>,
     onItemSelected: (Video) -> Unit,
     modifier: Modifier = Modifier,
@@ -136,7 +140,6 @@ private fun VideoPlayerScreenContent(
 ) {
     val isPreview = LocalInspectionMode.current
     val configuration = LocalConfiguration.current
-    val snackBarHostState = remember { SnackbarHostState() }
     Scaffold(topBar = {
         if (configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
             BaseTopAppBar(navigateBack = { navigateBackToPlaylistScreen() })
@@ -151,7 +154,6 @@ private fun VideoPlayerScreenContent(
             ) {
                 HeaderVideoPlayerScreen(isPreview = isPreview, video = video)
                 BodyVideoPlayerScreen(
-                    snackBarHostState = snackBarHostState,
                     isAddPlaylist = isAddPlaylist,
                     isDownloadState = isDownloadState,
                     onClickDownload = onClickDownload,
@@ -159,11 +161,13 @@ private fun VideoPlayerScreenContent(
                     onClickAddToPlaylist = onClickAddToPlaylist,
                     onClickRemoveFromPlaylist = onClickRemoveFromPlaylist
                 )
-                VideoList(
-                    videoList = videoList,
-                    onItemSelected = onItemSelected,
-                    currentVideo = video
-                )
+                if (videoList.isNotEmpty()) {
+                    VideoList(
+                        videoList = videoList,
+                        onItemSelected = onItemSelected,
+                        currentVideo = video
+                    )
+                }
             }
             SnackbarHost(
                 hostState = snackBarHostState,
@@ -204,7 +208,6 @@ private fun HeaderVideoPlayerScreen(isPreview: Boolean, video: Video) {
 
 @Composable
 private fun BodyVideoPlayerScreen(
-    snackBarHostState: SnackbarHostState,
     isAddPlaylist: Boolean,
     isDownloadState: Boolean,
     onClickDownload: () -> Unit,
@@ -212,7 +215,6 @@ private fun BodyVideoPlayerScreen(
     onClickAddToPlaylist: () -> Unit,
     onClickRemoveFromPlaylist: () -> Unit,
 ) {
-    val coroutineScope = rememberCoroutineScope()
     LazyRow(
         contentPadding = PaddingValues(start = 16.dp, end = 16.dp)
     ) {
@@ -228,12 +230,6 @@ private fun BodyVideoPlayerScreen(
             } else {
                 BodyBalanceActionButton(
                     onClick = {
-                        coroutineScope.launch {
-                            snackBarHostState.showSnackbar(
-                                message = "Видео поставлено на загрузку",
-                                duration = SnackbarDuration.Short
-                            )
-                        }
                         onClickDownload()
                     },
                     text = stringResource(R.string.download),
@@ -328,6 +324,7 @@ fun IntroductionPreview() {
         Box {
             VideoPlayerScreenContent(
                 video = Video.emptyVideo(1),
+                snackBarHostState = SnackbarHostState(),
                 videoList = listOf(Video.emptyVideo(1), Video.emptyVideo(2)),
                 navigateBackToPlaylistScreen = {},
                 onItemSelected = {},

@@ -83,8 +83,6 @@ fun IntroductionScreen(
 
                 )
             }
-
-            is IntroductionPlayerState.Empty -> Unit
         }
     }
 }

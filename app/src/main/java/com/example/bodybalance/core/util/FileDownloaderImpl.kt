@@ -98,7 +98,7 @@ interface DownloadCallback {
     fun onError(error: FileDownloaderError)
 }
 
-enum class FileDownloaderError(error: String) {
+enum class FileDownloaderError(val error: String) {
     HTTP_ERROR("Ошибка сервера"),
     WIFI_ERROR("Нет активного соединения с Wi-Fi"),
     NETWORK_ERROR("Ошибка сети"),
