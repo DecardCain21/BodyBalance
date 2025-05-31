@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
+import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.videoplayer.presentation.navigation.VideoPlayerNavigateScreenId
 import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerScreenUiEvent
 import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerState
@@ -45,14 +46,24 @@ fun VideoPlayerScreenRoute(
             }
         }
     }
-    //Другой подход?
-    val video = (currentState.videoState as? VideoPlayerState.VideoState.Content)?.video
+
+    val videoState = when (currentState.videoState) {
+        is VideoPlayerState.VideoState.Content -> currentState.videoState.video
+        VideoPlayerState.VideoState.Empty -> Video.emptyVideo(0)
+    }
+
+    val videoListState = when (currentState.videoListState) {
+        is VideoPlayerState.VideoListState.Content -> currentState.videoListState.videoList
+        VideoPlayerState.VideoListState.Empty -> emptyList()
+    }
 
     VideoPlayerScreen(
         routeLabel = routeLabel,
         snackBarHostState = snackbarHostState,
         itemId = itemId,
         modifier = modifier,
+        videoState = videoState,
+        videoListState = videoListState,
         navigateBackToPlaylistScreen = navigateBackToPlaylistScreen,
         currentState = currentState,
         getVideo = { viewModel.getVideo(itemId) },
@@ -65,44 +76,33 @@ fun VideoPlayerScreenRoute(
             )
         },
         onClickDownload = {
-            video?.let {
-                viewModel.handleEvent(
-                    VideoPlayerScreenUiEvent.DownloadVideo(
-                        url = it.url,
-                        fileName = it.id.toString()
-                    )
+            viewModel.handleEvent(
+                VideoPlayerScreenUiEvent.DownloadVideo(
+                    url = videoState.url,
+                    fileName = videoState.id.toString()
                 )
-
-            }
+            )
         },
         removeVideoFromCache = {
-            video?.let {
-                viewModel.handleEvent(
-                    VideoPlayerScreenUiEvent.RemoveVideoFromCache(
-                        fileName = it.id.toString()
-                    )
+            viewModel.handleEvent(
+                VideoPlayerScreenUiEvent.RemoveVideoFromCache(
+                    fileName = videoState.id.toString()
                 )
-
-            }
+            )
         },
         onClickAddToPlaylist = {
-            video?.let {
-                viewModel.handleEvent(
-                    VideoPlayerScreenUiEvent.AddToPlaylist(
-                        video = it
-                    )
+            viewModel.handleEvent(
+                VideoPlayerScreenUiEvent.AddToPlaylist(
+                    video = videoState
                 )
-
-            }
+            )
         },
         onClickRemoveFromPlaylist = {
-            video?.let {
-                viewModel.handleEvent(
-                    VideoPlayerScreenUiEvent.RemoveFromPlaylist(
-                        video = it
-                    )
+            viewModel.handleEvent(
+                VideoPlayerScreenUiEvent.RemoveFromPlaylist(
+                    video = videoState
                 )
-            }
+            )
         }
     )
 }

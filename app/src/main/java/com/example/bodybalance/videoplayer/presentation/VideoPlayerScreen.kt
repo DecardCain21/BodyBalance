@@ -68,6 +68,8 @@ fun VideoPlayerScreen(
     snackBarHostState: SnackbarHostState,
     itemId: Int,
     modifier: Modifier = Modifier,
+    videoState: Video,
+    videoListState:List<Video>,
     navigateBackToPlaylistScreen: () -> Unit,
     currentState: VideoPlayerState,
     getVideo: (Int) -> Unit,
@@ -84,15 +86,6 @@ fun VideoPlayerScreen(
             VideoPlayerNavigateScreenId.CATEGORY -> getVideo(itemId)
             VideoPlayerNavigateScreenId.PLAYLIST -> getPlaylistVideos(itemId)
         }
-    }
-    val videoState = when (currentState.videoState) {
-        is VideoPlayerState.VideoState.Content -> currentState.videoState.video
-        VideoPlayerState.VideoState.Empty -> Video.emptyVideo(0)
-    }
-
-    val videoListState = when (currentState.videoListState) {
-        is VideoPlayerState.VideoListState.Content -> currentState.videoListState.videoList
-        VideoPlayerState.VideoListState.Empty -> emptyList()
     }
 
     VideoPlayerScreenContent(
