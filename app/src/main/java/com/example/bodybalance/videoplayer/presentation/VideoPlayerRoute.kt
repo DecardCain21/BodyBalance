@@ -66,47 +66,42 @@ fun VideoPlayerScreenRoute(
         },
         onClickDownload = {
             video?.let {
-                with(currentState.videoState.video) {
-                    viewModel.handleEvent(
-                        VideoPlayerScreenUiEvent.DownloadVideo(
-                            url = url,
-                            fileName = id.toString()
-                        )
+                viewModel.handleEvent(
+                    VideoPlayerScreenUiEvent.DownloadVideo(
+                        url = it.url,
+                        fileName = it.id.toString()
                     )
-                }
+                )
+
             }
         },
         removeVideoFromCache = {
             video?.let {
-                with(currentState.videoState.video) {
-                    viewModel.handleEvent(
-                        VideoPlayerScreenUiEvent.RemoveVideoFromCache(
-                            fileName = id.toString()
-                        )
+                viewModel.handleEvent(
+                    VideoPlayerScreenUiEvent.RemoveVideoFromCache(
+                        fileName = it.id.toString()
                     )
-                }
+                )
+
             }
         },
         onClickAddToPlaylist = {
             video?.let {
-                with(currentState.videoState.video) {
-                    viewModel.handleEvent(
-                        VideoPlayerScreenUiEvent.AddToPlaylist(
-                            video = this
-                        )
+                viewModel.handleEvent(
+                    VideoPlayerScreenUiEvent.AddToPlaylist(
+                        video = it
                     )
-                }
+                )
+
             }
         },
         onClickRemoveFromPlaylist = {
             video?.let {
-                with(currentState.videoState.video) {
-                    viewModel.handleEvent(
-                        VideoPlayerScreenUiEvent.RemoveFromPlaylist(
-                            video = this
-                        )
+                viewModel.handleEvent(
+                    VideoPlayerScreenUiEvent.RemoveFromPlaylist(
+                        video = it
                     )
-                }
+                )
             }
         }
     )
