@@ -20,7 +20,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
@@ -28,12 +27,16 @@ import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -48,8 +51,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
 import com.example.bodybalance.R
 import com.example.bodybalance.core.composable.BaseTopAppBar
@@ -59,8 +60,8 @@ import com.example.bodybalance.core.composable.items.VideoItem
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import com.example.bodybalance.videoplayer.presentation.navigation.VideoPlayerNavigateScreenId
-import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerScreenUiEvent
 import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerState
+import kotlinx.coroutines.launch
 
 @OptIn(UnstableApi::class)
 @Composable
@@ -69,16 +70,20 @@ fun VideoPlayerScreen(
     itemId: Int,
     modifier: Modifier = Modifier,
     navigateBackToPlaylistScreen: () -> Unit,
-    viewModel: VideoPlayerViewModel = hiltViewModel(),
+    currentState: VideoPlayerState,
+    getVideo: (Int) -> Unit,
+    getPlaylistVideos: (Int) -> Unit,
+    onItemSelected: (Video) -> Unit,
+    onClickDownload: () -> Unit,
+    removeVideoFromCache: () -> Unit,
+    onClickAddToPlaylist: () -> Unit,
+    onClickRemoveFromPlaylist: () -> Unit,
 ) {
-
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val currentState = uiState
 
     LaunchedEffect(Unit) {
         when (routeLabel) {
-            VideoPlayerNavigateScreenId.CATEGORY -> viewModel.getVideo(itemId)
-            VideoPlayerNavigateScreenId.PLAYLIST -> viewModel.getPlaylistVideos(itemId)
+            VideoPlayerNavigateScreenId.CATEGORY -> getVideo(itemId)
+            VideoPlayerNavigateScreenId.PLAYLIST -> getPlaylistVideos(itemId)
         }
     }
 
@@ -90,48 +95,19 @@ fun VideoPlayerScreen(
                 video = currentState.currentVideo,
                 videoList = currentState.videoList,
                 onItemSelected = {
-                    viewModel.handleEvent(
-                        VideoPlayerScreenUiEvent.ChoiceVideo(
-                            video = it
-                        )
-                    )
+                    onItemSelected(it)
                 },
                 onClickDownload = {
-                    with(currentState.currentVideo) {
-                        viewModel.handleEvent(
-                            VideoPlayerScreenUiEvent.DownloadVideo(
-                                url = url,
-                                fileName = id.toString()
-                            )
-                        )
-                    }
+                    onClickDownload()
                 },
                 removeVideoFromCache = {
-                    with(currentState.currentVideo) {
-                        viewModel.handleEvent(
-                            VideoPlayerScreenUiEvent.RemoveVideoFromCache(
-                                fileName = id.toString()
-                            )
-                        )
-                    }
+                    removeVideoFromCache()
                 },
                 onClickAddToPlaylist = {
-                    with(currentState.currentVideo) {
-                        viewModel.handleEvent(
-                            VideoPlayerScreenUiEvent.AddToPlaylist(
-                                video = this
-                            )
-                        )
-                    }
+                    onClickAddToPlaylist()
                 },
                 onClickRemoveFromPlaylist = {
-                    with(currentState.currentVideo) {
-                        viewModel.handleEvent(
-                            VideoPlayerScreenUiEvent.RemoveFromPlaylist(
-                                video = this
-                            )
-                        )
-                    }
+                    onClickRemoveFromPlaylist()
                 },
                 isDownloadState = currentState.videoInCache,
                 isAddPlaylist = currentState.videoInPlaylist
@@ -159,76 +135,93 @@ private fun VideoPlayerScreenContent(
 ) {
     val isPreview = LocalInspectionMode.current
     val configuration = LocalConfiguration.current
-    val scrollState = rememberScrollState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
 
-    Column(
-        modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        if (configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
-            BaseTopAppBar(navigateBack = { navigateBackToPlaylistScreen() })
-        }
-
-        if (isPreview) {
-            Box(
-                modifier = Modifier
-                    .height(240.dp)
-                    .aspectRatio(3 / 4f)
-                    .padding(top = 50.dp)
-                    .background(Color.Gray),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("ExoPlayer Placeholder", color = Color.White)
-            }
-        } else {
-            ExoPlayer(video = video)
-        }
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(all = 16.dp),
-            text = video.name,
-            overflow = TextOverflow.Ellipsis,
-            fontWeight = FontWeight(400),
-            fontSize = 22.sp,
-            color = MaterialTheme.colorScheme.primary
-        )
-        //NavItem(videoList = videoList, onItemSelected = { onItemSelected(it) })
-        LazyRow(
-            contentPadding = PaddingValues(start = 16.dp, end = 16.dp)
+    Box {
+        Column(
+            modifier = modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            item {
-                if (isDownloadState) {
-                    BodyBalanceActionButton(
-                        onClick = { removeVideoFromCache() },
-                        text = stringResource(R.string.remove_from_device),
-                        imageVector = Icons.Default.DeleteOutline
-                    )
-                } else {
-                    BodyBalanceActionButton(
-                        onClick = { onClickDownload() },
-                        text = stringResource(R.string.download),
-                        imageVector = Icons.Default.Download
-                    )
-                }
-                Spacer(modifier = Modifier.padding(horizontal = 3.dp))
-                if (isAddPlaylist) {
-                    BodyBalanceActionButton(
-                        onClick = { onClickRemoveFromPlaylist() },
-                        text = stringResource(R.string.added_to_playlist),
-                        imageVector = Icons.Default.Bookmark
-                    )
-                } else {
-                    BodyBalanceActionButton(
-                        onClick = { onClickAddToPlaylist() },
-                        text = stringResource(R.string.add_to_playlist),
-                        imageVector = Icons.Default.BookmarkBorder
-                    )
-                }
+            if (configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
+                BaseTopAppBar(navigateBack = { navigateBackToPlaylistScreen() })
             }
 
+            if (isPreview) {
+                Box(
+                    modifier = Modifier
+                        .height(240.dp)
+                        .aspectRatio(3 / 4f)
+                        .padding(top = 50.dp)
+                        .background(Color.Gray),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("ExoPlayer Placeholder", color = Color.White)
+                }
+            } else {
+                ExoPlayer(video = video)
+            }
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(all = 16.dp),
+                text = video.name,
+                overflow = TextOverflow.Ellipsis,
+                fontWeight = FontWeight(400),
+                fontSize = 22.sp,
+                color = MaterialTheme.colorScheme.primary
+            )
+            //NavItem(videoList = videoList, onItemSelected = { onItemSelected(it) })
+            LazyRow(
+                contentPadding = PaddingValues(start = 16.dp, end = 16.dp)
+            ) {
+                item {
+                    if (isDownloadState) {
+                        BodyBalanceActionButton(
+                            onClick = {
+                                removeVideoFromCache()
+                            },
+                            text = stringResource(R.string.remove_from_device),
+                            imageVector = Icons.Default.DeleteOutline
+                        )
+                    } else {
+                        BodyBalanceActionButton(
+                            onClick = {
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = "Видео поставлено на загрузку",
+                                        duration = SnackbarDuration.Short
+                                    )
+                                }
+                                onClickDownload()
+                            },
+                            text = stringResource(R.string.download),
+                            imageVector = Icons.Default.Download
+                        )
+                    }
+                    Spacer(modifier = Modifier.padding(horizontal = 3.dp))
+                    if (isAddPlaylist) {
+                        BodyBalanceActionButton(
+                            onClick = { onClickRemoveFromPlaylist() },
+                            text = stringResource(R.string.added_to_playlist),
+                            imageVector = Icons.Default.Bookmark
+                        )
+                    } else {
+                        BodyBalanceActionButton(
+                            onClick = { onClickAddToPlaylist() },
+                            text = stringResource(R.string.add_to_playlist),
+                            imageVector = Icons.Default.BookmarkBorder
+                        )
+                    }
+                }
+
+            }
+            VideoList(videoList = videoList, onItemSelected = onItemSelected, currentVideo = video)
         }
-        VideoList(videoList = videoList, onItemSelected = onItemSelected, currentVideo = video)
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
     }
 }
 

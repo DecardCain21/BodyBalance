@@ -2,6 +2,7 @@ package com.example.bodybalance.settings.presentation.settings
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,6 +19,9 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -26,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +48,7 @@ import com.example.bodybalance.core.composable.BaseTopAppBar
 import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.core.util.convertToFileSize
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun SettingsScreen(
@@ -57,6 +63,7 @@ internal fun SettingsScreen(
     changeDownloadSettings: (Boolean) -> Unit,
 ) {
     var showDialog by remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
         topBar = {
@@ -74,7 +81,10 @@ internal fun SettingsScreen(
                 .padding(paddingValues),
             horizontalAlignment = Alignment.Start
         ) {
-            ClearCacheRow(cacheSize) { clearCache() }
+            ClearCacheRow(
+                cacheSize = cacheSize,
+                snackbarHostState = snackbarHostState
+            ) { clearCache() }
             DownloadOnlyWifiRow(
                 checked = downloadOnlyWifi,
                 onCheckedChange = changeDownloadSettings
@@ -89,6 +99,10 @@ internal fun SettingsScreen(
                 buttonColor = Color.Transparent,
                 enabledTextColor = MaterialTheme.colorScheme.primary,
                 onClick = { showDialog = true }
+            )
+            // Позиционируем Snackbar внизу экрана
+            SnackbarHost(
+                hostState = snackbarHostState
             )
         }
 
@@ -106,52 +120,65 @@ internal fun SettingsScreen(
 
 @Composable
 private fun ClearCacheRow(
+    snackbarHostState: SnackbarHostState,
     cacheSize: Long,
     onClear: () -> Unit
 ) {
-    Row(
-        modifier = Modifier
-            .padding(top = 16.dp)
-            .clickable { onClear() },
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Spacer(modifier = Modifier.padding(start = 16.dp))
-        Image(
+    val coroutineScope = rememberCoroutineScope()
+
+    Box {
+        Row(
             modifier = Modifier
-                .padding(vertical = 12.dp)
-                .size(24.dp)
-                .align(Alignment.Top),
-            imageVector = Icons.Default.Delete,
-            contentDescription = stringResource(R.string.clear_cashe),
-            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
-        )
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .padding(vertical = 12.dp)
-                .padding(horizontal = 16.dp)
+                .padding(top = 16.dp)
+                .clickable {
+                    onClear()
+                    coroutineScope.launch {
+                        snackbarHostState.showSnackbar(
+                            message = "${cacheSize.convertToFileSize()} на устройстве освободилось",
+                            duration = SnackbarDuration.Short
+                        )
+                    }
+                },
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = stringResource(R.string.clear_cashe),
-                fontSize = 16.sp,
-                color = colorResource(R.color.white),
+            Spacer(modifier = Modifier.padding(start = 16.dp))
+            Image(
+                modifier = Modifier
+                    .padding(vertical = 12.dp)
+                    .size(24.dp)
+                    .align(Alignment.Top),
+                imageVector = Icons.Default.Delete,
+                contentDescription = stringResource(R.string.clear_cashe),
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
             )
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(vertical = 12.dp)
+                    .padding(horizontal = 16.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.clear_cashe),
+                    fontSize = 16.sp,
+                    color = colorResource(R.color.white),
+                )
+                Text(
+                    text = stringResource(R.string.clear_cashe_description),
+                    fontSize = 12.sp,
+                    color = colorResource(R.color.white),
+                )
+            }
             Text(
-                text = stringResource(R.string.clear_cashe_description),
-                fontSize = 12.sp,
+                modifier = Modifier
+                    .padding(vertical = 12.dp)
+                    .align(Alignment.Top),
+                text = cacheSize.convertToFileSize(),
+                fontSize = 11.sp,
                 color = colorResource(R.color.white),
+                textAlign = TextAlign.End
             )
+            Spacer(modifier = Modifier.padding(end = 16.dp))
         }
-        Text(
-            modifier = Modifier
-                .padding(vertical = 12.dp)
-                .align(Alignment.Top),
-            text = cacheSize.convertToFileSize(),
-            fontSize = 11.sp,
-            color = colorResource(R.color.white),
-            textAlign = TextAlign.End
-        )
-        Spacer(modifier = Modifier.padding(end = 16.dp))
     }
 }
 

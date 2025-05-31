@@ -6,6 +6,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.bodybalance.videoplayer.presentation.VideoPlayerScreen
+import com.example.bodybalance.videoplayer.presentation.VideoPlayerScreenRoute
 
 const val ROUTE_ID = "route id"
 const val ITEM_ID = "item id"
@@ -27,7 +28,7 @@ fun NavGraphBuilder.videoPlayerScreen(navigateBackToPlaylistScreen: () -> Unit) 
     ) { backStackEntry ->
         val routeLabel = backStackEntry.arguments?.getString(ROUTE_ID) ?: ""
         val itemId = backStackEntry.arguments?.getInt(ITEM_ID) ?: 0
-        VideoPlayerScreen( // Возможно стоит подумать как сделать подругому
+        VideoPlayerScreenRoute( // Возможно стоит подумать как сделать подругому
             routeLabel = VideoPlayerNavigateScreenId.fromLabel(routeLabel),
             itemId = itemId,
             navigateBackToPlaylistScreen = navigateBackToPlaylistScreen
