@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -135,93 +136,126 @@ private fun VideoPlayerScreenContent(
 ) {
     val isPreview = LocalInspectionMode.current
     val configuration = LocalConfiguration.current
-    val snackbarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
-
-    Box {
-        Column(
-            modifier = modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            if (configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
-                BaseTopAppBar(navigateBack = { navigateBackToPlaylistScreen() })
-            }
-
-            if (isPreview) {
-                Box(
-                    modifier = Modifier
-                        .height(240.dp)
-                        .aspectRatio(3 / 4f)
-                        .padding(top = 50.dp)
-                        .background(Color.Gray),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("ExoPlayer Placeholder", color = Color.White)
-                }
-            } else {
-                ExoPlayer(video = video)
-            }
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(all = 16.dp),
-                text = video.name,
-                overflow = TextOverflow.Ellipsis,
-                fontWeight = FontWeight(400),
-                fontSize = 22.sp,
-                color = MaterialTheme.colorScheme.primary
-            )
-            //NavItem(videoList = videoList, onItemSelected = { onItemSelected(it) })
-            LazyRow(
-                contentPadding = PaddingValues(start = 16.dp, end = 16.dp)
-            ) {
-                item {
-                    if (isDownloadState) {
-                        BodyBalanceActionButton(
-                            onClick = {
-                                removeVideoFromCache()
-                            },
-                            text = stringResource(R.string.remove_from_device),
-                            imageVector = Icons.Default.DeleteOutline
-                        )
-                    } else {
-                        BodyBalanceActionButton(
-                            onClick = {
-                                coroutineScope.launch {
-                                    snackbarHostState.showSnackbar(
-                                        message = "Видео поставлено на загрузку",
-                                        duration = SnackbarDuration.Short
-                                    )
-                                }
-                                onClickDownload()
-                            },
-                            text = stringResource(R.string.download),
-                            imageVector = Icons.Default.Download
-                        )
-                    }
-                    Spacer(modifier = Modifier.padding(horizontal = 3.dp))
-                    if (isAddPlaylist) {
-                        BodyBalanceActionButton(
-                            onClick = { onClickRemoveFromPlaylist() },
-                            text = stringResource(R.string.added_to_playlist),
-                            imageVector = Icons.Default.Bookmark
-                        )
-                    } else {
-                        BodyBalanceActionButton(
-                            onClick = { onClickAddToPlaylist() },
-                            text = stringResource(R.string.add_to_playlist),
-                            imageVector = Icons.Default.BookmarkBorder
-                        )
-                    }
-                }
-
-            }
-            VideoList(videoList = videoList, onItemSelected = onItemSelected, currentVideo = video)
+    val snackBarHostState = remember { SnackbarHostState() }
+    Scaffold(topBar = {
+        if (configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
+            BaseTopAppBar(navigateBack = { navigateBackToPlaylistScreen() })
         }
-        SnackbarHost(
-            hostState = snackbarHostState,
-            modifier = Modifier.align(Alignment.BottomCenter)
-        )
+    }) { paddingValue ->
+        Box {
+            Column(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(paddingValue),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                HeaderVideoPlayerScreen(isPreview = isPreview, video = video)
+                BodyVideoPlayerScreen(
+                    snackBarHostState = snackBarHostState,
+                    isAddPlaylist = isAddPlaylist,
+                    isDownloadState = isDownloadState,
+                    onClickDownload = onClickDownload,
+                    removeVideoFromCache = removeVideoFromCache,
+                    onClickAddToPlaylist = onClickAddToPlaylist,
+                    onClickRemoveFromPlaylist = onClickRemoveFromPlaylist
+                )
+                VideoList(
+                    videoList = videoList,
+                    onItemSelected = onItemSelected,
+                    currentVideo = video
+                )
+            }
+            SnackbarHost(
+                hostState = snackBarHostState,
+                modifier = Modifier.align(Alignment.BottomCenter)
+            )
+        }
+    }
+
+}
+
+@Composable
+private fun HeaderVideoPlayerScreen(isPreview: Boolean, video: Video) {
+    if (isPreview) {
+        Box(
+            modifier = Modifier
+                .height(240.dp)
+                .aspectRatio(3 / 4f)
+                .padding(top = 50.dp)
+                .background(Color.Gray),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("ExoPlayer Placeholder", color = Color.White)
+        }
+    } else {
+        ExoPlayer(video = video)
+    }
+    Text(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(all = 16.dp),
+        text = video.name,
+        overflow = TextOverflow.Ellipsis,
+        fontWeight = FontWeight(400),
+        fontSize = 22.sp,
+        color = MaterialTheme.colorScheme.primary
+    )
+}
+
+@Composable
+private fun BodyVideoPlayerScreen(
+    snackBarHostState: SnackbarHostState,
+    isAddPlaylist: Boolean,
+    isDownloadState: Boolean,
+    onClickDownload: () -> Unit,
+    removeVideoFromCache: () -> Unit,
+    onClickAddToPlaylist: () -> Unit,
+    onClickRemoveFromPlaylist: () -> Unit,
+) {
+    val coroutineScope = rememberCoroutineScope()
+    LazyRow(
+        contentPadding = PaddingValues(start = 16.dp, end = 16.dp)
+    ) {
+        item {
+            if (isDownloadState) {
+                BodyBalanceActionButton(
+                    onClick = {
+                        removeVideoFromCache()
+                    },
+                    text = stringResource(R.string.remove_from_device),
+                    imageVector = Icons.Default.DeleteOutline
+                )
+            } else {
+                BodyBalanceActionButton(
+                    onClick = {
+                        coroutineScope.launch {
+                            snackBarHostState.showSnackbar(
+                                message = "Видео поставлено на загрузку",
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                        onClickDownload()
+                    },
+                    text = stringResource(R.string.download),
+                    imageVector = Icons.Default.Download
+                )
+            }
+            Spacer(modifier = Modifier.padding(horizontal = 3.dp))
+            if (isAddPlaylist) {
+                BodyBalanceActionButton(
+                    onClick = { onClickRemoveFromPlaylist() },
+                    text = stringResource(R.string.added_to_playlist),
+                    imageVector = Icons.Default.Bookmark
+                )
+            } else {
+                BodyBalanceActionButton(
+                    onClick = { onClickAddToPlaylist() },
+                    text = stringResource(R.string.add_to_playlist),
+                    imageVector = Icons.Default.BookmarkBorder
+                )
+            }
+        }
+
     }
 }
 
