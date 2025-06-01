@@ -6,6 +6,12 @@ import com.example.bodybalance.settings.domain.usecase.ClearCacheUseCase
 import com.example.bodybalance.settings.domain.usecase.GetFilesCacheSizeUseCase
 import com.example.bodybalance.settings.domain.usecase.LogOutOfAccountUseCase
 import com.example.bodybalance.settings.domain.usecase.SettingsToolsUseCase
+import com.example.bodybalance.settings.presentation.settings.state.SettingsScreenState
+import com.example.bodybalance.settings.presentation.settings.state.SettingsScreenUiEvent
+import com.example.bodybalance.settings.presentation.settings.state.SettingsScreenUiEvent.ChangeDownloadSettings
+import com.example.bodybalance.settings.presentation.settings.state.SettingsScreenUiEvent.ChangeVisibilitySingOutDialog
+import com.example.bodybalance.settings.presentation.settings.state.SettingsScreenUiEvent.ClearCache
+import com.example.bodybalance.settings.presentation.settings.state.SettingsScreenUiEvent.SingOut
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,18 +36,32 @@ class SettingsViewModel @Inject constructor(
         getDownloadWifiFlag()
     }
 
-    fun signOut() {
-        viewModelScope.launch {
-            logOutOfAccountUseCase()
+    fun handleEvent(event: SettingsScreenUiEvent) {
+        when (event) {
+            is ChangeDownloadSettings -> changeDownloadSettings(event.flag)
+            is ChangeVisibilitySingOutDialog -> changeVisibilitySingOutDialog(event.flag)
+            is ClearCache -> clearCache()
+            is SingOut -> signOut()
         }
     }
 
-    fun clearCache() {
+    private fun changeVisibilitySingOutDialog(flag: Boolean) {
+        _uiState.update { it.copy(showLogoutDialog = flag) }
+    }
+
+    private fun signOut() {
+        viewModelScope.launch {
+            logOutOfAccountUseCase()
+            _uiState.update { it.copy(navigateToHome = true) }
+        }
+    }
+
+    private fun clearCache() {
         clearCacheUseCase()
         getCacheSize()
     }
 
-    fun changeDownloadSettings(flag: Boolean) {
+    private fun changeDownloadSettings(flag: Boolean) {
         settingsToolsUseCase.setWifiFlag(flag)
         getDownloadWifiFlag()
     }

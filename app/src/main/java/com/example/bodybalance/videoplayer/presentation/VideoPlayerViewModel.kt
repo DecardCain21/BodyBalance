@@ -37,12 +37,7 @@ class VideoPlayerViewModel @Inject constructor(
     private val getAllPlaylistVideosUseCase: GetAllPlaylistVideosUseCase,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(
-        VideoPlayerState(
-            videoState = VideoPlayerState.VideoState.Empty,
-            videoListState = VideoPlayerState.VideoListState.Empty
-        )
-    )
+    private val _uiState = MutableStateFlow(VideoPlayerState.emptyState())
     val uiState: StateFlow<VideoPlayerState> = _uiState.asStateFlow()
 
     private val _snackBarEvent = MutableSharedFlow<SnackbarEventParams>()
@@ -79,8 +74,10 @@ class VideoPlayerViewModel @Inject constructor(
             getAllPlaylistVideosUseCase().collect { playlistVideos ->
                 val newState =
                     VideoPlayerState(
-                        videoState = VideoPlayerState.VideoState.Content(playlistVideos.find { it.id == videoId }
-                            ?: Video.emptyVideo(1)),
+                        videoState = VideoPlayerState.VideoState.Content(
+                            playlistVideos.find { it.id == videoId }
+                                ?: Video.emptyVideo(1)
+                        ),
                         videoListState = VideoPlayerState.VideoListState.Content(playlistVideos),
                     )
                 setButtonsState(newState)
@@ -192,7 +189,8 @@ class VideoPlayerViewModel @Inject constructor(
 
     private suspend fun setButtonsState(state: VideoPlayerState) {
         viewModelScope.launch {
-            val test = fileDownloaderImpl.fileExists((state.videoState as VideoPlayerState.VideoState.Content).video.id.toString())
+            val test = // todo: ?
+                fileDownloaderImpl.fileExists((state.videoState as VideoPlayerState.VideoState.Content).video.id.toString())
             _uiState.value =
                 state.copy(
                     videoInPlaylist = existsPlaylistVideoByIdUseCase(state.videoState.video.id),

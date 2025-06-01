@@ -61,10 +61,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    navEvent: Unit?,
     uiState: HomeScreenState,
     snackbarHostState: SnackbarHostState,
-    navigateToIntroductionScreen: () -> Unit = {},
     inputLogin: (String) -> Unit,
     clearAll: () -> Unit,
     accountEnter: () -> Unit,
@@ -83,12 +81,6 @@ fun HomeScreen(
                 is FocusInteraction.Focus -> isFocused = true
                 is FocusInteraction.Unfocus -> isFocused = false
             }
-        }
-    }
-
-    LaunchedEffect(navEvent) {
-        navEvent?.let {
-            navigateToIntroductionScreen()
         }
     }
 
@@ -236,7 +228,8 @@ private fun GetLoginBlockBottomSheet(
                         showBottomSheetAction()
                     }
                 }
-            })
+            }
+        )
     }
 }
 
@@ -276,8 +269,6 @@ private fun HomeScreenPreview() {
                 inputLogin = {},
                 clearAll = {},
                 getLogin = {},
-                navigateToIntroductionScreen = {},
-                navEvent = null,
                 isLoading = false
             )
         }

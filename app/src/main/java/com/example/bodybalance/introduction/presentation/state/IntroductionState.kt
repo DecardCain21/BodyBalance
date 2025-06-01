@@ -16,6 +16,14 @@ data class IntroductionScreenState(
     sealed interface IntroductionPlayerState {
         data class Content(val video: Video = Video.emptyVideo(1)) : IntroductionPlayerState
     }
+
+    companion object {
+        fun emptyState(): IntroductionScreenState =
+            IntroductionScreenState(
+                inputValue = Input.Empty,
+                videoState = IntroductionPlayerState.Content(),
+            )
+    }
 }
 
 enum class SupportTextIntroduction(val message: String) {

@@ -1,5 +1,6 @@
 package com.example.bodybalance.home.presentation
 
+import android.annotation.SuppressLint
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -19,6 +20,7 @@ import com.example.bodybalance.home.presentation.state.HomeScreenUiEvent.InputLo
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
+@SuppressLint("OpaqueUnitKey")
 @Composable
 fun HomeScreenRoute(
     modifier: Modifier = Modifier,
@@ -31,6 +33,12 @@ fun HomeScreenRoute(
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val navEvent by viewModel.navigationEvent.collectAsState(initial = null)
+
+    LaunchedEffect(navEvent) {
+        navEvent?.let {
+            navigateToIntroductionScreen()
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.snackbarEvent.collect { params ->
@@ -48,9 +56,7 @@ fun HomeScreenRoute(
     HomeScreen(
         modifier = modifier,
         uiState = uiState,
-        navEvent = navEvent,
         snackbarHostState = snackbarHostState,
-        navigateToIntroductionScreen = { navigateToIntroductionScreen() },
         inputLogin = { viewModel.handleEvent(InputLogin(it)) },
         clearAll = { viewModel.handleEvent(ClearAll) },
         accountEnter = { viewModel.handleEvent(Enter) },

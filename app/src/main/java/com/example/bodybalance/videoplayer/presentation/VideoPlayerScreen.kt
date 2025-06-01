@@ -69,7 +69,7 @@ fun VideoPlayerScreen(
     itemId: Int,
     modifier: Modifier = Modifier,
     videoState: Video,
-    videoListState:List<Video>,
+    videoListState: List<Video>,
     navigateBackToPlaylistScreen: () -> Unit,
     currentState: VideoPlayerState,
     getVideo: (Int) -> Unit,
@@ -94,26 +94,14 @@ fun VideoPlayerScreen(
         navigateBackToPlaylistScreen = navigateBackToPlaylistScreen,
         video = videoState,
         videoList = videoListState,
-        onItemSelected = {
-            onItemSelected(it)
-        },
-        onClickDownload = {
-            onClickDownload()
-        },
-        removeVideoFromCache = {
-            removeVideoFromCache()
-        },
-        onClickAddToPlaylist = {
-            onClickAddToPlaylist()
-        },
-        onClickRemoveFromPlaylist = {
-            onClickRemoveFromPlaylist()
-        },
+        onItemSelected = { onItemSelected(it) },
+        onClickDownload = { onClickDownload() },
+        removeVideoFromCache = { removeVideoFromCache() },
+        onClickAddToPlaylist = { onClickAddToPlaylist() },
+        onClickRemoveFromPlaylist = { onClickRemoveFromPlaylist() },
         isDownloadState = currentState.videoInCache,
         isAddPlaylist = currentState.videoInPlaylist
     )
-
-
 }
 
 @Composable
@@ -133,11 +121,12 @@ private fun VideoPlayerScreenContent(
 ) {
     val isPreview = LocalInspectionMode.current
     val configuration = LocalConfiguration.current
-    Scaffold(topBar = {
-        if (configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
-            BaseTopAppBar(navigateBack = { navigateBackToPlaylistScreen() })
-        }
-    }) { paddingValue ->
+    Scaffold(
+        topBar = {
+            if (configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
+                BaseTopAppBar(navigateBack = { navigateBackToPlaylistScreen() })
+            }
+        }) { paddingValue ->
         Box {
             Column(
                 modifier = modifier
@@ -168,7 +157,6 @@ private fun VideoPlayerScreenContent(
             )
         }
     }
-
 }
 
 @Composable
@@ -208,9 +196,7 @@ private fun BodyVideoPlayerScreen(
     onClickAddToPlaylist: () -> Unit,
     onClickRemoveFromPlaylist: () -> Unit,
 ) {
-    LazyRow(
-        contentPadding = PaddingValues(start = 16.dp, end = 16.dp)
-    ) {
+    LazyRow(contentPadding = PaddingValues(horizontal = 16.dp)) {
         item {
             if (isDownloadState) {
                 BodyBalanceActionButton(
@@ -244,7 +230,6 @@ private fun BodyVideoPlayerScreen(
                 )
             }
         }
-
     }
 }
 

@@ -26,18 +26,11 @@ class IntroductionViewModel @Inject constructor(
     private val getIntroductionVideoUseCase: GetIntroductionVideoUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(
-        IntroductionScreenState(
-            inputValue = Input.Empty,
-            videoState = IntroductionPlayerState.Content(),
-        )
-    )
+    private val _uiState = MutableStateFlow(IntroductionScreenState.emptyState())
     val uiState: StateFlow<IntroductionScreenState>
         get() = _uiState.asStateFlow()
 
-    init {
-        getIntroductionVideo()
-    }
+    init { getIntroductionVideo() }
 
     fun handleEvent(event: IntroductionScreenUiEvent) {
         when (event) {

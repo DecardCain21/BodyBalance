@@ -27,11 +27,8 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -55,14 +52,14 @@ internal fun SettingsScreen(
     modifier: Modifier = Modifier,
     navigateBackToPlaylistScreen: () -> Unit,
     navigateToAboutAppScreen: () -> Unit,
-    navigateToHomeScreen: () -> Unit,
     downloadOnlyWifi: Boolean,
     cacheSize: Long,
     signOut: () -> Unit,
     clearCache: () -> Unit,
     changeDownloadSettings: (Boolean) -> Unit,
+    showLogoutDialog: Boolean,
+    changeVisibilitySingOutDialog: (Boolean) -> Unit
 ) {
-    var showDialog by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
@@ -98,21 +95,18 @@ internal fun SettingsScreen(
                 text = stringResource(R.string.exit),
                 buttonColor = Color.Transparent,
                 enabledTextColor = MaterialTheme.colorScheme.primary,
-                onClick = { showDialog = true }
+                onClick = { changeVisibilitySingOutDialog(true) }
             )
-            // Позиционируем Snackbar внизу экрана
-            SnackbarHost(
-                hostState = snackbarHostState
-            )
+
+            SnackbarHost(hostState = snackbarHostState)
         }
 
         LogoutDialog(
-            showDialog = showDialog,
-            onDismiss = { showDialog = false },
+            showDialog = showLogoutDialog,
+            onDismiss = { changeVisibilitySingOutDialog(false) },
             onConfirm = {
+                changeVisibilitySingOutDialog(false)
                 signOut()
-                navigateToHomeScreen()
-                showDialog = false
             }
         )
     }
@@ -294,12 +288,13 @@ private fun PreviewSettingsScreen() {
         SettingsScreen(
             navigateToAboutAppScreen = {},
             navigateBackToPlaylistScreen = {},
-            navigateToHomeScreen = {},
             cacheSize = 100L,
             downloadOnlyWifi = true,
             clearCache = {},
             changeDownloadSettings = {},
-            signOut = {}
+            signOut = {},
+            showLogoutDialog = false,
+            changeVisibilitySingOutDialog = {}
         )
     }
 }

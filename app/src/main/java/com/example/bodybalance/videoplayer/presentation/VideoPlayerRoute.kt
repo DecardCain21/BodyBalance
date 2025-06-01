@@ -70,9 +70,7 @@ fun VideoPlayerScreenRoute(
         getPlaylistVideos = { viewModel.getPlaylistVideos(itemId) },
         onItemSelected = {
             viewModel.handleEvent(
-                VideoPlayerScreenUiEvent.ChoiceVideo(
-                    video = it
-                )
+                VideoPlayerScreenUiEvent.ChoiceVideo(video = it)
             )
         },
         onClickDownload = {
@@ -92,16 +90,12 @@ fun VideoPlayerScreenRoute(
         },
         onClickAddToPlaylist = {
             viewModel.handleEvent(
-                VideoPlayerScreenUiEvent.AddToPlaylist(
-                    video = videoState
-                )
+                VideoPlayerScreenUiEvent.AddToPlaylist(video = videoState)
             )
         },
         onClickRemoveFromPlaylist = {
             viewModel.handleEvent(
-                VideoPlayerScreenUiEvent.RemoveFromPlaylist(
-                    video = videoState
-                )
+                VideoPlayerScreenUiEvent.RemoveFromPlaylist(video = videoState)
             )
         }
     )

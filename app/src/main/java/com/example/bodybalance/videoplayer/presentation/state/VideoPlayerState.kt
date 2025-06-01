@@ -17,4 +17,12 @@ data class VideoPlayerState(
         data object Empty : VideoListState
         data class Content(val videoList: List<Video>) : VideoListState
     }
+
+    companion object {
+        fun emptyState(): VideoPlayerState =
+            VideoPlayerState(
+                videoState = VideoState.Empty,
+                videoListState = VideoListState.Empty
+            )
+    }
 }
