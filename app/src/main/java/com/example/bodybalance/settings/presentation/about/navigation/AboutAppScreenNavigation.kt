@@ -5,9 +5,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.bodybalance.settings.presentation.about.AboutAppRoute
 
-const val ABOUT_APP_NAME = "aboutapp"
+private const val ABOUT_APP_NAME = "aboutapp"
 
-fun NavController.navigateToAboutAppScreen() {
+public fun NavController.navigateToAboutAppScreen() {
     navigate(
         route = ABOUT_APP_NAME
     ) {
@@ -15,7 +15,7 @@ fun NavController.navigateToAboutAppScreen() {
     }
 }
 
-fun NavGraphBuilder.aboutAppScreen(
+public fun NavGraphBuilder.aboutAppScreen(
     navigateBackToSettings: () -> Unit
 ) {
     composable(route = ABOUT_APP_NAME) {

@@ -7,7 +7,7 @@ import com.example.bodybalance.core.domain.api.CategoryRepository
 import com.example.bodybalance.core.domain.models.Category
 import javax.inject.Inject
 
-class CategoryRepositoryImpl @Inject constructor(
+internal class CategoryRepositoryImpl @Inject constructor(
     private val categoryNetworkClient: CategoryNetworkClient,
     private val userAccountLocalSource: UserAccountLocalSource
 ) : CategoryRepository {

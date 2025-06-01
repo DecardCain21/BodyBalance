@@ -2,7 +2,7 @@ package com.example.bodybalance.core.data.source.local.database.api
 
 import com.example.bodybalance.core.data.source.local.database.entity.AccountEntity
 
-interface UserAccountLocalSource {
+internal interface UserAccountLocalSource {
 
     suspend fun getAllAccounts(): List<AccountEntity>
 

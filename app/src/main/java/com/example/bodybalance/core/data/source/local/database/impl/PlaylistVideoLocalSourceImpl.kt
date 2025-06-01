@@ -6,7 +6,7 @@ import com.example.bodybalance.core.data.source.local.database.entity.PlaylistVi
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class PlaylistVideoLocalSourceImpl @Inject constructor(
+internal class PlaylistVideoLocalSourceImpl @Inject constructor(
     private val dao: PlaylistVideoDao
 ) : PlaylistVideoLocalSource {
 

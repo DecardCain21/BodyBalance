@@ -59,11 +59,10 @@ public fun BodyBalanceActionButton(
         )
     }
 }
-//Icons.Default.Download
 
 @Preview(showBackground = true, backgroundColor = 0xFF141218)
 @Composable
-fun BodyBalanceActionButtonPreview() {
+private fun BodyBalanceActionButtonPreview() {
     BodyBalanceTheme {
         Box {
             BodyBalanceActionButton(

@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(UnstableApi::class)
 @Composable
-fun VideoPlayerScreenRoute(
+internal fun VideoPlayerScreenRoute(
     routeLabel: VideoPlayerNavigateScreenId,
     itemId: Int,
     modifier: Modifier = Modifier,

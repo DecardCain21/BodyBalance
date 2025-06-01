@@ -218,7 +218,7 @@ private fun DownloadOnlyWifiRow(
 }
 
 @Composable
-fun AboutAppRow(onClick: () -> Unit) {
+private fun AboutAppRow(onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

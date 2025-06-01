@@ -20,7 +20,7 @@ import com.example.bodybalance.videoplayer.presentation.navigation.navigateToVid
 import com.example.bodybalance.videoplayer.presentation.navigation.videoPlayerScreen
 
 @Composable
-fun Navigation(isAuthenticated: Boolean) {
+public fun Navigation(isAuthenticated: Boolean) {
 
     val navController: NavHostController = rememberNavController()
 

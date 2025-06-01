@@ -8,7 +8,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
-class SaveVideoInCacheUseCaseImpl @Inject constructor(
+internal class SaveVideoInCacheUseCaseImpl @Inject constructor(
     private val savedVideoRepository: SavedVideoRepository
 ) : SaveVideoInCacheUseCase {
 

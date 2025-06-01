@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
-class CategoryNetworkClient(
+internal class CategoryNetworkClient(
     private val apiService: BodyBalanceApiService
 ) : RetrofitNetworkClient() {
 

@@ -9,7 +9,7 @@ import com.example.bodybalance.app.BodyBalanceApp
 import com.example.bodybalance.core.longcache.VideoDownload
 
 @UnstableApi
-class VideoStorageManager {
+public class VideoStorageManager {
     //Реализовать хранилище
     //Реализовать запрос
     //Test
@@ -26,7 +26,7 @@ class VideoStorageManager {
     }
 
 
-    fun startDownload() {
+    public fun startDownload() {
         val videoId: Long = 1
         val description: String = ""
         val zipUrl: String = ""
@@ -48,7 +48,7 @@ class VideoStorageManager {
 
     }
 
-    fun getDMStatus(downloadId: Long): Int? {
+    public fun getDMStatus(downloadId: Long): Int? {
         val request = DownloadManager.Query().setFilterById(downloadId)
         downloadManager.query(request).use {
             return if (it.count > 0) {
@@ -57,7 +57,7 @@ class VideoStorageManager {
         }
     }
 
-    fun unzip(model: VideoDownload) {
+    public fun unzip(model: VideoDownload) {
         val pfd: ParcelFileDescriptor = downloadManager.openDownloadedFile(model.downloadId)
         val fd = pfd.fileDescriptor
 

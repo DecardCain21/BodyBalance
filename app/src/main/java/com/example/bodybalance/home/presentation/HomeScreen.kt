@@ -59,7 +59,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("OpaqueUnitKey")
 @Composable
-fun HomeScreen(
+internal fun HomeScreen(
     modifier: Modifier = Modifier,
     uiState: HomeScreenState,
     snackbarHostState: SnackbarHostState,

@@ -2,7 +2,7 @@ package com.example.bodybalance.core.domain.api
 
 import com.example.bodybalance.core.domain.models.Category
 
-interface CategoryRepository {
+public interface CategoryRepository {
 
-    suspend fun getCategory(): Result<List<Category>>
+    public suspend fun getCategory(): Result<List<Category>>
 }

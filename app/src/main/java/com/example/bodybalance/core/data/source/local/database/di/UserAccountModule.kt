@@ -13,7 +13,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class UserAccountBinder {
+internal abstract class UserAccountBinder {
 
     @Binds
     abstract fun bindUseAccountLocalSource(
@@ -23,7 +23,7 @@ abstract class UserAccountBinder {
 
 @Module
 @InstallIn(SingletonComponent::class)
-object UserAccountProvider {
+internal object UserAccountProvider {
 
     @Provides
     @Singleton

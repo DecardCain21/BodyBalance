@@ -17,7 +17,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class CategoryModuleBinder {
+internal abstract class CategoryModuleBinder {
 
     @Binds
     abstract fun bindGetSectionsUseCase(

@@ -40,7 +40,7 @@ import com.example.bodybalance.ui.theme.BodyBalanceTheme
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun NavItem(
+public fun NavItem(
     modifier: Modifier = Modifier,
     videoList: List<Video>,
     onItemSelected: (Video) -> Unit

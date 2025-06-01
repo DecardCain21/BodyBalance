@@ -1,6 +1,6 @@
 package com.example.bodybalance.core.domain.models
 
-data class Video(
+public data class Video(
     val id: Int,
     val name: String,
     val url: String,
@@ -9,8 +9,8 @@ data class Video(
     val imageUrl: String = ""
 ) {
 
-    companion object {
-        fun emptyVideo(id: Int) = Video(
+    public companion object {
+        public fun emptyVideo(id: Int): Video = Video(
             id = id,
             url = "",
             category = "",

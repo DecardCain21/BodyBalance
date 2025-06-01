@@ -14,7 +14,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class PlaylistVideoBinder {
+internal abstract class PlaylistVideoBinder {
 
     @Binds
     abstract fun bindPlaylistVideoLocalSource(
@@ -24,7 +24,7 @@ abstract class PlaylistVideoBinder {
 
 @Module
 @InstallIn(SingletonComponent::class)
-object PlaylistVideoProvider {
+internal object PlaylistVideoProvider {
 
     @Provides
     @Singleton

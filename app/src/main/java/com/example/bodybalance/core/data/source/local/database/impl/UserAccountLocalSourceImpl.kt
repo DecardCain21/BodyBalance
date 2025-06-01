@@ -5,7 +5,7 @@ import com.example.bodybalance.core.data.source.local.database.dao.UserAccountDa
 import com.example.bodybalance.core.data.source.local.database.entity.AccountEntity
 import javax.inject.Inject
 
-class UserAccountLocalSourceImpl @Inject constructor(
+internal class UserAccountLocalSourceImpl @Inject constructor(
     private val dao: UserAccountDao
 ) : UserAccountLocalSource {
 

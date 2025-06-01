@@ -9,11 +9,10 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class ServiceModuleBinder {
+internal abstract class ServiceModuleBinder {
 
     @Binds
     abstract fun bindExternalNavigator(
         externalNavigatorImpl: ExternalNavigatorImpl
     ): ExternalNavigator
-
 }

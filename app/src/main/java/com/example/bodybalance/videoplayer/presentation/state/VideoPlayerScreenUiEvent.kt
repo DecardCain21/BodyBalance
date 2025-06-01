@@ -2,7 +2,7 @@ package com.example.bodybalance.videoplayer.presentation.state
 
 import com.example.bodybalance.core.domain.models.Video
 
-interface VideoPlayerScreenUiEvent {
+internal interface VideoPlayerScreenUiEvent {
     data class ChoiceVideo(val video: Video) : VideoPlayerScreenUiEvent
     data class DownloadVideo(val url: String, val fileName: String) : VideoPlayerScreenUiEvent
     data class RemoveVideoFromCache(val fileName: String) : VideoPlayerScreenUiEvent

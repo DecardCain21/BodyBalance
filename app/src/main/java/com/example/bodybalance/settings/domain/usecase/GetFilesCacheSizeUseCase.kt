@@ -1,6 +1,6 @@
 package com.example.bodybalance.settings.domain.usecase
 
-interface GetFilesCacheSizeUseCase {
+internal interface GetFilesCacheSizeUseCase {
 
     operator fun invoke(): Long
 }

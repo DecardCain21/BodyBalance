@@ -3,7 +3,7 @@ package com.example.bodybalance.core.util
 import android.annotation.SuppressLint
 
 @SuppressLint("DefaultLocale")
-fun Long.convertToFileSize(): String {
+public fun Long.convertToFileSize(): String {
     val kb = this / 1024.0
     val mb = kb / 1024.0
     val gb = mb / 1024.0

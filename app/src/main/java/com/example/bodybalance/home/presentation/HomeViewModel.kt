@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+internal class HomeViewModel @Inject constructor(
     private val checkLoginUseCase: CheckLoginUseCase,
     private val followLinkUseCase: FollowLinkUseCase
 ) : ViewModel() {

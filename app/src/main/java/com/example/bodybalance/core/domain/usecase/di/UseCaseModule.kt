@@ -17,30 +17,30 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class UseCaseBinder {
+public abstract class UseCaseBinder {
 
     @Binds
-    abstract fun bindFollowTheLinkUseCase(
+    public abstract fun bindFollowTheLinkUseCase(
         followTheLinkUseCase: FollowLinkUseCaseImpl
     ): FollowLinkUseCase
 
     @Binds
-    abstract fun bindShareContentUseCase(
+    public abstract fun bindShareContentUseCase(
         shareContentUseCase: ShareContentUseCaseImpl
     ): ShareContentUseCase
 
     @Binds
-    abstract fun bindGetVideoUseCase(
+    public abstract fun bindGetVideoUseCase(
         getVideoByCategoryUseCaseImpl: GetVideoByCategoryUseCaseImpl
     ): GetVideoByCategoryUseCase
 
     @Binds
-    abstract fun bindGetAllVideosUseCaseImpl(
+    public abstract fun bindGetAllVideosUseCaseImpl(
         getAllSavedVideosUseCaseImpl: GetAllPlaylistVideosUseCaseImpl
     ): GetAllPlaylistVideosUseCase
 
     @Binds
-    abstract fun bindGetVideoByIdUseCase(
+    public abstract fun bindGetVideoByIdUseCase(
         getVideoByIdUseCaseImpl: GetVideoByIdUseCaseImpl
     ): GetVideoByIdUseCase
 }

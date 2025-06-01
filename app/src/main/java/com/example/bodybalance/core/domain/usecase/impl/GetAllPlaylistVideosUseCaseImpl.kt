@@ -6,7 +6,7 @@ import com.example.bodybalance.core.domain.models.Video
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetAllPlaylistVideosUseCaseImpl @Inject constructor(
+public class GetAllPlaylistVideosUseCaseImpl @Inject constructor(
     private val repository: PlaylistVideoRepository
 ) : GetAllPlaylistVideosUseCase {
 

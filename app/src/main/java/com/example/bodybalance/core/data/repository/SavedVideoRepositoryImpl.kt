@@ -9,7 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class SavedVideoRepositoryImpl @Inject constructor(
+internal class SavedVideoRepositoryImpl @Inject constructor(
     private val savedVideoDao: VideoCacheDao
 ) : SavedVideoRepository {
 

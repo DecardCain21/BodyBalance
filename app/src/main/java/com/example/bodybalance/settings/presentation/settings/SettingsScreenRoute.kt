@@ -12,7 +12,7 @@ import com.example.bodybalance.settings.presentation.settings.state.SettingsScre
 import com.example.bodybalance.settings.presentation.settings.state.SettingsScreenUiEvent.SingOut
 
 @Composable
-fun SettingsScreenRoute(
+internal fun SettingsScreenRoute(
     modifier: Modifier = Modifier,
     navigateBackToPlaylistScreen: () -> Unit,
     navigateToAboutAppScreen: () -> Unit,

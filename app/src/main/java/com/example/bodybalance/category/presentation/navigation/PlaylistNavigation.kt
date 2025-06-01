@@ -6,9 +6,9 @@ import androidx.navigation.compose.composable
 import com.example.bodybalance.category.presentation.CategoryScreenRoute
 import com.example.bodybalance.videoplayer.presentation.navigation.VideoPlayerNavigateScreenId
 
-const val PLAYLIST_ROUTE = "playlist"
+private const val PLAYLIST_ROUTE = "playlist"
 
-fun NavGraphBuilder.playlistScreen(
+public fun NavGraphBuilder.playlistScreen(
     navigateToVideoPlayerScreen: (VideoPlayerNavigateScreenId, Int) -> Unit,
     navigateToSettingsScreen: () -> Unit,
     navigateBackToIntroduction: () -> Unit,
@@ -24,7 +24,7 @@ fun NavGraphBuilder.playlistScreen(
     }
 }
 
-fun NavController.navigateToPlaylist() {
+public fun NavController.navigateToPlaylist() {
     navigate(route = PLAYLIST_ROUTE) {
         launchSingleTop
     }

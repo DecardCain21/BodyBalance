@@ -18,7 +18,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class IntroductionModuleBinder {
+internal abstract class IntroductionModuleBinder {
 
     @Binds
     abstract fun bindGetIntroductionCodeUseCase(
@@ -38,7 +38,7 @@ abstract class IntroductionModuleBinder {
 
 @Module
 @InstallIn(SingletonComponent::class)
-object IntroductionModuleProvider {
+internal object IntroductionModuleProvider {
 
     @Provides
     @Singleton

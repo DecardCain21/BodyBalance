@@ -2,14 +2,15 @@ package com.example.bodybalance.core.util.api
 
 import com.example.bodybalance.core.util.DownloadCallback
 
-interface FileDownloader {
-    fun downloadFile(url: String, fileName: String, callback: DownloadCallback)
+public interface FileDownloader {
 
-    fun fileExists(fileName: String): Boolean
+    public fun downloadFile(url: String, fileName: String, callback: DownloadCallback)
 
-    fun deleteFile(fileName: String): Boolean
+    public fun fileExists(fileName: String): Boolean
 
-    fun deleteAllDownloadedFiles(): Boolean
+    public fun deleteFile(fileName: String): Boolean
 
-    fun getFilesCacheSize(): Long
+    public fun deleteAllDownloadedFiles(): Boolean
+
+    public fun getFilesCacheSize(): Long
 }

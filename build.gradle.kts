@@ -9,11 +9,10 @@ plugins {
     alias(libs.plugins.compose.compiler) apply false
 }
 
-/*
 allprojects {
     tasks.withType<KotlinCompile> {
         kotlinOptions {
             freeCompilerArgs += "-Xexplicit-api=strict"
         }
     }
-}*/
+}

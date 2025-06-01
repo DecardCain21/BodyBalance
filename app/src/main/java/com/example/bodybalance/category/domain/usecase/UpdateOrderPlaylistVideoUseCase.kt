@@ -1,6 +1,6 @@
 package com.example.bodybalance.category.domain.usecase
 
-interface UpdateOrderPlaylistVideoUseCase {
+internal interface UpdateOrderPlaylistVideoUseCase {
 
     suspend operator fun invoke(id: Int, order: Int)
 }

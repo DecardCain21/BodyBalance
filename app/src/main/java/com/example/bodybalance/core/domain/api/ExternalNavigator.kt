@@ -1,8 +1,8 @@
 package com.example.bodybalance.core.domain.api
 
-interface ExternalNavigator {
+public interface ExternalNavigator {
 
-    fun followTheLink(url: String)
+    public fun followTheLink(url: String)
 
-    fun share(text: String, title: String)
+    public fun share(text: String, title: String)
 }

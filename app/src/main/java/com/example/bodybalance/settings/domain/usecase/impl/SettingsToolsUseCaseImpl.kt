@@ -4,7 +4,7 @@ import com.example.bodybalance.core.domain.api.SettingsToolsRepository
 import com.example.bodybalance.settings.domain.usecase.SettingsToolsUseCase
 import javax.inject.Inject
 
-class SettingsToolsUseCaseImpl @Inject constructor(
+internal class SettingsToolsUseCaseImpl @Inject constructor(
     private val settingsToolsRepository: SettingsToolsRepository
 ): SettingsToolsUseCase {
 

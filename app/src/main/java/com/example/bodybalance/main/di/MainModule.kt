@@ -9,7 +9,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class MainModuleBinder {
+internal abstract class MainModuleBinder {
 
     @Binds
     abstract fun bindCheckAuthUseCase(

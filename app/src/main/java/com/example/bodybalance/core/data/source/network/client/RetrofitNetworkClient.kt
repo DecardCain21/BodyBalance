@@ -9,7 +9,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.net.SocketTimeoutException
 
-abstract class RetrofitNetworkClient : NetworkClient {
+public abstract class RetrofitNetworkClient : NetworkClient {
 
     private val maxRetries = 10
     private val retryDelayMillis = 2000L

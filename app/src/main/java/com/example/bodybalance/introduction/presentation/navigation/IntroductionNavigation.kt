@@ -5,10 +5,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.bodybalance.introduction.presentation.IntroductionScreenRoute
 
-const val INTRODUCTION_ROUTE = "introduction"
+public const val INTRODUCTION_ROUTE: String = "introduction"
 
 // Функция для навконтроллера , кладёт в граф/стек навигации
-fun NavController.navigateToIntroductionScreen() {
+public fun NavController.navigateToIntroductionScreen() {
     navigate(
         route = INTRODUCTION_ROUTE,
     ) {
@@ -17,7 +17,7 @@ fun NavController.navigateToIntroductionScreen() {
 }
 
 // Создание экземляра экрана, самой функции Compose
-fun NavGraphBuilder.introductionScreen(
+public fun NavGraphBuilder.introductionScreen(
     // Вложение функции для перехода на следующий экран
     navToPlaylist: () -> Unit,
 ) {

@@ -23,7 +23,7 @@ import com.example.bodybalance.ui.theme.BodyBalanceTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BaseTopAppBar(
+public fun BaseTopAppBar(
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     title: String = "",

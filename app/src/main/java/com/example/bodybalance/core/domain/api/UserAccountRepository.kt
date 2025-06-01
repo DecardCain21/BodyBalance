@@ -2,11 +2,11 @@ package com.example.bodybalance.core.domain.api
 
 import com.example.bodybalance.core.domain.models.Account
 
-interface UserAccountRepository {
+public interface UserAccountRepository {
 
-    suspend fun getAllAccounts(): List<Account>
+    public suspend fun getAllAccounts(): List<Account>
 
-    suspend fun deleteActiveAccount()
+    public suspend fun deleteActiveAccount()
 
-    suspend fun activateAccount(account: Account)
+    public suspend fun activateAccount(account: Account)
 }

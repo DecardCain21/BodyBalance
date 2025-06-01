@@ -1,6 +1,6 @@
 package com.example.bodybalance.core.domain.api
 
-interface AuthRepository {
+public interface AuthRepository {
 
-    suspend fun isAuthenticated(): Boolean
+    public suspend fun isAuthenticated(): Boolean
 }

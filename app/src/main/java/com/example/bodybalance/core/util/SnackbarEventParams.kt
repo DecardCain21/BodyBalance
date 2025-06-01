@@ -1,6 +1,6 @@
 package com.example.bodybalance.core.util
 
-data class SnackbarEventParams(
+public data class SnackbarEventParams(
     val message: String,
     val actionLabel: String? = null
 )

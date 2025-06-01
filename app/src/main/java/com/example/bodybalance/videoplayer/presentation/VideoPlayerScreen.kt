@@ -63,7 +63,7 @@ import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerState
 
 @OptIn(UnstableApi::class)
 @Composable
-fun VideoPlayerScreen(
+internal fun VideoPlayerScreen(
     routeLabel: VideoPlayerNavigateScreenId,
     snackBarHostState: SnackbarHostState,
     itemId: Int,
@@ -297,7 +297,7 @@ private fun VideoPlayerScreenLoading(modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true, backgroundColor = 0xFF141218)
 @Composable
-fun IntroductionPreview() {
+private fun IntroductionPreview() {
     BodyBalanceTheme {
         Box {
             VideoPlayerScreenContent(

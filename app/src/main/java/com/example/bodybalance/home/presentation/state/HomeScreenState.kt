@@ -1,13 +1,13 @@
 package com.example.bodybalance.home.presentation.state
 
-data class HomeScreenState(
+internal data class HomeScreenState(
     val inputError: Boolean = false,
     val inputValue: String = "base",
     val supportText: SupportTextHome = SupportTextHome.EMPTY,
     val isLoading: Boolean = false
 )
 
-enum class SupportTextHome(val message: String) {
+internal enum class SupportTextHome(val message: String) {
     INVALID_LOGIN("Неверный логин"),
     ENTER_LOGIN("Введите логин"),
     LOGIN_REQUIREMENTS("Используйте только буквы и цифры"),

@@ -2,7 +2,7 @@ package com.example.bodybalance.videoplayer.presentation.state
 
 import com.example.bodybalance.core.domain.models.Video
 
-data class VideoPlayerState(
+internal data class VideoPlayerState(
     val videoState: VideoState,
     val videoListState: VideoListState,
     val videoInCache: Boolean = false,

@@ -17,7 +17,7 @@ import com.example.bodybalance.core.data.source.local.database.entity.SavedVideo
         PlaylistVideoEntity::class
     ]
 )
-abstract class AppDatabase : RoomDatabase() {
+internal abstract class AppDatabase : RoomDatabase() {
 
     abstract fun videoCacheDao(): VideoCacheDao
 

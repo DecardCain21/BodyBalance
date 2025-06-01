@@ -5,16 +5,16 @@ import android.content.Context
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class BodyBalanceApp : Application() {
+public class BodyBalanceApp : Application() {
 
     init {
         instance = this
     }
 
-    companion object {
+    public companion object {
         private var instance: BodyBalanceApp? = null
 
-        fun applicationContext(): Context {
+        public fun applicationContext(): Context {
             return instance!!.applicationContext
         }
     }

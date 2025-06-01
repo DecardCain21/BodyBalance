@@ -1,8 +1,8 @@
 package com.example.bodybalance.core.domain.api
 
-interface SettingsToolsRepository {
+public interface SettingsToolsRepository {
 
-    fun getDownloadWifiFlag(): Boolean
+    public fun getDownloadWifiFlag(): Boolean
 
-    fun setDownloadWifiFlag(flag: Boolean)
+    public fun setDownloadWifiFlag(flag: Boolean)
 }

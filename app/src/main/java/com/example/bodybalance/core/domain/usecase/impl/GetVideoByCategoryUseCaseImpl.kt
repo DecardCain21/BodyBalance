@@ -5,7 +5,7 @@ import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.core.domain.usecase.api.GetVideoByCategoryUseCase
 import javax.inject.Inject
 
-class GetVideoByCategoryUseCaseImpl @Inject constructor(
+public class GetVideoByCategoryUseCaseImpl @Inject constructor(
     private val videoRepository: VideoRepository
 ) : GetVideoByCategoryUseCase {
 

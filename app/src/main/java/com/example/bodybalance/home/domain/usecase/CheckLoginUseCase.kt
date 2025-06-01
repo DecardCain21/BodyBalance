@@ -1,6 +1,6 @@
 package com.example.bodybalance.home.domain.usecase
 
-interface CheckLoginUseCase {
+internal interface CheckLoginUseCase {
 
     suspend operator fun invoke(login: String): Result<Unit>
 }

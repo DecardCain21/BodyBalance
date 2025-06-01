@@ -12,7 +12,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 @OptIn(UnstableApi::class)
-class ExternalNavigatorImpl @Inject constructor(
+internal class ExternalNavigatorImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ): ExternalNavigator {
 

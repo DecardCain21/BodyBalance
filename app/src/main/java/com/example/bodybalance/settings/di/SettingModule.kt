@@ -15,7 +15,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class SettingsModuleBinder {
+internal abstract class SettingsModuleBinder {
 
     @Binds
     abstract fun bindLogOutOfAccountUseCase(

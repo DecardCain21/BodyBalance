@@ -1,6 +1,6 @@
 package com.example.bodybalance.main.domain.usecase
 
-interface CheckAuthUseCase {
+internal interface CheckAuthUseCase {
 
     suspend operator fun invoke(): Boolean
 }

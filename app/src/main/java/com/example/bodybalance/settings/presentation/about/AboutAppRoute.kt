@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
-fun AboutAppRoute(
+internal fun AboutAppRoute(
     modifier: Modifier = Modifier,
     navigateBackToSettings: () -> Unit = {},
     viewMode: AboutAppViewModel = hiltViewModel()

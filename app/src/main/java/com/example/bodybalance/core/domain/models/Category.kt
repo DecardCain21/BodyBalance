@@ -1,10 +1,10 @@
 package com.example.bodybalance.core.domain.models
 
-data class Category(
+public data class Category(
     val id: Int,
     val name: String,
 ) {
-    companion object {
-        fun empty() = Category(id = 0, name = "")
+    public companion object {
+        public fun empty(): Category = Category(id = 0, name = "")
     }
 }

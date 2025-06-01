@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.sp
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 
 @Composable
-fun CustomTextField(
+public fun CustomTextField(
     modifier: Modifier = Modifier,
     value: String = "",
     label: String = "",

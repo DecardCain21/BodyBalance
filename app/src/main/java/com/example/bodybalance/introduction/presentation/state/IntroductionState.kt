@@ -2,7 +2,7 @@ package com.example.bodybalance.introduction.presentation.state
 
 import com.example.bodybalance.core.domain.models.Video
 
-data class IntroductionScreenState(
+internal data class IntroductionScreenState(
     val inputValue: Input,
     val videoState: IntroductionPlayerState,
     val buttonIsEnabled: Boolean = false,
@@ -26,7 +26,7 @@ data class IntroductionScreenState(
     }
 }
 
-enum class SupportTextIntroduction(val message: String) {
+internal enum class SupportTextIntroduction(val message: String) {
     INVALID_LOGIN("Неверное кодовое слово"),
     ENTER_LOGIN("Введите кодовое слово")
 }

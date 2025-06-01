@@ -1,6 +1,6 @@
 package com.example.bodybalance.settings.domain.usecase
 
-interface ClearCacheUseCase {
+internal interface ClearCacheUseCase {
 
     operator fun invoke()
 }

@@ -545,7 +545,7 @@ private fun DeleteVideoDialog(
 private fun PreviewPlaylist(
     modifier: Modifier = Modifier,
 ) {
-    BodyBalanceTheme(dynamicColor = false) {
+    BodyBalanceTheme {
         CategoryScreen(
             uiState = CategoryState().copy(
                 playlistVideo = listOf(

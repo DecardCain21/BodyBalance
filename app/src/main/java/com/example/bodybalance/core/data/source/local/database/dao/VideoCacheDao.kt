@@ -9,7 +9,7 @@ import androidx.room.Update
 import com.example.bodybalance.core.data.source.local.database.entity.SavedVideoEntity
 
 @Dao
-interface VideoCacheDao {
+internal interface VideoCacheDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(savedVideoEntity: SavedVideoEntity)

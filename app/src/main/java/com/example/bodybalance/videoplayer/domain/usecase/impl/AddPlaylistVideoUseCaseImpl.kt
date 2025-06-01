@@ -7,7 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class AddPlaylistVideoUseCaseImpl @Inject constructor(
+internal class AddPlaylistVideoUseCaseImpl @Inject constructor(
     private val playlistVideoRepository: PlaylistVideoRepository
 ) : AddPlaylistVideoUseCase {
     override suspend fun invoke(video: Video) {

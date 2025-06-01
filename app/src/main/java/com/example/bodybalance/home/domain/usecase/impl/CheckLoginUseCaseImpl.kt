@@ -4,7 +4,7 @@ import com.example.bodybalance.core.domain.api.LoginRepository
 import com.example.bodybalance.home.domain.usecase.CheckLoginUseCase
 import javax.inject.Inject
 
-class CheckLoginUseCaseImpl @Inject constructor(
+internal class CheckLoginUseCaseImpl @Inject constructor(
     private val loginRepository: LoginRepository
 ) : CheckLoginUseCase {
 

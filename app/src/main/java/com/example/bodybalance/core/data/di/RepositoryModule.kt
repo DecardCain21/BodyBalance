@@ -25,7 +25,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class NetworkModuleBinder {
+internal abstract class NetworkModuleBinder {
 
     @Binds
     abstract fun bindVideoRepository(

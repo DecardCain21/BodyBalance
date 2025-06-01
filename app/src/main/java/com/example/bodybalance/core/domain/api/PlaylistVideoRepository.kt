@@ -3,21 +3,21 @@ package com.example.bodybalance.core.domain.api
 import com.example.bodybalance.core.domain.models.Video
 import kotlinx.coroutines.flow.Flow
 
-interface PlaylistVideoRepository {
+public interface PlaylistVideoRepository {
 
-    fun getAllPlaylistVideos(): Flow<List<Video>>
+    public fun getAllPlaylistVideos(): Flow<List<Video>>
 
-    suspend fun insertPlaylistVideo(video: Video)
+    public suspend fun insertPlaylistVideo(video: Video)
 
-    suspend fun deletePlaylistVideo(video: Video)
+    public suspend fun deletePlaylistVideo(video: Video)
 
-    suspend fun deletePlaylistVideoById(id: Int)
+    public suspend fun deletePlaylistVideoById(id: Int)
 
-    suspend fun getPlaylistVideoById(id: Int): Video?
+    public suspend fun getPlaylistVideoById(id: Int): Video?
 
-    suspend fun updatePlaylistVideo(video: Video)
+    public suspend fun updatePlaylistVideo(video: Video)
 
-    suspend fun existsPlaylistVideoById(id: Int): Boolean
+    public suspend fun existsPlaylistVideoById(id: Int): Boolean
 
-    suspend fun updateOrderPlaylistVideo(id: Int, order: Int)
+    public suspend fun updateOrderPlaylistVideo(id: Int, order: Int)
 }

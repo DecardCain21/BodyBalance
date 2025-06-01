@@ -59,7 +59,7 @@ import com.example.bodybalance.ui.theme.White
 
 @OptIn(UnstableApi::class)
 @Composable
-fun exoPlayer(
+public fun exoPlayer(
     context: Context,
     video: Video,
     modifier: Modifier = Modifier,

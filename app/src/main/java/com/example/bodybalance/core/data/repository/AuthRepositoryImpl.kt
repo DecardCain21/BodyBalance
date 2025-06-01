@@ -4,7 +4,7 @@ import com.example.bodybalance.core.data.source.local.database.api.UserAccountLo
 import com.example.bodybalance.core.domain.api.AuthRepository
 import javax.inject.Inject
 
-class AuthRepositoryImpl @Inject constructor(
+internal class AuthRepositoryImpl @Inject constructor(
     private val userAccountLocalSource: UserAccountLocalSource
 ) : AuthRepository {
 

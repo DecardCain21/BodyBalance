@@ -2,15 +2,15 @@ package com.example.bodybalance.core.data.dto
 
 import com.google.gson.annotations.SerializedName
 
-class VideoDto(
+public class VideoDto(
     @SerializedName("id")
-    val id: Int,
+    public val id: Int,
     @SerializedName("url")
-    val url: String,
+    public val url: String,
     @SerializedName("name")
-    val name: String,
+    public val name: String,
     @SerializedName("description")
-    val description: String,
+    public val description: String,
     @SerializedName("category")
-    val category: String,
+    public val category: String,
 )

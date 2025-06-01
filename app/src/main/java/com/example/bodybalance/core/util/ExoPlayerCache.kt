@@ -11,7 +11,7 @@ import androidx.media3.datasource.cache.SimpleCache
 import java.io.File
 
 @UnstableApi
-object ExoPlayerCache {
+public object ExoPlayerCache {
 
     private var cache: SimpleCache? = null
 
@@ -24,7 +24,7 @@ object ExoPlayerCache {
         return cache!!
     }
 
-    fun getCacheDataSourceFactory(context: Context): CacheDataSource.Factory {
+    public fun getCacheDataSourceFactory(context: Context): CacheDataSource.Factory {
         val httpDataSourceFactory = DefaultHttpDataSource.Factory()
         val defaultDataSourceFactory = DefaultDataSource.Factory(context, httpDataSourceFactory)
         return CacheDataSource.Factory()

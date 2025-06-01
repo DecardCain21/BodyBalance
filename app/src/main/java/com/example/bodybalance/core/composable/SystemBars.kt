@@ -6,7 +6,7 @@ import com.example.bodybalance.ui.theme.Black
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
-fun SetSystemBarsColor() {
+internal fun SetSystemBarsColor() {
     val systemUiController = rememberSystemUiController()
     val color = Black  // Фиолетовый цвет
 

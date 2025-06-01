@@ -3,7 +3,7 @@ package com.example.bodybalance.core.data.convertor
 import com.example.bodybalance.core.data.dto.VideoDto
 import com.example.bodybalance.core.domain.models.Video
 
-fun Video.convertToDto() = VideoDto(
+internal fun Video.convertToDto() = VideoDto(
     id = id,
     name = name,
     url = url,
@@ -11,7 +11,7 @@ fun Video.convertToDto() = VideoDto(
     category = category
 )
 
-fun VideoDto.convertToVideo() = Video(
+internal fun VideoDto.convertToVideo() = Video(
     id = id,
     name = name,
     url = url,

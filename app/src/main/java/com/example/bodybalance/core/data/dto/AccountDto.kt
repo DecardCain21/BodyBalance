@@ -2,9 +2,9 @@ package com.example.bodybalance.core.data.dto
 
 import com.google.gson.annotations.SerializedName
 
-class AccountDto(
+public class AccountDto(
     @SerializedName("type_id")
-    val typeId: Int,
+    public val typeId: Int,
     @SerializedName("type_name")
-    val typeName: String
+    public val typeName: String
 )

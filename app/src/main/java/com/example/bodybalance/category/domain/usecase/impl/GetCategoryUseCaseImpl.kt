@@ -5,7 +5,7 @@ import com.example.bodybalance.core.domain.api.CategoryRepository
 import com.example.bodybalance.core.domain.models.Category
 import javax.inject.Inject
 
-class GetCategoryUseCaseImpl @Inject constructor(
+internal class GetCategoryUseCaseImpl @Inject constructor(
     private val categoryRepository: CategoryRepository
 ) : GetCategoryUseCase {
 

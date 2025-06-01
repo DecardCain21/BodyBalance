@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.sp
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 
 @Composable
-fun BasicButton(
+public fun BasicButton(
     modifier: Modifier = Modifier,
     text: String,
     onClick: () -> Unit,
@@ -56,7 +56,7 @@ fun BasicButton(
 @Preview
 @Composable
 private fun BasicButtonPreview() {
-    BodyBalanceTheme(dynamicColor = false) {
+    BodyBalanceTheme {
         BasicButton(
             modifier = Modifier.fillMaxWidth(),
             text = "Кнопка",

@@ -6,7 +6,7 @@ import com.example.bodybalance.core.data.source.network.client.LoginNetworkClien
 import com.example.bodybalance.core.domain.api.LoginRepository
 import javax.inject.Inject
 
-class LoginRepositoryImpl @Inject constructor(
+internal class LoginRepositoryImpl @Inject constructor(
     private val loginNetworkClient: LoginNetworkClient,
     private val userAccountLocalSource: UserAccountLocalSource
 ) : LoginRepository {

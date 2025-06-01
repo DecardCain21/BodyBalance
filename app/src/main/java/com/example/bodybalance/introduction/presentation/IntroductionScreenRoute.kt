@@ -8,7 +8,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.bodybalance.introduction.presentation.state.IntroductionScreenUiEvent
 
 @Composable
-fun IntroductionScreenRoute(
+internal fun IntroductionScreenRoute(
     modifier: Modifier = Modifier,
     navToPlaylist: () -> Unit = {},
     viewModel: IntroductionViewModel = hiltViewModel()

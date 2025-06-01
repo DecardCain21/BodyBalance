@@ -15,7 +15,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class VideoPlaylistModuleBinder {
+internal abstract class VideoPlaylistModuleBinder {
 
     @Binds
     abstract fun bindSaveVideoInCache(

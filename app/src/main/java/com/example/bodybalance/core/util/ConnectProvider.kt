@@ -5,7 +5,7 @@ import com.example.bodybalance.app.BodyBalanceApp
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 
-fun getConnected(): Boolean {
+public fun getConnected(): Boolean {
     val connectivityManager = BodyBalanceApp.applicationContext()
         .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
@@ -23,7 +23,7 @@ fun getConnected(): Boolean {
     }
 }
 
-fun isConnectedToWifi(): Boolean {
+public fun isConnectedToWifi(): Boolean {
     val connectivityManager = BodyBalanceApp.applicationContext()
         .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val network = connectivityManager.activeNetwork ?: return false

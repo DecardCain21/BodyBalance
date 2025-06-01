@@ -4,7 +4,7 @@ import com.example.bodybalance.core.domain.api.IntroductionCodeRepository
 import com.example.bodybalance.introduction.domain.usecase.SetIntroductionCodeUseCase
 import javax.inject.Inject
 
-class SetIntroductionCodeUseCaseImpl @Inject constructor(
+internal class SetIntroductionCodeUseCaseImpl @Inject constructor(
     private val introductionCodeRepository: IntroductionCodeRepository
 ) : SetIntroductionCodeUseCase {
 

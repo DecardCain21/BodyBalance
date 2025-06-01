@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun CustomSnackbar(
+public fun CustomSnackbar(
     hostState: SnackbarHostState,
     modifier: Modifier = Modifier
 ) {

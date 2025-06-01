@@ -7,7 +7,7 @@ import com.example.bodybalance.core.domain.api.VideoRepository
 import com.example.bodybalance.core.domain.models.Video
 import javax.inject.Inject
 
-class VideoRepositoryImpl @Inject constructor(
+internal class VideoRepositoryImpl @Inject constructor(
     private val videoNetworkClient: VideoNetworkClient,
     private val userAccountLocalSource: UserAccountLocalSource
 ) : VideoRepository {

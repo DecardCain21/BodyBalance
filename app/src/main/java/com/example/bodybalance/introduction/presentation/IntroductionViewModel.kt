@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class IntroductionViewModel @Inject constructor(
+internal class IntroductionViewModel @Inject constructor(
     private val getIntroductionCodeUseCase: GetIntroductionCodeUseCase,
     private val setIntroductionCodeUseCase: SetIntroductionCodeUseCase,
     private val getIntroductionVideoUseCase: GetIntroductionVideoUseCase

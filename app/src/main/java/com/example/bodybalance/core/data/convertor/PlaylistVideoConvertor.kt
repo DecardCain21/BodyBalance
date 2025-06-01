@@ -3,7 +3,7 @@ package com.example.bodybalance.core.data.convertor
 import com.example.bodybalance.core.data.source.local.database.entity.PlaylistVideoEntity
 import com.example.bodybalance.core.domain.models.Video
 
-fun Video.convertEntity() = PlaylistVideoEntity(
+internal fun Video.convertEntity() = PlaylistVideoEntity(
     id = id,
     name = name,
     url = url,
@@ -13,7 +13,7 @@ fun Video.convertEntity() = PlaylistVideoEntity(
     order = 0
 )
 
-fun PlaylistVideoEntity.convertToVideo() = Video(
+internal fun PlaylistVideoEntity.convertToVideo() = Video(
     id = id,
     name = name,
     url = url,

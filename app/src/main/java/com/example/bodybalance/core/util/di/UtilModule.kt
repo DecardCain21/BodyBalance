@@ -14,11 +14,11 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object UtilModuleProvider {
+public object UtilModuleProvider {
 
     @Provides
     @Singleton
-    fun provideFileDownloader(
+    public fun provideFileDownloader(
         @ApplicationContext context: Context,
         settingsToolsRepository: SettingsToolsRepository,
         okHttpClient: OkHttpClient

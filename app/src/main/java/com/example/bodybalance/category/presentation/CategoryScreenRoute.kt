@@ -9,7 +9,7 @@ import com.example.bodybalance.category.presentation.state.CategoryScreenUiEvent
 import com.example.bodybalance.videoplayer.presentation.navigation.VideoPlayerNavigateScreenId
 
 @Composable
-fun CategoryScreenRoute(
+internal fun CategoryScreenRoute(
     modifier: Modifier = Modifier,
     navigateToVideoPlayerScreen: (VideoPlayerNavigateScreenId, Int) -> Unit,
     navigateToSettingsScreen: () -> Unit,

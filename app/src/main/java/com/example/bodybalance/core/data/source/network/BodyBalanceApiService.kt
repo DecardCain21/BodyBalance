@@ -6,26 +6,26 @@ import com.example.bodybalance.core.data.dto.VideoDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface BodyBalanceApiService {
+public interface BodyBalanceApiService {
 
     @GET("v1/video_categories")
-    suspend fun getCategoryVideo(
+    public suspend fun getCategoryVideo(
         @Query("type") type: Int,
         @Query("category") category: Int,
     ): List<VideoDto>
 
     @GET("v1/category")
-    suspend fun getCategory(
+    public suspend fun getCategory(
         @Query("type") type: Int,
     ): List<CategoryDto>
 
     @GET("v1/login")
-    suspend fun checkAccount(
+    public suspend fun checkAccount(
         @Query("username") username: String
     ): AccountDto
 
     @GET("v1/video")
-    suspend fun getVideoById(
+    public suspend fun getVideoById(
         @Query("video_id") videoId:Int
     ) : VideoDto
 }

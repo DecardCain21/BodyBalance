@@ -40,7 +40,7 @@ import com.example.bodybalance.ui.theme.BottomSheetTextGrey
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun AboutAppScreen(
+internal fun AboutAppScreen(
     modifier: Modifier = Modifier,
     navigateBackToSettings: () -> Unit = {},
     openContributorLink: (String) -> Unit = {},
@@ -218,7 +218,7 @@ private fun ContributorsItem(
 )
 @Composable
 private fun PreviewAboutAppScreen() {
-    BodyBalanceTheme(dynamicColor = false, darkTheme = true) {
+    BodyBalanceTheme {
         AboutAppScreen()
     }
 }

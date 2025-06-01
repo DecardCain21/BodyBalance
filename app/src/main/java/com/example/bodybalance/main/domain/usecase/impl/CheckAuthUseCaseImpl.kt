@@ -4,7 +4,7 @@ import com.example.bodybalance.core.domain.api.AuthRepository
 import com.example.bodybalance.main.domain.usecase.CheckAuthUseCase
 import javax.inject.Inject
 
-class CheckAuthUseCaseImpl @Inject constructor(
+internal class CheckAuthUseCaseImpl @Inject constructor(
     private val authRepository: AuthRepository
 ) : CheckAuthUseCase {
 

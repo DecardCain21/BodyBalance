@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class PlaylistVideoRepositoryImpl @Inject constructor(
+internal class PlaylistVideoRepositoryImpl @Inject constructor(
     private val playlistVideoLocalSource: PlaylistVideoLocalSource
 ) : PlaylistVideoRepository {
 

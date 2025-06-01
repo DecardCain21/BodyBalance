@@ -4,7 +4,7 @@ import com.example.bodybalance.core.util.api.FileDownloader
 import com.example.bodybalance.settings.domain.usecase.GetFilesCacheSizeUseCase
 import javax.inject.Inject
 
-class GetFilesCacheSizeUseCaseImpl @Inject constructor(
+internal class GetFilesCacheSizeUseCaseImpl @Inject constructor(
     private val fileDownloaderImpl: FileDownloader
 ): GetFilesCacheSizeUseCase {
 

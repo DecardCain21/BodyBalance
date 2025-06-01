@@ -28,7 +28,7 @@ import javax.inject.Inject
 
 @UnstableApi
 @HiltViewModel
-class VideoPlayerViewModel @Inject constructor(
+internal class VideoPlayerViewModel @Inject constructor(
     private val fileDownloaderImpl: FileDownloader,
     private val getVideoByCategoryUseCase: GetVideoByCategoryUseCase,
     private val addPlaylistVideoUseCase: AddPlaylistVideoUseCase,

@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 @SuppressLint("OpaqueUnitKey")
 @Composable
-fun HomeScreenRoute(
+internal fun HomeScreenRoute(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
     navigateToIntroductionScreen: () -> Unit = {},

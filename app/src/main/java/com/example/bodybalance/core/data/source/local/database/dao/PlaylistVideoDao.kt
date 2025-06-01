@@ -10,7 +10,7 @@ import com.example.bodybalance.core.data.source.local.database.entity.PlaylistVi
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface PlaylistVideoDao {
+internal interface PlaylistVideoDao {
 
     @Query("SELECT * FROM playlist_video ORDER BY `order` ASC")
     fun getAllPlaylistVideos(): Flow<List<PlaylistVideoEntity>>

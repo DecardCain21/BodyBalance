@@ -12,7 +12,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 import javax.inject.Inject
 
-class FileDownloaderImpl @Inject constructor(
+public class FileDownloaderImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val settingsToolsRepository: SettingsToolsRepository,
     private val okHttpClient: OkHttpClient
@@ -93,12 +93,12 @@ class FileDownloaderImpl @Inject constructor(
 
 }
 
-interface DownloadCallback {
-    fun onSuccess(fileDownload: Boolean)
-    fun onError(error: FileDownloaderError)
+public interface DownloadCallback {
+    public fun onSuccess(fileDownload: Boolean)
+    public fun onError(error: FileDownloaderError)
 }
 
-enum class FileDownloaderError(val error: String) {
+public enum class FileDownloaderError(public val error: String) {
     HTTP_ERROR("Ошибка сервера"),
     WIFI_ERROR("Нет активного соединения с Wi-Fi"),
     NETWORK_ERROR("Ошибка сети"),

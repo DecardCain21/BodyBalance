@@ -1,6 +1,6 @@
 package com.example.bodybalance.core.domain.api
 
-interface LoginRepository {
+public interface LoginRepository {
 
-    suspend fun checkAccount(login: String): Result<Unit>
+    public suspend fun checkAccount(login: String): Result<Unit>
 }

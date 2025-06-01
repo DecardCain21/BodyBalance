@@ -3,7 +3,7 @@ package com.example.bodybalance.core.data.source.network.client
 import com.example.bodybalance.core.data.dto.VideoDto
 import com.example.bodybalance.core.data.source.network.BodyBalanceApiService
 
-class VideoNetworkClient(
+internal class VideoNetworkClient(
     private val apiService: BodyBalanceApiService
 ) : RetrofitNetworkClient() {
 

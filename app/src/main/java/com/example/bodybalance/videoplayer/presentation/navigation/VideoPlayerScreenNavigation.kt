@@ -5,20 +5,22 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.bodybalance.videoplayer.presentation.VideoPlayerScreen
 import com.example.bodybalance.videoplayer.presentation.VideoPlayerScreenRoute
 
-const val ROUTE_ID = "route id"
-const val ITEM_ID = "item id"
-const val VIDEO_PLAYER_ROUTE = "video_player"
+private const val ROUTE_ID = "route id"
+private const val ITEM_ID = "item id"
+private const val VIDEO_PLAYER_ROUTE = "video_player"
 
-fun NavController.navigateToVideoPlayerScreen(routeId: VideoPlayerNavigateScreenId, itemId: Int) {
+public fun NavController.navigateToVideoPlayerScreen(
+    routeId: VideoPlayerNavigateScreenId,
+    itemId: Int
+) {
     navigate(route = "$VIDEO_PLAYER_ROUTE/${routeId.label}/${itemId}") {
         launchSingleTop
     }
 }
 
-fun NavGraphBuilder.videoPlayerScreen(navigateBackToPlaylistScreen: () -> Unit) {
+public fun NavGraphBuilder.videoPlayerScreen(navigateBackToPlaylistScreen: () -> Unit) {
     composable(
         route = "$VIDEO_PLAYER_ROUTE/{$ROUTE_ID}/{$ITEM_ID}",
         arguments = listOf(
@@ -36,12 +38,12 @@ fun NavGraphBuilder.videoPlayerScreen(navigateBackToPlaylistScreen: () -> Unit) 
     }
 }
 
-enum class VideoPlayerNavigateScreenId(val label: String) {
+public enum class VideoPlayerNavigateScreenId(public val label: String) {
     CATEGORY("category"),
     PLAYLIST("playlist");
 
-    companion object {
-        fun fromLabel(label: String): VideoPlayerNavigateScreenId {
+    public companion object {
+        public fun fromLabel(label: String): VideoPlayerNavigateScreenId {
             return entries.find { it.label == label } ?: CATEGORY
         }
     }

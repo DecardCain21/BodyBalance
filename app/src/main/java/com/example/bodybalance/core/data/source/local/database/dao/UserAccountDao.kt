@@ -8,7 +8,7 @@ import androidx.room.Transaction
 import com.example.bodybalance.core.data.source.local.database.entity.AccountEntity
 
 @Dao
-interface UserAccountDao {
+internal interface UserAccountDao {
 
     @Query("SELECT * FROM user_account")
     suspend fun getAllAccount(): List<AccountEntity>

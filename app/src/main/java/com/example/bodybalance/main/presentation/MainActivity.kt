@@ -17,7 +17,7 @@ import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+internal class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

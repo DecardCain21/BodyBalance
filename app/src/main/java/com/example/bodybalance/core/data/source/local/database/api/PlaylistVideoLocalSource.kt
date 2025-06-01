@@ -3,7 +3,7 @@ package com.example.bodybalance.core.data.source.local.database.api
 import com.example.bodybalance.core.data.source.local.database.entity.PlaylistVideoEntity
 import kotlinx.coroutines.flow.Flow
 
-interface PlaylistVideoLocalSource {
+internal interface PlaylistVideoLocalSource {
 
     fun getAllPlaylistVideos(): Flow<List<PlaylistVideoEntity>>
 

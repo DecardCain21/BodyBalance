@@ -1,8 +1,8 @@
 package com.example.bodybalance.core.domain.api
 
-interface IntroductionCodeRepository {
+public interface IntroductionCodeRepository {
 
-    fun getCode(): String
+    public fun getCode(): String
 
-    fun setCode(code: String)
+    public fun setCode(code: String)
 }

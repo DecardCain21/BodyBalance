@@ -52,7 +52,7 @@ import kotlinx.coroutines.delay
 @SuppressLint("OpaqueUnitKey")
 @androidx.annotation.OptIn(UnstableApi::class)
 @Composable
-fun IntroductionScreen(
+internal fun IntroductionScreen(
     uiState: IntroductionScreenState,
     inputCodeWord: (String) -> Unit,
     navToPlaylist: () -> Unit,
@@ -88,7 +88,7 @@ fun IntroductionScreen(
 }
 
 @Composable
-fun IntroductionScreenContent(
+private fun IntroductionScreenContent(
     video: Video,
     inputValue: String,
     isEnabledButton: Boolean,
@@ -239,7 +239,7 @@ private fun ExoPlayer(
 
 @Preview(backgroundColor = 0xFF141218, showBackground = true)
 @Composable
-fun IntroductionPreview() {
+private fun IntroductionPreview() {
     BodyBalanceTheme {
         IntroductionScreenContent(
             video = Video.emptyVideo(1),
