@@ -8,6 +8,7 @@ internal data class VideoPlayerState(
     val videoInCache: Boolean = false,
     val videoInPlaylist: Boolean = false
 ) {
+
     sealed interface VideoState {
         data object Empty : VideoState
         data class Content(val video: Video) : VideoState

@@ -7,7 +7,7 @@ import com.example.bodybalance.category.domain.usecase.GetAllAccountsUseCase
 import com.example.bodybalance.category.domain.usecase.GetCategoryUseCase
 import com.example.bodybalance.category.domain.usecase.UpdateOrderPlaylistVideoUseCase
 import com.example.bodybalance.category.presentation.state.CategoryScreenUiEvent
-import com.example.bodybalance.category.presentation.state.CategoryState
+import com.example.bodybalance.category.presentation.state.CategoryScreenState
 import com.example.bodybalance.core.domain.models.Account
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.core.domain.usecase.api.GetAllPlaylistVideosUseCase
@@ -30,8 +30,8 @@ internal class CategoryViewModel @Inject constructor(
     private val updateOrderPlaylistVideoUseCase: UpdateOrderPlaylistVideoUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(CategoryState())
-    val uiState: StateFlow<CategoryState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(CategoryScreenState.emptyState())
+    val uiState: StateFlow<CategoryScreenState> = _uiState.asStateFlow()
 
     init {
         loadInformation()
@@ -54,19 +54,25 @@ internal class CategoryViewModel @Inject constructor(
                 val accounts = getAllAccountsUseCase()
                 val categories = getCategoryUseCase().getOrNull()
 
+                val categoryState = if (categories.isNullOrEmpty()) {
+                    CategoryScreenState.CategoryState.Empty
+                } else {
+                    CategoryScreenState.CategoryState.Content(categories)
+                }
+
                 getAllPlaylistVideosUseCase().collect { playlistVideo ->
                     _uiState.update { currentState ->
                         val activeAccount = accounts.find { it.isActive } ?: accounts.first()
                         currentState.copy(
                             activeAccount = activeAccount,
-                            accounts = accounts,
-                            category = categories ?: emptyList(),
-                            playlistVideo = playlistVideo
+                            accounts = CategoryScreenState.AccountsState.Content(accounts),
+                            category = categoryState,
+                            playlistVideo = CategoryScreenState.PlaylistState.Content(playlistVideo)
                         )
                     }
                 }
             } catch (e: Exception) {
-                _uiState.update { CategoryState() }
+                _uiState.update { CategoryScreenState.emptyState() }
             }
         }
     }
@@ -75,10 +81,16 @@ internal class CategoryViewModel @Inject constructor(
         viewModelScope.launch {
             activateAccountUseCase(account)
             val categories = getCategoryUseCase().getOrNull()
+
+            val categoryState = if (categories.isNullOrEmpty()) {
+                CategoryScreenState.CategoryState.Empty
+            } else {
+                CategoryScreenState.CategoryState.Content(categories)
+            }
             _uiState.update { state ->
                 state.copy(
                     activeAccount = account,
-                    category = categories ?: emptyList()
+                    category = categoryState
                 )
             }
         }

@@ -49,12 +49,12 @@ internal fun VideoPlayerScreenRoute(
 
     val videoState = when (currentState.videoState) {
         is VideoPlayerState.VideoState.Content -> currentState.videoState.video
-        VideoPlayerState.VideoState.Empty -> Video.emptyVideo(0)
+        is VideoPlayerState.VideoState.Empty -> Video.emptyVideo(0)
     }
 
     val videoListState = when (currentState.videoListState) {
         is VideoPlayerState.VideoListState.Content -> currentState.videoListState.videoList
-        VideoPlayerState.VideoListState.Empty -> emptyList()
+        is VideoPlayerState.VideoListState.Empty -> emptyList()
     }
 
     VideoPlayerScreen(

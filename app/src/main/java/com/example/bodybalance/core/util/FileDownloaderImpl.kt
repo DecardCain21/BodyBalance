@@ -33,7 +33,7 @@ public class FileDownloaderImpl @Inject constructor(
             }
 
             override fun onResponse(call: okhttp3.Call, response: Response) {
-                if (!response.isSuccessful) { // todo: зачем это нужно, если есть проверка ниже??
+                if (!response.isSuccessful) {
                     callback.onError(FileDownloaderError.HTTP_ERROR)
                     return
                 }
@@ -47,6 +47,7 @@ public class FileDownloaderImpl @Inject constructor(
                     }
                     callback.onSuccess(true)
                 } catch (e: Exception) {
+                    deleteFile(fileName)
                     callback.onError(FileDownloaderError.FILE_SAVE_ERROR)
                 }
             }

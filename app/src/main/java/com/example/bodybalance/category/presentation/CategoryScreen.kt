@@ -66,7 +66,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bodybalance.R
-import com.example.bodybalance.category.presentation.state.CategoryState
+import com.example.bodybalance.category.presentation.state.CategoryScreenState
 import com.example.bodybalance.core.composable.BaseTopAppBar
 import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.core.composable.items.ExerciseItem
@@ -87,7 +87,10 @@ import org.burnoutcrew.reorderable.reorderable
 @Composable
 internal fun CategoryScreen(
     modifier: Modifier = Modifier,
-    uiState: CategoryState,
+    accounts: List<Account>,
+    activeAccount: Account,
+    category: List<Category>,
+    playlistVideo: List<Video>,
     navigateBackToIntroduction: () -> Unit,
     navigateToVideoPlayerScreen: (routeId: VideoPlayerNavigateScreenId, itemId: Int) -> Unit,
     navigateToSettingsScreen: () -> Unit,
@@ -99,8 +102,8 @@ internal fun CategoryScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                accounts = uiState.accounts,
-                activeAccount = uiState.activeAccount,
+                accounts = accounts,
+                activeAccount = activeAccount,
                 onAccountSelected = changeUser,
                 navigateToSettingsScreen = navigateToSettingsScreen,
                 navigateBackToIntroduction = navigateBackToIntroduction,
@@ -115,8 +118,8 @@ internal fun CategoryScreen(
                 .background(color = MaterialTheme.colorScheme.background)
         ) {
             CategoryPages(
-                exercise = uiState.category,
-                playlistVideo = uiState.playlistVideo,
+                exercise = category,
+                playlistVideo = playlistVideo,
                 navigateToVideoPlayerScreen = {
                     navigateToVideoPlayerScreen(VideoPlayerNavigateScreenId.CATEGORY, it)
                 },
@@ -433,9 +436,7 @@ private fun PlaylistScreen(
                 SwipeToDismissBox(
                     state = dismissState,
                     enableDismissFromStartToEnd = false, // Отключаем свайп вправо
-                    backgroundContent = {
-                        DismissBackground(showDeleteBackground)
-                    },
+                    backgroundContent = { DismissBackground(showDeleteBackground) },
                     content = {
                         ReorderableItem(state = state, key = item.id) { isDragging ->
                             showDeleteBackground = !isDragging
@@ -547,19 +548,20 @@ private fun PreviewPlaylist(
 ) {
     BodyBalanceTheme {
         CategoryScreen(
-            uiState = CategoryState().copy(
-                playlistVideo = listOf(
-                    Video.emptyVideo(1),
-                    Video.emptyVideo(2),
-                )
-            ),
             navigateToSettingsScreen = {},
             navigateToVideoPlayerScreen = { _, _ -> },
             navigateBackToIntroduction = {},
             navigateToHomeScreen = {},
             changeUser = {},
             deleteVideoFromPlaylist = {},
-            updateOrderPlaylistVideo = { _, _ -> }
+            updateOrderPlaylistVideo = { _, _ -> },
+            playlistVideo = listOf(
+                Video.emptyVideo(1),
+                Video.emptyVideo(2),
+            ),
+            activeAccount = Account.empty(1),
+            accounts = emptyList(),
+            category = emptyList()
         )
     }
 }

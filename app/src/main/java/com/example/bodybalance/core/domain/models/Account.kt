@@ -13,6 +13,7 @@ public data class Account(
     val isActive: Boolean
 ) {
     public companion object {
-        public fun empty(): Account = Account(id = 0, name = "", isActive = true)
+        public fun empty(id: Int = 0): Account =
+            Account(id = id, name = "", isActive = true)
     }
 }
