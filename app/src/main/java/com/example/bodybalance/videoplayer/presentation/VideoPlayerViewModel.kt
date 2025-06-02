@@ -100,7 +100,7 @@ internal class VideoPlayerViewModel @Inject constructor(
 
                 else -> result.getOrNull()?.let {
                     VideoPlayerState(
-                        videoState = VideoPlayerState.VideoState.Content(it.first()),
+                        videoState = VideoPlayerState.VideoState.Content(getVideoFromCache(it.first())),
                         videoListState = VideoPlayerState.VideoListState.Content(it),
                     )
                 }
@@ -116,12 +116,17 @@ internal class VideoPlayerViewModel @Inject constructor(
 
     private fun selectVideo(video: Video) {
         _uiState.update {
-            it.copy(videoState = VideoPlayerState.VideoState.Content(video))
+            it.copy(videoState = VideoPlayerState.VideoState.Content(getVideoFromCache(video)))
         }
         viewModelScope.launch {
             val currentState = _uiState.value
             setButtonsState(currentState)
         }
+    }
+
+    private fun getVideoFromCache(video: Video): Video {
+        val url = fileDownloaderImpl.getFilePathIfExists(video.id.toString())
+        return video.copy(url = url ?: video.url)
     }
 
     private fun addToPlaylist(video: Video) {
@@ -170,6 +175,7 @@ internal class VideoPlayerViewModel @Inject constructor(
                                 )
                             )
                         }
+
                         else -> _snackBarEvent.emit(SnackbarEventParams(message = error.error))
                     }
                 }
@@ -189,13 +195,19 @@ internal class VideoPlayerViewModel @Inject constructor(
 
     private suspend fun setButtonsState(state: VideoPlayerState) {
         viewModelScope.launch {
-            val test = // todo: ?
-                fileDownloaderImpl.fileExists((state.videoState as VideoPlayerState.VideoState.Content).video.id.toString())
-            _uiState.value =
-                state.copy(
-                    videoInPlaylist = existsPlaylistVideoByIdUseCase(state.videoState.video.id),
-                    videoInCache = test
-                )
+            if (state.videoState is VideoPlayerState.VideoState.Content) {
+                _uiState.value =
+                    state.copy(
+                        videoInPlaylist = existsPlaylistVideoByIdUseCase(state.videoState.video.id),
+                        videoInCache = fileDownloaderImpl.fileExists(state.videoState.video.id.toString())
+                    )
+            } else {
+                _uiState.value =
+                    state.copy(
+                        videoInPlaylist = false,
+                        videoInCache = false
+                    )
+            }
         }
     }
 

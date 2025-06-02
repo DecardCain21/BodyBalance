@@ -88,8 +88,12 @@ public class FileDownloaderImpl @Inject constructor(
 
     override fun getFilesCacheSize(): Long {
         val files = context.filesDir.listFiles() ?: return 0L
-
         return files.sumOf { it.length() }
+    }
+
+    override fun getFilePathIfExists(fileName: String): String? {
+        val file = File(context.filesDir, fileName)
+        return file.takeIf { it.exists() }?.absolutePath
     }
 
 }

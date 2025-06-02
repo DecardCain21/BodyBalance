@@ -13,4 +13,6 @@ public interface FileDownloader {
     public fun deleteAllDownloadedFiles(): Boolean
 
     public fun getFilesCacheSize(): Long
+
+    public fun getFilePathIfExists(fileName: String): String?
 }
