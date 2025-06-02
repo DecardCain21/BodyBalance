@@ -49,7 +49,7 @@ import androidx.compose.ui.unit.sp
 import com.example.bodybalance.R
 import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.core.composable.CustomTextField
-import com.example.bodybalance.core.composable.snackbar.CustomSnackbar
+import com.example.bodybalance.core.composable.snackbar.CustomSnackbarHost
 import com.example.bodybalance.home.presentation.state.HomeScreenState
 import com.example.bodybalance.ui.theme.Black
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
@@ -174,7 +174,7 @@ internal fun HomeScreen(
                 )
             }
         }
-        CustomSnackbar(
+        CustomSnackbarHost(
             hostState = snackbarHostState,
             modifier = Modifier
                 .align(Alignment.BottomCenter)

@@ -21,7 +21,7 @@ public class FileDownloaderImpl @Inject constructor(
     override fun downloadFile(url: String, fileName: String, callback: DownloadCallback) {
         val request = Request.Builder().url(url).build()
         val downloadOnlyWifi = settingsToolsRepository.getDownloadWifiFlag()
-        if (downloadOnlyWifi && !isConnectedToWifi()) {
+        if (downloadOnlyWifi && isConnectedToWifi()) {
             callback.onError(FileDownloaderError.WIFI_ERROR)
             return
         }

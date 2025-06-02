@@ -32,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.bodybalance.BuildConfig
 import com.example.bodybalance.R
 import com.example.bodybalance.core.composable.BaseTopAppBar
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
@@ -46,7 +47,6 @@ internal fun AboutAppScreen(
     openContributorLink: (String) -> Unit = {},
     shareApp: () -> Unit = {}
 ) {
-
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
 
@@ -129,7 +129,7 @@ private fun VersionRow(modifier: Modifier = Modifier) {
         )
         Text(
             modifier = Modifier.padding(start = 16.dp),
-            text = "0.0.0",
+            text = BuildConfig.VERSION_NAME,
             fontSize = 11.sp,
             fontWeight = FontWeight(500),
             color = MaterialTheme.colorScheme.primary
@@ -170,7 +170,7 @@ private fun DevelopersRow(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
-            .combinedClickable(onClick = { onClick() }),
+            .combinedClickable(onClick = onClick),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

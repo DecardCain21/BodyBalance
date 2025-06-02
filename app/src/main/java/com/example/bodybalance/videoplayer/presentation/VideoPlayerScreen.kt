@@ -25,10 +25,8 @@ import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Download
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -56,6 +54,7 @@ import com.example.bodybalance.core.composable.BaseTopAppBar
 import com.example.bodybalance.core.composable.BodyBalanceActionButton
 import com.example.bodybalance.core.composable.exoPlayer
 import com.example.bodybalance.core.composable.items.VideoItem
+import com.example.bodybalance.core.composable.snackbar.CustomSnackbarHost
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import com.example.bodybalance.videoplayer.presentation.navigation.VideoPlayerNavigateScreenId
@@ -66,14 +65,13 @@ import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerState
 internal fun VideoPlayerScreen(
     routeLabel: VideoPlayerNavigateScreenId,
     snackBarHostState: SnackbarHostState,
-    itemId: Int,
     modifier: Modifier = Modifier,
     videoState: Video,
     videoListState: List<Video>,
     navigateBackToPlaylistScreen: () -> Unit,
     currentState: VideoPlayerState,
-    getVideo: (Int) -> Unit,
-    getPlaylistVideos: (Int) -> Unit,
+    getVideo: () -> Unit,
+    getPlaylistVideos: () -> Unit,
     onItemSelected: (Video) -> Unit,
     onClickDownload: () -> Unit,
     removeVideoFromCache: () -> Unit,
@@ -83,8 +81,8 @@ internal fun VideoPlayerScreen(
 
     LaunchedEffect(Unit) {
         when (routeLabel) {
-            VideoPlayerNavigateScreenId.CATEGORY -> getVideo(itemId)
-            VideoPlayerNavigateScreenId.PLAYLIST -> getPlaylistVideos(itemId)
+            VideoPlayerNavigateScreenId.CATEGORY -> getVideo()
+            VideoPlayerNavigateScreenId.PLAYLIST -> getPlaylistVideos()
         }
     }
 
@@ -119,48 +117,51 @@ private fun VideoPlayerScreenContent(
     isDownloadState: Boolean,
     isAddPlaylist: Boolean
 ) {
-    val isPreview = LocalInspectionMode.current
     val configuration = LocalConfiguration.current
+
     Scaffold(
         topBar = {
             if (configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
                 BaseTopAppBar(navigateBack = { navigateBackToPlaylistScreen() })
             }
-        }) { paddingValue ->
-        Box {
-            Column(
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(paddingValue),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                HeaderVideoPlayerScreen(isPreview = isPreview, video = video)
-                BodyVideoPlayerScreen(
-                    isAddPlaylist = isAddPlaylist,
-                    isDownloadState = isDownloadState,
-                    onClickDownload = onClickDownload,
-                    removeVideoFromCache = removeVideoFromCache,
-                    onClickAddToPlaylist = onClickAddToPlaylist,
-                    onClickRemoveFromPlaylist = onClickRemoveFromPlaylist
-                )
-                if (videoList.isNotEmpty()) {
-                    VideoList(
-                        videoList = videoList,
-                        onItemSelected = onItemSelected,
-                        currentVideo = video
-                    )
-                }
-            }
-            SnackbarHost(
-                hostState = snackBarHostState,
-                modifier = Modifier.align(Alignment.BottomCenter)
+        },
+        snackbarHost = {
+            CustomSnackbarHost(
+                modifier = Modifier.padding(horizontal = 8.dp),
+                hostState = snackBarHostState
             )
+        }
+    ) { paddingValue ->
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(paddingValue),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            HeaderVideoPlayerScreen(video = video)
+            BodyVideoPlayerScreen(
+                isAddPlaylist = isAddPlaylist,
+                isDownloadState = isDownloadState,
+                onClickDownload = onClickDownload,
+                removeVideoFromCache = removeVideoFromCache,
+                onClickAddToPlaylist = onClickAddToPlaylist,
+                onClickRemoveFromPlaylist = onClickRemoveFromPlaylist
+            )
+            if (videoList.isNotEmpty()) {
+                VideoList(
+                    videoList = videoList,
+                    onItemSelected = onItemSelected,
+                    currentVideo = video
+                )
+            }
         }
     }
 }
 
 @Composable
-private fun HeaderVideoPlayerScreen(isPreview: Boolean, video: Video) {
+private fun HeaderVideoPlayerScreen(video: Video) {
+    val isPreview = LocalInspectionMode.current
+
     if (isPreview) {
         Box(
             modifier = Modifier
@@ -173,12 +174,15 @@ private fun HeaderVideoPlayerScreen(isPreview: Boolean, video: Video) {
             Text("ExoPlayer Placeholder", color = Color.White)
         }
     } else {
-        ExoPlayer(video = video)
+        exoPlayer(
+            context = LocalContext.current,
+            video = video
+        )
     }
     Text(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(all = 16.dp),
+            .padding(16.dp),
         text = video.name,
         overflow = TextOverflow.Ellipsis,
         fontWeight = FontWeight(400),
@@ -208,14 +212,12 @@ private fun BodyVideoPlayerScreen(
                 )
             } else {
                 BodyBalanceActionButton(
-                    onClick = {
-                        onClickDownload()
-                    },
+                    onClick = onClickDownload,
                     text = stringResource(R.string.download),
                     imageVector = Icons.Default.Download
                 )
             }
-            Spacer(modifier = Modifier.padding(horizontal = 3.dp))
+            Spacer(modifier = Modifier.padding(horizontal = 4.dp))
             if (isAddPlaylist) {
                 BodyBalanceActionButton(
                     onClick = { onClickRemoveFromPlaylist() },
@@ -276,43 +278,22 @@ private fun VideoList(
     }
 }
 
-@Composable
-private fun ExoPlayer(
-    video: Video,
-    modifier: Modifier = Modifier,
-) {
-    exoPlayer(
-        modifier = modifier,
-        context = LocalContext.current,
-        video = video
-    )
-}
-
-@Composable
-private fun VideoPlayerScreenLoading(modifier: Modifier = Modifier) {
-    Box(modifier = modifier.fillMaxSize()) {
-        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-    }
-}
-
-@Preview(showBackground = true, backgroundColor = 0xFF141218)
+@Preview
 @Composable
 private fun IntroductionPreview() {
     BodyBalanceTheme {
-        Box {
-            VideoPlayerScreenContent(
-                video = Video.emptyVideo(1),
-                snackBarHostState = SnackbarHostState(),
-                videoList = listOf(Video.emptyVideo(1), Video.emptyVideo(2)),
-                navigateBackToPlaylistScreen = {},
-                onItemSelected = {},
-                onClickDownload = {},
-                onClickAddToPlaylist = {},
-                onClickRemoveFromPlaylist = {},
-                removeVideoFromCache = {},
-                isDownloadState = false,
-                isAddPlaylist = false
-            )
-        }
+        VideoPlayerScreenContent(
+            video = Video.emptyVideo(1),
+            snackBarHostState = SnackbarHostState(),
+            videoList = listOf(Video.emptyVideo(1), Video.emptyVideo(2)),
+            navigateBackToPlaylistScreen = {},
+            onItemSelected = {},
+            onClickDownload = {},
+            onClickAddToPlaylist = {},
+            onClickRemoveFromPlaylist = {},
+            removeVideoFromCache = {},
+            isDownloadState = false,
+            isAddPlaylist = false
+        )
     }
 }

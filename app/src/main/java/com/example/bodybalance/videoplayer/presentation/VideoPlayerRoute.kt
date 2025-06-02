@@ -3,6 +3,7 @@ package com.example.bodybalance.videoplayer.presentation
 import androidx.annotation.OptIn
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -38,11 +39,15 @@ internal fun VideoPlayerScreenRoute(
         viewModel.snackBarEvent.collect { params ->
             snackbarJob?.cancel()
             snackbarJob = launch {
-                snackbarHostState.showSnackbar(
+                val result = snackbarHostState.showSnackbar(
                     message = params.message,
                     actionLabel = params.actionLabel,
                     duration = SnackbarDuration.Short
                 )
+
+                if (result == SnackbarResult.ActionPerformed) {
+                    params.onAction?.invoke()
+                }
             }
         }
     }
@@ -60,7 +65,6 @@ internal fun VideoPlayerScreenRoute(
     VideoPlayerScreen(
         routeLabel = routeLabel,
         snackBarHostState = snackbarHostState,
-        itemId = itemId,
         modifier = modifier,
         videoState = videoState,
         videoListState = videoListState,
