@@ -21,27 +21,17 @@ internal fun CategoryScreenRoute(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val currentState = uiState
 
-    val categoryState = when (currentState.category) {
-        is CategoryScreenState.CategoryState.Content -> currentState.category.categoryList
-        is CategoryScreenState.CategoryState.Empty -> emptyList()
-    }
-
     val accountState = when (currentState.accounts) {
         is CategoryScreenState.AccountsState.Content -> currentState.accounts.accountList
         is CategoryScreenState.AccountsState.Empty -> emptyList()
     }
 
-    val playlistState = when (currentState.playlistVideo) {
-        is CategoryScreenState.PlaylistState.Content -> currentState.playlistVideo.playlistVideo
-        is CategoryScreenState.PlaylistState.Empty -> emptyList()
-    }
-
     CategoryScreen(
         modifier = modifier,
-        playlistVideo = playlistState,
+        playlistState = currentState.playlistVideo,
         activeAccount = uiState.activeAccount,
         accounts = accountState,
-        category = categoryState,
+        categoryState = currentState.category,
         navigateToVideoPlayerScreen = { routeId, itemId ->
             navigateToVideoPlayerScreen(routeId, itemId)
         },

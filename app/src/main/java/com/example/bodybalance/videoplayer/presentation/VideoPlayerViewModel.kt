@@ -114,7 +114,6 @@ internal class VideoPlayerViewModel @Inject constructor(
         }
     }
 
-
     private fun selectVideo(video: Video) {
         _uiState.update {
             it.copy(videoState = VideoPlayerState.VideoState.Content(video))
@@ -173,7 +172,6 @@ internal class VideoPlayerViewModel @Inject constructor(
                         }
                         else -> _snackBarEvent.emit(SnackbarEventParams(message = error.error))
                     }
-
                 }
             }
         })

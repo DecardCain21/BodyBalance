@@ -66,7 +66,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bodybalance.R
-import com.example.bodybalance.category.presentation.state.CategoryScreenState
+import com.example.bodybalance.category.presentation.state.CategoryScreenState.CategoryState
+import com.example.bodybalance.category.presentation.state.CategoryScreenState.PlaylistState
 import com.example.bodybalance.core.composable.BaseTopAppBar
 import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.core.composable.items.ExerciseItem
@@ -89,8 +90,8 @@ internal fun CategoryScreen(
     modifier: Modifier = Modifier,
     accounts: List<Account>,
     activeAccount: Account,
-    category: List<Category>,
-    playlistVideo: List<Video>,
+    categoryState: CategoryState,
+    playlistState: PlaylistState,
     navigateBackToIntroduction: () -> Unit,
     navigateToVideoPlayerScreen: (routeId: VideoPlayerNavigateScreenId, itemId: Int) -> Unit,
     navigateToSettingsScreen: () -> Unit,
@@ -118,8 +119,8 @@ internal fun CategoryScreen(
                 .background(color = MaterialTheme.colorScheme.background)
         ) {
             CategoryPages(
-                exercise = category,
-                playlistVideo = playlistVideo,
+                categoryState = categoryState,
+                playlistState = playlistState,
                 navigateToVideoPlayerScreen = {
                     navigateToVideoPlayerScreen(VideoPlayerNavigateScreenId.CATEGORY, it)
                 },
@@ -254,8 +255,8 @@ private fun ChangeUserBlock(
 
 @Composable
 private fun CategoryPages(
-    exercise: List<Category>,
-    playlistVideo: List<Video>,
+    categoryState: CategoryState,
+    playlistState: PlaylistState,
     navigateToVideoPlayerScreen: (Int) -> Unit, // Int - Id категории
     navigateToVideoPlayerScreenFromPlaylist: (Int) -> Unit, // Int - Id видео
     deleteVideoFromPlaylist: (Video) -> Unit,
@@ -297,25 +298,51 @@ private fun CategoryPages(
     HorizontalPager(state = pagerState) { page ->
         when (page) {
             0 -> {
-                if (playlistVideo.isEmpty()) {
-                    PlaylistEmptyScreen(modifier = Modifier.padding(bottom = 56.dp))
-                } else {
-                    PlaylistScreen(
-                        playlistVideo = playlistVideo,
+                when (playlistState) {
+                    is PlaylistState.Content -> PlaylistScreen(
+                        playlistVideo = playlistState.playlistVideo,
                         navigateToVideoPlayerScreenFromPlaylist = navigateToVideoPlayerScreenFromPlaylist,
                         deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) },
                         updateOrderPlaylistVideo = updateOrderPlaylistVideo
                     )
+
+                    is PlaylistState.Empty ->
+                        PlaylistEmptyScreen(modifier = Modifier.padding(bottom = 56.dp))
                 }
             }
 
-            1 -> ExerciseScreen(
-                category = exercise,
-                navigateToVideoPlayerScreen = navigateToVideoPlayerScreen
-            )
+            1 -> {
+                when (categoryState) {
+                    is CategoryState.Content -> ExerciseScreen(
+                        category = categoryState.categoryList,
+                        navigateToVideoPlayerScreen = navigateToVideoPlayerScreen
+                    )
+
+                    is CategoryState.Empty ->
+                        ExerciseEmptyScreen(modifier = Modifier.padding(bottom = 56.dp))
+                }
+            }
 
             else -> Unit
         }
+    }
+}
+
+@Composable
+private fun ExerciseEmptyScreen(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "Проверьте соединение с интернетом",
+            fontSize = 22.sp,
+            color = White,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        BasicButton(text = "Обновить", onClick = { })
     }
 }
 
@@ -543,9 +570,7 @@ private fun DeleteVideoDialog(
 
 @Preview
 @Composable
-private fun PreviewPlaylist(
-    modifier: Modifier = Modifier,
-) {
+private fun PreviewPlaylist() {
     BodyBalanceTheme {
         CategoryScreen(
             navigateToSettingsScreen = {},
@@ -555,13 +580,10 @@ private fun PreviewPlaylist(
             changeUser = {},
             deleteVideoFromPlaylist = {},
             updateOrderPlaylistVideo = { _, _ -> },
-            playlistVideo = listOf(
-                Video.emptyVideo(1),
-                Video.emptyVideo(2),
-            ),
+            playlistState = PlaylistState.Empty,
             activeAccount = Account.empty(1),
             accounts = emptyList(),
-            category = emptyList()
+            categoryState = CategoryState.Empty
         )
     }
 }

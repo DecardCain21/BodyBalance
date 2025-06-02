@@ -61,13 +61,18 @@ internal class CategoryViewModel @Inject constructor(
                 }
 
                 getAllPlaylistVideosUseCase().collect { playlistVideo ->
+                    val playlistState = if (playlistVideo.isEmpty()) {
+                        CategoryScreenState.PlaylistState.Empty
+                    }else {
+                        CategoryScreenState.PlaylistState.Content(playlistVideo)
+                    }
                     _uiState.update { currentState ->
                         val activeAccount = accounts.find { it.isActive } ?: accounts.first()
                         currentState.copy(
                             activeAccount = activeAccount,
                             accounts = CategoryScreenState.AccountsState.Content(accounts),
                             category = categoryState,
-                            playlistVideo = CategoryScreenState.PlaylistState.Content(playlistVideo)
+                            playlistVideo = playlistState
                         )
                     }
                 }
