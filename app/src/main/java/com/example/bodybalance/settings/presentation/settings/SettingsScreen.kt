@@ -20,14 +20,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +41,7 @@ import com.example.bodybalance.BuildConfig
 import com.example.bodybalance.R
 import com.example.bodybalance.core.composable.BaseTopAppBar
 import com.example.bodybalance.core.composable.BasicButton
+import com.example.bodybalance.core.composable.snackbar.CustomSnackbarHost
 import com.example.bodybalance.core.util.convertToFileSize
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import kotlinx.coroutines.launch
@@ -50,6 +49,7 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun SettingsScreen(
     modifier: Modifier = Modifier,
+    snackBarHostState: SnackbarHostState,
     navigateBackToPlaylistScreen: () -> Unit,
     navigateToAboutAppScreen: () -> Unit,
     downloadOnlyWifi: Boolean,
@@ -60,7 +60,6 @@ internal fun SettingsScreen(
     showLogoutDialog: Boolean,
     changeVisibilitySingOutDialog: (Boolean) -> Unit
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
         topBar = {
@@ -70,7 +69,12 @@ internal fun SettingsScreen(
                 navigationIcon = Icons.Default.Close
             )
         },
-        snackbarHost = {}
+        snackbarHost = {
+            CustomSnackbarHost(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                hostState = snackBarHostState
+            )
+        }
     ) { paddingValues ->
         Column(
             modifier = modifier
@@ -80,7 +84,6 @@ internal fun SettingsScreen(
         ) {
             ClearCacheRow(
                 cacheSize = cacheSize,
-                snackbarHostState = snackbarHostState
             ) { clearCache() }
             DownloadOnlyWifiRow(
                 checked = downloadOnlyWifi,
@@ -97,8 +100,6 @@ internal fun SettingsScreen(
                 enabledTextColor = MaterialTheme.colorScheme.primary,
                 onClick = { changeVisibilitySingOutDialog(true) }
             )
-
-            SnackbarHost(hostState = snackbarHostState)
         }
 
         LogoutDialog(
@@ -114,7 +115,6 @@ internal fun SettingsScreen(
 
 @Composable
 private fun ClearCacheRow(
-    snackbarHostState: SnackbarHostState,
     cacheSize: Long,
     onClear: () -> Unit
 ) {
@@ -126,12 +126,6 @@ private fun ClearCacheRow(
                 .padding(top = 16.dp)
                 .clickable {
                     onClear()
-                    coroutineScope.launch {
-                        snackbarHostState.showSnackbar(
-                            message = "${cacheSize.convertToFileSize()} на устройстве освободилось",
-                            duration = SnackbarDuration.Short
-                        )
-                    }
                 },
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -288,6 +282,7 @@ private fun PreviewSettingsScreen() {
         SettingsScreen(
             navigateToAboutAppScreen = {},
             navigateBackToPlaylistScreen = {},
+            snackBarHostState = SnackbarHostState(),
             cacheSize = 100L,
             downloadOnlyWifi = true,
             clearCache = {},
