@@ -2,6 +2,7 @@ package com.example.bodybalance.core.util
 
 import android.content.Context
 import com.example.bodybalance.core.domain.api.SettingsToolsRepository
+import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.core.util.api.FileDownloader
 import dagger.hilt.android.qualifiers.ApplicationContext
 import okhttp3.OkHttpClient
@@ -94,6 +95,30 @@ public class FileDownloaderImpl @Inject constructor(
     override fun getFilePathIfExists(fileName: String): String? {
         val file = File(context.filesDir, fileName)
         return file.takeIf { it.exists() }?.absolutePath
+    }
+
+    override fun getAllDownloadedVideos(): List<Video> {
+        val filesDir = context.filesDir
+        val files = filesDir.listFiles() ?: return emptyList()
+
+        return files.mapNotNull { file ->
+            try {
+                // Предполагаем, что имя файла - это ID видео
+                val videoId = file.nameWithoutExtension.toInt()
+
+                Video(
+                    id = videoId,
+                    name = "Видео $videoId", // Можно заменить на реальное имя из БД
+                    url = file.absolutePath, // Локальный путь к файлу
+                    category = "Скачанные", // Категория для скачанных видео
+                    description = "Скачанное видео ${file.name}",
+                    imageUrl = "" // Можно добавить путь к превью, если есть
+                )
+            } catch (e: NumberFormatException) {
+                // Пропускаем файлы, которые не могут быть преобразованы в ID видео
+                null
+            }
+        }
     }
 
 }

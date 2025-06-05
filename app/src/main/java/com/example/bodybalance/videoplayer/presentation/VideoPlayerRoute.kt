@@ -72,6 +72,7 @@ internal fun VideoPlayerScreenRoute(
         currentState = currentState,
         getVideo = { viewModel.getVideo(itemId) },
         getPlaylistVideos = { viewModel.getPlaylistVideos(itemId) },
+        getDownloadedVideos = { viewModel.getAllDownloadedVideos(itemId) },
         onItemSelected = {
             viewModel.handleEvent(
                 VideoPlayerScreenUiEvent.ChoiceVideo(video = it)

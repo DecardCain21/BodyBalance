@@ -3,6 +3,7 @@ package com.example.bodybalance.videoplayer.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.util.UnstableApi
+import com.example.bodybalance.category.domain.usecase.GetAllDownloadedFilesUseCase
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.core.domain.usecase.api.GetAllPlaylistVideosUseCase
 import com.example.bodybalance.core.domain.usecase.api.GetVideoByCategoryUseCase
@@ -37,6 +38,7 @@ internal class VideoPlayerViewModel @Inject constructor(
     private val existsPlaylistVideoByIdUseCase: ExistsPlaylistVideoByIdUseCase,
     private val getAllPlaylistVideosUseCase: GetAllPlaylistVideosUseCase,
     private val settingsToolsUseCase: SettingsToolsUseCase,
+    private val getAllDownloadedFilesUseCase: GetAllDownloadedFilesUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(VideoPlayerState.emptyState())
@@ -84,6 +86,21 @@ internal class VideoPlayerViewModel @Inject constructor(
                     )
                 setButtonsState(newState)
             }
+        }
+    }
+
+    fun getAllDownloadedVideos(videoId: Int) {
+        viewModelScope.launch {
+            val videos = getAllDownloadedFilesUseCase()
+            val newState =
+                VideoPlayerState(
+                    videoState = VideoPlayerState.VideoState.Content(
+                        videos.find { it.id == videoId }
+                            ?: Video.emptyVideo(1)
+                    ),
+                    videoListState = VideoPlayerState.VideoListState.Content(videos),
+                )
+            setButtonsState(newState)
         }
     }
 

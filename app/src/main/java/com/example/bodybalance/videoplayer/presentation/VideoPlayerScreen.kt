@@ -72,6 +72,7 @@ internal fun VideoPlayerScreen(
     currentState: VideoPlayerState,
     getVideo: () -> Unit,
     getPlaylistVideos: () -> Unit,
+    getDownloadedVideos: () -> Unit,
     onItemSelected: (Video) -> Unit,
     onClickDownload: () -> Unit,
     removeVideoFromCache: () -> Unit,
@@ -83,6 +84,7 @@ internal fun VideoPlayerScreen(
         when (routeLabel) {
             VideoPlayerNavigateScreenId.CATEGORY -> getVideo()
             VideoPlayerNavigateScreenId.PLAYLIST -> getPlaylistVideos()
+            VideoPlayerNavigateScreenId.DOWNLOADED -> getDownloadedVideos()
         }
     }
 

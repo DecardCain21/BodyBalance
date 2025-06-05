@@ -1,5 +1,6 @@
 package com.example.bodybalance.core.util.api
 
+import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.core.util.DownloadCallback
 
 public interface FileDownloader {
@@ -15,4 +16,6 @@ public interface FileDownloader {
     public fun getFilesCacheSize(): Long
 
     public fun getFilePathIfExists(fileName: String): String?
+
+    public fun getAllDownloadedVideos(): List<Video>
 }

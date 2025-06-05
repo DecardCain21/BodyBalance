@@ -8,7 +8,8 @@ internal data class CategoryScreenState(
     val activeAccount: Account = Account.empty(),
     val accounts: AccountsState,
     val category: CategoryState,
-    val playlistVideo: PlaylistState
+    val playlistVideo: PlaylistState,
+    val downloadedState: DownloadedState
 ) {
 
     sealed interface AccountsState {
@@ -26,12 +27,18 @@ internal data class CategoryScreenState(
         data class Content(val playlistVideo: List<Video>) : PlaylistState
     }
 
+    sealed interface DownloadedState {
+        data object Empty : DownloadedState
+        data class Content(val downloadedVideo: List<Video>) : DownloadedState
+    }
+
     companion object {
         fun emptyState(): CategoryScreenState =
             CategoryScreenState(
                 accounts = AccountsState.Empty,
                 category = CategoryState.Empty,
-                playlistVideo = PlaylistState.Empty
+                playlistVideo = PlaylistState.Empty,
+                downloadedState = DownloadedState.Empty
             )
     }
 }
