@@ -96,6 +96,7 @@ internal class CategoryViewModel @Inject constructor(
     }
 
     private fun changeUserAccount(account: Account) {
+        _uiState.update { it.copy(category = CategoryScreenState.CategoryState.Loading) }
         viewModelScope.launch {
             activateAccountUseCase(account)
             val categories = getCategoryUseCase().getOrNull()
