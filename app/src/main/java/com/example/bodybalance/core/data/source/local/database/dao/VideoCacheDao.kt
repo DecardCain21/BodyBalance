@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.bodybalance.core.data.source.local.database.entity.SavedVideoEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 internal interface VideoCacheDao {
@@ -24,7 +25,7 @@ internal interface VideoCacheDao {
     suspend fun getById(id: Int): SavedVideoEntity?
 
     @Query("SELECT * FROM saved_video")
-    suspend fun getAll(): List<SavedVideoEntity>
+    fun getAll(): Flow<List<SavedVideoEntity>>
 
     @Query("SELECT * FROM saved_video WHERE name = :category")
     suspend fun getByCategory(category: String): List<SavedVideoEntity>

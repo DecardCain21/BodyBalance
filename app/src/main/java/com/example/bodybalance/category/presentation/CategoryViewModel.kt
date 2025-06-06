@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.bodybalance.category.domain.usecase.ActivateAccountUseCase
 import com.example.bodybalance.category.domain.usecase.GetAllAccountsUseCase
 import com.example.bodybalance.category.domain.usecase.GetAllDownloadedFilesUseCase
+import com.example.bodybalance.category.domain.usecase.GetAllSavedVideoUseCase
 import com.example.bodybalance.category.domain.usecase.GetCategoryUseCase
 import com.example.bodybalance.category.domain.usecase.UpdateOrderPlaylistVideoUseCase
 import com.example.bodybalance.category.presentation.state.CategoryScreenUiEvent
@@ -29,7 +30,8 @@ internal class CategoryViewModel @Inject constructor(
     private val getAllAccountsUseCase: GetAllAccountsUseCase,
     private val deletePlaylistVideoUseCase: DeletePlaylistVideoUseCase,
     private val updateOrderPlaylistVideoUseCase: UpdateOrderPlaylistVideoUseCase,
-    private val getAllDownloadedFilesUseCase: GetAllDownloadedFilesUseCase
+    private val getAllDownloadedFilesUseCase: GetAllDownloadedFilesUseCase,
+    private val getAllSavedVideoUseCase: GetAllSavedVideoUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CategoryScreenState.emptyState())
@@ -55,7 +57,6 @@ internal class CategoryViewModel @Inject constructor(
             try {
                 val accounts = getAllAccountsUseCase()
                 val categories = getCategoryUseCase().getOrNull()
-                val downloadedVideos = getAllDownloadedFilesUseCase()
 
                 val categoryState = if (categories.isNullOrEmpty()) {
                     CategoryScreenState.CategoryState.Empty
@@ -63,27 +64,29 @@ internal class CategoryViewModel @Inject constructor(
                     CategoryScreenState.CategoryState.Content(categories)
                 }
 
-                val downloadedState = if (downloadedVideos.isNullOrEmpty()){
-                    CategoryScreenState.DownloadedState.Empty
-                }else{
-                    CategoryScreenState.DownloadedState.Content(downloadedVideos)
-                }
-
                 getAllPlaylistVideosUseCase().collect { playlistVideo ->
-                    val playlistState = if (playlistVideo.isEmpty()) {
-                        CategoryScreenState.PlaylistState.Empty
-                    }else {
-                        CategoryScreenState.PlaylistState.Content(playlistVideo)
-                    }
-                    _uiState.update { currentState ->
-                        val activeAccount = accounts.find { it.isActive } ?: accounts.first()
-                        currentState.copy(
-                            activeAccount = activeAccount,
-                            accounts = CategoryScreenState.AccountsState.Content(accounts),
-                            category = categoryState,
-                            playlistVideo = playlistState,
-                            downloadedState = downloadedState
-                        )
+                    getAllSavedVideoUseCase().collect { savedVideo ->
+                        val playlistState = if (playlistVideo.isEmpty()) {
+                            CategoryScreenState.PlaylistState.Empty
+                        }else {
+                            CategoryScreenState.PlaylistState.Content(playlistVideo)
+                        }
+
+                        val downloadedState = if (savedVideo.isEmpty()){
+                            CategoryScreenState.DownloadedState.Empty
+                        }else{
+                            CategoryScreenState.DownloadedState.Content(savedVideo)
+                        }
+                        _uiState.update { currentState ->
+                            val activeAccount = accounts.find { it.isActive } ?: accounts.first()
+                            currentState.copy(
+                                activeAccount = activeAccount,
+                                accounts = CategoryScreenState.AccountsState.Content(accounts),
+                                category = categoryState,
+                                playlistVideo = playlistState,
+                                downloadedState = downloadedState
+                            )
+                        }
                     }
                 }
             } catch (e: Exception) {
