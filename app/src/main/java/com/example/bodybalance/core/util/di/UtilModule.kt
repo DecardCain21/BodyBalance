@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.bodybalance.core.domain.api.SettingsToolsRepository
 import com.example.bodybalance.core.util.api.FileDownloader
 import com.example.bodybalance.core.util.FileDownloaderImpl
+import com.example.bodybalance.core.domain.usecase.api.SaveVideoInCacheUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,10 +22,12 @@ public object UtilModuleProvider {
     public fun provideFileDownloader(
         @ApplicationContext context: Context,
         settingsToolsRepository: SettingsToolsRepository,
-        okHttpClient: OkHttpClient
+        okHttpClient: OkHttpClient,
+        saveVideoInCacheUseCase: SaveVideoInCacheUseCase
     ): FileDownloader = FileDownloaderImpl(
         context = context,
         settingsToolsRepository = settingsToolsRepository,
-        okHttpClient = okHttpClient
+        okHttpClient = okHttpClient,
+        saveVideoInCacheUseCase = saveVideoInCacheUseCase
     )
 }

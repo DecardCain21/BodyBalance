@@ -4,7 +4,11 @@ import android.content.Context
 import com.example.bodybalance.core.domain.api.SettingsToolsRepository
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.core.util.api.FileDownloader
+import com.example.bodybalance.core.domain.usecase.api.SaveVideoInCacheUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -16,11 +20,12 @@ import javax.inject.Inject
 public class FileDownloaderImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val settingsToolsRepository: SettingsToolsRepository,
-    private val okHttpClient: OkHttpClient
+    private val okHttpClient: OkHttpClient,
+    private val saveVideoInCacheUseCase: SaveVideoInCacheUseCase,
 ) : FileDownloader {
 
-    override fun downloadFile(url: String, fileName: String, callback: DownloadCallback) {
-        val request = Request.Builder().url(url).build()
+    override fun downloadFile(video: Video, callback: DownloadCallback) {
+        val request = Request.Builder().url(video.url).build()
         val downloadOnlyWifi = settingsToolsRepository.getDownloadWifiFlag()
         if (downloadOnlyWifi && isConnectedToWifi()) {
             callback.onError(FileDownloaderError.WIFI_ERROR)
@@ -40,15 +45,18 @@ public class FileDownloaderImpl @Inject constructor(
                 }
 
                 try {
-                    val file = File(context.filesDir, fileName)
+                    val file = File(context.filesDir, video.id.toString())
                     response.body?.byteStream()?.use { input ->
                         FileOutputStream(file).use { output ->
                             input.copyTo(output)
                         }
                     }
-                    callback.onSuccess(true)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        saveVideoInCacheUseCase(video)
+                    }
+                    callback.onSuccess(file.absolutePath)
                 } catch (e: Exception) {
-                    deleteFile(fileName)
+                    deleteFile(video.id.toString())
                     callback.onError(FileDownloaderError.FILE_SAVE_ERROR)
                 }
             }
@@ -124,7 +132,7 @@ public class FileDownloaderImpl @Inject constructor(
 }
 
 public interface DownloadCallback {
-    public fun onSuccess(fileDownload: Boolean)
+    public fun onSuccess(url: String)
     public fun onError(error: FileDownloaderError)
 }
 

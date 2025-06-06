@@ -14,7 +14,7 @@ public data class Video(
             id = id,
             url = "",
             category = "",
-            name = "Разминка перед упражнениями на отдельную группу мыщц",
+            name = "",
             description = ""
         )
     }

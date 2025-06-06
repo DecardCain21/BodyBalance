@@ -80,10 +80,7 @@ internal fun VideoPlayerScreenRoute(
         },
         onClickDownload = {
             viewModel.handleEvent(
-                VideoPlayerScreenUiEvent.DownloadVideo(
-                    url = videoState.url,
-                    fileName = videoState.id.toString()
-                )
+                VideoPlayerScreenUiEvent.DownloadVideo(video = videoState)
             )
         },
         removeVideoFromCache = {

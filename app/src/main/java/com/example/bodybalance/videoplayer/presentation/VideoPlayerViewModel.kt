@@ -38,7 +38,7 @@ internal class VideoPlayerViewModel @Inject constructor(
     private val existsPlaylistVideoByIdUseCase: ExistsPlaylistVideoByIdUseCase,
     private val getAllPlaylistVideosUseCase: GetAllPlaylistVideosUseCase,
     private val settingsToolsUseCase: SettingsToolsUseCase,
-    private val getAllDownloadedFilesUseCase: GetAllDownloadedFilesUseCase
+    private val getAllDownloadedFilesUseCase: GetAllDownloadedFilesUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(VideoPlayerState.emptyState())
@@ -52,7 +52,7 @@ internal class VideoPlayerViewModel @Inject constructor(
     fun handleEvent(event: VideoPlayerScreenUiEvent) {
         when (event) {
             is VideoPlayerScreenUiEvent.DownloadVideo -> {
-                downloadVideo(url = event.url, fileName = event.fileName)
+                downloadVideo(video = event.video)
             }
 
             is VideoPlayerScreenUiEvent.RemoveVideoFromCache -> {
@@ -163,41 +163,43 @@ internal class VideoPlayerViewModel @Inject constructor(
         }
     }
 
-    private fun downloadVideo(url: String, fileName: String) {
+    private fun downloadVideo(video: Video) {
         viewModelScope.launch {
             _snackBarEvent.emit(
                 SnackbarEventParams(message = VIDEO_IS_BEING_DOWNLOADED)
             )
         }
-        fileDownloaderImpl.downloadFile(url = url, fileName = fileName, object : DownloadCallback {
-            override fun onSuccess(fileDownload: Boolean) {
-                viewModelScope.launch {
-                    _snackBarEvent.emit(
-                        SnackbarEventParams(message = VIDEO_DOWNLOADED)
-                    )
-                    val currentState = _uiState.value
-                    setButtonsState(currentState)
+        fileDownloaderImpl.downloadFile(
+            video = video,
+            object : DownloadCallback {
+                override fun onSuccess(url: String) {
+                    viewModelScope.launch {
+                        _snackBarEvent.emit(SnackbarEventParams(message = VIDEO_DOWNLOADED))
+
+                        val currentState = _uiState.value
+                        setButtonsState(currentState)
+                    }
                 }
-            }
 
-            override fun onError(error: FileDownloaderError) {
-                viewModelScope.launch {
-                    when (error) {
-                        FileDownloaderError.WIFI_ERROR -> {
-                            _snackBarEvent.emit(
-                                SnackbarEventParams(
-                                    message = error.error,
-                                    actionLabel = ACTION_LABEL_UNPLUG,
-                                    onAction = { settingsToolsUseCase.setWifiFlag(false) }
+                override fun onError(error: FileDownloaderError) {
+                    viewModelScope.launch {
+                        when (error) {
+                            FileDownloaderError.WIFI_ERROR -> {
+                                _snackBarEvent.emit(
+                                    SnackbarEventParams(
+                                        message = error.error,
+                                        actionLabel = ACTION_LABEL_UNPLUG,
+                                        onAction = { settingsToolsUseCase.setWifiFlag(false) }
+                                    )
                                 )
-                            )
-                        }
+                            }
 
-                        else -> _snackBarEvent.emit(SnackbarEventParams(message = error.error))
+                            else -> _snackBarEvent.emit(SnackbarEventParams(message = error.error))
+                        }
                     }
                 }
             }
-        })
+        )
     }
 
     private fun removeVideoFromCache(fileName: String) {

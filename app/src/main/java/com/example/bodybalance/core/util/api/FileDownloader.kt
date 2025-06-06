@@ -5,7 +5,7 @@ import com.example.bodybalance.core.util.DownloadCallback
 
 public interface FileDownloader {
 
-    public fun downloadFile(url: String, fileName: String, callback: DownloadCallback)
+    public fun downloadFile(video: Video, callback: DownloadCallback)
 
     public fun fileExists(fileName: String): Boolean
 

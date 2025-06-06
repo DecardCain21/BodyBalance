@@ -1,14 +1,14 @@
-package com.example.bodybalance.videoplayer.domain.usecase.impl
+package com.example.bodybalance.core.domain.usecase.impl
 
 import com.example.bodybalance.core.domain.api.SavedVideoRepository
 import com.example.bodybalance.core.domain.models.Video
-import com.example.bodybalance.videoplayer.domain.usecase.SaveVideoInCacheUseCase
+import com.example.bodybalance.core.domain.usecase.api.SaveVideoInCacheUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
-internal class SaveVideoInCacheUseCaseImpl @Inject constructor(
+public class SaveVideoInCacheUseCaseImpl @Inject constructor(
     private val savedVideoRepository: SavedVideoRepository
 ) : SaveVideoInCacheUseCase {
 
