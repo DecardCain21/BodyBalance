@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
@@ -57,58 +58,14 @@ import com.example.bodybalance.core.composable.items.VideoItem
 import com.example.bodybalance.core.composable.snackbar.CustomSnackbarHost
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
-import com.example.bodybalance.videoplayer.presentation.navigation.VideoPlayerNavigateScreenId
 import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerState
 
 @OptIn(UnstableApi::class)
 @Composable
 internal fun VideoPlayerScreen(
-    routeLabel: VideoPlayerNavigateScreenId,
+    currentVideo: Video,
     snackBarHostState: SnackbarHostState,
-    modifier: Modifier = Modifier,
-    videoState: Video,
-    videoListState: List<Video>,
-    navigateBackToPlaylistScreen: () -> Unit,
-    currentState: VideoPlayerState,
-    getVideo: () -> Unit,
-    getPlaylistVideos: () -> Unit,
-    getDownloadedVideos: () -> Unit,
-    onItemSelected: (Video) -> Unit,
-    onClickDownload: () -> Unit,
-    removeVideoFromCache: () -> Unit,
-    onClickAddToPlaylist: () -> Unit,
-    onClickRemoveFromPlaylist: () -> Unit,
-) {
-
-    LaunchedEffect(Unit) {
-        when (routeLabel) {
-            VideoPlayerNavigateScreenId.CATEGORY -> getVideo()
-            VideoPlayerNavigateScreenId.PLAYLIST -> getPlaylistVideos()
-            VideoPlayerNavigateScreenId.DOWNLOADED -> getDownloadedVideos()
-        }
-    }
-
-    VideoPlayerScreenContent(
-        modifier = modifier,
-        snackBarHostState = snackBarHostState,
-        navigateBackToPlaylistScreen = navigateBackToPlaylistScreen,
-        video = videoState,
-        videoList = videoListState,
-        onItemSelected = { onItemSelected(it) },
-        onClickDownload = { onClickDownload() },
-        removeVideoFromCache = { removeVideoFromCache() },
-        onClickAddToPlaylist = { onClickAddToPlaylist() },
-        onClickRemoveFromPlaylist = { onClickRemoveFromPlaylist() },
-        isDownloadState = currentState.videoInCache,
-        isAddPlaylist = currentState.videoInPlaylist
-    )
-}
-
-@Composable
-private fun VideoPlayerScreenContent(
-    video: Video,
-    snackBarHostState: SnackbarHostState,
-    videoList: List<Video>,
+    videoListState: VideoPlayerState.VideoListState,
     onItemSelected: (Video) -> Unit,
     modifier: Modifier = Modifier,
     navigateBackToPlaylistScreen: () -> Unit,
@@ -116,8 +73,8 @@ private fun VideoPlayerScreenContent(
     removeVideoFromCache: () -> Unit,
     onClickAddToPlaylist: () -> Unit,
     onClickRemoveFromPlaylist: () -> Unit,
-    isDownloadState: Boolean,
-    isAddPlaylist: Boolean
+    videoInCache: Boolean,
+    videoInPlaylist: Boolean
 ) {
     val configuration = LocalConfiguration.current
 
@@ -140,23 +97,39 @@ private fun VideoPlayerScreenContent(
                 .padding(paddingValue),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            HeaderVideoPlayerScreen(video = video)
-            BodyVideoPlayerScreen(
-                isAddPlaylist = isAddPlaylist,
-                isDownloadState = isDownloadState,
-                onClickDownload = onClickDownload,
-                removeVideoFromCache = removeVideoFromCache,
-                onClickAddToPlaylist = onClickAddToPlaylist,
-                onClickRemoveFromPlaylist = onClickRemoveFromPlaylist
-            )
-            if (videoList.isNotEmpty()) {
-                VideoList(
-                    videoList = videoList,
-                    onItemSelected = onItemSelected,
-                    currentVideo = video
-                )
+            HeaderVideoPlayerScreen(video = currentVideo)
+
+            when (videoListState) {
+                is VideoPlayerState.VideoListState.Content -> {
+                    BodyVideoPlayerScreen(
+                        isAddPlaylist = videoInPlaylist,
+                        isDownloadState = videoInCache,
+                        onClickDownload = onClickDownload,
+                        removeVideoFromCache = removeVideoFromCache,
+                        onClickAddToPlaylist = onClickAddToPlaylist,
+                        onClickRemoveFromPlaylist = onClickRemoveFromPlaylist
+                    )
+                    VideoList(
+                        videoList = videoListState.videoList,
+                        onItemSelected = onItemSelected,
+                        currentVideo = currentVideo
+                    )
+                }
+
+                is VideoPlayerState.VideoListState.Loading -> VideoListLoading()
             }
         }
+    }
+}
+
+@Composable
+private fun VideoListLoading(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        CircularProgressIndicator()
     }
 }
 
@@ -284,18 +257,20 @@ private fun VideoList(
 @Composable
 private fun IntroductionPreview() {
     BodyBalanceTheme {
-        VideoPlayerScreenContent(
-            video = Video.emptyVideo(1),
+        VideoPlayerScreen(
+            currentVideo = Video.emptyVideo(1),
             snackBarHostState = SnackbarHostState(),
-            videoList = listOf(Video.emptyVideo(1), Video.emptyVideo(2)),
             navigateBackToPlaylistScreen = {},
             onItemSelected = {},
             onClickDownload = {},
             onClickAddToPlaylist = {},
             onClickRemoveFromPlaylist = {},
             removeVideoFromCache = {},
-            isDownloadState = false,
-            isAddPlaylist = false
+            videoInCache = false,
+            videoInPlaylist = false,
+            videoListState = VideoPlayerState.VideoListState.Content(
+                listOf(Video.emptyVideo(1), Video.emptyVideo(2))
+            )
         )
     }
 }

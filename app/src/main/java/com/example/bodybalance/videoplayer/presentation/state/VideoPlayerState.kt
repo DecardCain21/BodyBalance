@@ -15,7 +15,7 @@ internal data class VideoPlayerState(
     }
 
     sealed interface VideoListState {
-        data object Empty : VideoListState
+        data object Loading : VideoListState
         data class Content(val videoList: List<Video>) : VideoListState
     }
 
@@ -23,7 +23,7 @@ internal data class VideoPlayerState(
         fun emptyState(): VideoPlayerState =
             VideoPlayerState(
                 videoState = VideoState.Empty,
-                videoListState = VideoListState.Empty
+                videoListState = VideoListState.Loading
             )
     }
 }

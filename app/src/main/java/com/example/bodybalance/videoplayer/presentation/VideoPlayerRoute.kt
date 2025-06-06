@@ -36,6 +36,14 @@ internal fun VideoPlayerScreenRoute(
     var snackbarJob by remember { mutableStateOf<Job?>(null) }
 
     LaunchedEffect(Unit) {
+        when (routeLabel) {
+            VideoPlayerNavigateScreenId.CATEGORY -> viewModel.getVideo(itemId)
+            VideoPlayerNavigateScreenId.PLAYLIST -> viewModel.getPlaylistVideos(itemId)
+            VideoPlayerNavigateScreenId.DOWNLOADED -> viewModel.getAllDownloadedVideos(itemId)
+        }
+    }
+
+    LaunchedEffect(Unit) {
         viewModel.snackBarEvent.collect { params ->
             snackbarJob?.cancel()
             snackbarJob = launch {
@@ -57,22 +65,12 @@ internal fun VideoPlayerScreenRoute(
         is VideoPlayerState.VideoState.Empty -> Video.emptyVideo(0)
     }
 
-    val videoListState = when (currentState.videoListState) {
-        is VideoPlayerState.VideoListState.Content -> currentState.videoListState.videoList
-        is VideoPlayerState.VideoListState.Empty -> emptyList()
-    }
-
     VideoPlayerScreen(
-        routeLabel = routeLabel,
         snackBarHostState = snackbarHostState,
         modifier = modifier,
-        videoState = videoState,
-        videoListState = videoListState,
+        currentVideo = videoState,
+        videoListState = currentState.videoListState,
         navigateBackToPlaylistScreen = navigateBackToPlaylistScreen,
-        currentState = currentState,
-        getVideo = { viewModel.getVideo(itemId) },
-        getPlaylistVideos = { viewModel.getPlaylistVideos(itemId) },
-        getDownloadedVideos = { viewModel.getAllDownloadedVideos(itemId) },
         onItemSelected = {
             viewModel.handleEvent(
                 VideoPlayerScreenUiEvent.ChoiceVideo(video = it)
@@ -99,6 +97,8 @@ internal fun VideoPlayerScreenRoute(
             viewModel.handleEvent(
                 VideoPlayerScreenUiEvent.RemoveFromPlaylist(video = videoState)
             )
-        }
+        },
+        videoInCache = currentState.videoInCache,
+        videoInPlaylist = currentState.videoInPlaylist
     )
 }

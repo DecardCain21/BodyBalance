@@ -19,6 +19,7 @@ internal data class CategoryScreenState(
 
     sealed interface CategoryState {
         data object Empty : CategoryState
+        data object Loading : CategoryState
         data class Content(val categoryList: List<Category>) : CategoryState
     }
 
@@ -36,7 +37,7 @@ internal data class CategoryScreenState(
         fun emptyState(): CategoryScreenState =
             CategoryScreenState(
                 accounts = AccountsState.Empty,
-                category = CategoryState.Empty,
+                category = CategoryState.Loading,
                 playlistVideo = PlaylistState.Empty,
                 downloadedState = DownloadedState.Empty
             )

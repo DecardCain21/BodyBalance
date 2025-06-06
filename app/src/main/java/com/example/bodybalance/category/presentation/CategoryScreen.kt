@@ -28,6 +28,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -331,6 +332,9 @@ private fun CategoryPages(
 
                     is CategoryState.Empty ->
                         ExerciseEmptyScreen(modifier = Modifier.padding(bottom = 56.dp))
+
+                    is CategoryState.Loading ->
+                        ExerciseLoadingScreen(modifier = Modifier.padding(bottom = 56.dp))
                 }
             }
 
@@ -349,6 +353,17 @@ private fun CategoryPages(
 
             else -> Unit
         }
+    }
+}
+
+@Composable
+private fun ExerciseLoadingScreen(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        CircularProgressIndicator()
     }
 }
 
