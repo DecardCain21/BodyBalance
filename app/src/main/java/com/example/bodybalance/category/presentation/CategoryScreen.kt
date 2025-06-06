@@ -67,6 +67,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bodybalance.R
 import com.example.bodybalance.category.presentation.state.CategoryScreenState.CategoryState
+import com.example.bodybalance.category.presentation.state.CategoryScreenState.DownloadedState
 import com.example.bodybalance.category.presentation.state.CategoryScreenState.PlaylistState
 import com.example.bodybalance.core.composable.BaseTopAppBar
 import com.example.bodybalance.core.composable.BasicButton
@@ -92,6 +93,7 @@ internal fun CategoryScreen(
     activeAccount: Account,
     categoryState: CategoryState,
     playlistState: PlaylistState,
+    downloadedState: DownloadedState,
     navigateBackToIntroduction: () -> Unit,
     navigateToVideoPlayerScreen: (routeId: VideoPlayerNavigateScreenId, itemId: Int) -> Unit,
     navigateToSettingsScreen: () -> Unit,
@@ -121,6 +123,10 @@ internal fun CategoryScreen(
             CategoryPages(
                 categoryState = categoryState,
                 playlistState = playlistState,
+                savedVideos = downloadedState,
+                navigateToVideoScreenFromDownloaded = {
+                    navigateToVideoPlayerScreen(VideoPlayerNavigateScreenId.DOWNLOADED, it)
+                },
                 navigateToVideoPlayerScreen = {
                     navigateToVideoPlayerScreen(VideoPlayerNavigateScreenId.CATEGORY, it)
                 },
@@ -257,12 +263,17 @@ private fun ChangeUserBlock(
 private fun CategoryPages(
     categoryState: CategoryState,
     playlistState: PlaylistState,
+    savedVideos: DownloadedState,
     navigateToVideoPlayerScreen: (Int) -> Unit, // Int - Id категории
     navigateToVideoPlayerScreenFromPlaylist: (Int) -> Unit, // Int - Id видео
+    navigateToVideoScreenFromDownloaded: (Int) -> Unit, // Int - Id видео
     deleteVideoFromPlaylist: (Video) -> Unit,
     updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit
 ) {
-    val tabs = listOf(stringResource(R.string.playlist), stringResource(R.string.exercises))
+    val tabs = listOf(
+        stringResource(R.string.playlist), stringResource(R.string.exercises),
+        stringResource(R.string.downloaded)
+    )
     val pagerState = rememberPagerState { tabs.size }
     val scope = rememberCoroutineScope()
 
@@ -279,7 +290,7 @@ private fun CategoryPages(
             SecondaryIndicator(
                 modifier = Modifier
                     .tabIndicatorOffset(tabPositions[pagerState.currentPage])
-                    .padding(horizontal = 60.dp)
+                    .padding(horizontal = 35.dp)
                     .clip(RoundedCornerShape(topStart = 50f, topEnd = 50f)),
                 height = 3.dp,
                 color = MaterialTheme.colorScheme.primary,
@@ -320,6 +331,19 @@ private fun CategoryPages(
 
                     is CategoryState.Empty ->
                         ExerciseEmptyScreen(modifier = Modifier.padding(bottom = 56.dp))
+                }
+            }
+
+            2 -> {
+                when (savedVideos) {
+                    is DownloadedState.Content -> DownloadedScreen(
+                        downloadedVideos = savedVideos.downloadedVideo,
+                        navigateToVideoScreenFromDownloaded = navigateToVideoScreenFromDownloaded,
+                        updateOrderPlaylistVideo = updateOrderPlaylistVideo
+                    )
+
+                    is DownloadedState.Empty ->
+                        PlaylistEmptyScreen(modifier = Modifier.padding(bottom = 56.dp))
                 }
             }
 
@@ -502,6 +526,56 @@ private fun PlaylistScreen(
 }
 
 @Composable
+private fun DownloadedScreen(
+    downloadedVideos: List<Video>,
+    modifier: Modifier = Modifier,
+    navigateToVideoScreenFromDownloaded: (Int) -> Unit,
+    updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit
+) {
+    var list by remember { mutableStateOf(downloadedVideos) }
+
+    LaunchedEffect(downloadedVideos) {
+        list = downloadedVideos
+    }
+
+    val state = rememberReorderableLazyListState(onMove = { from, to ->
+        list = list.toMutableList().apply {
+            add(to.index, removeAt(from.index))
+        }
+    }, onDragEnd = { _, _ ->
+        list.forEachIndexed { index, video ->
+            updateOrderPlaylistVideo(video.id, index)
+        }
+    })
+
+    Box(modifier = modifier.fillMaxSize()) {
+        LazyColumn(
+            state = state.listState,
+            modifier = modifier
+                .fillMaxSize()
+                .padding(top = 16.dp)
+                .reorderable(state),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            items(items = list, key = { it.id }) { item ->
+                ReorderableItem(state = state, key = item.id) {
+                    VideoItem(
+                        modifier = Modifier.clickable {
+                            navigateToVideoScreenFromDownloaded(item.id)
+                        },
+                        imageUrl = item.imageUrl,
+                        title = item.name,
+                        showIconDrag = true,
+                        reorderState = state
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
 private fun DismissBackground(visible: Boolean) {
     var show by remember { mutableStateOf(false) }
 
@@ -583,7 +657,8 @@ private fun PreviewPlaylist() {
             playlistState = PlaylistState.Empty,
             activeAccount = Account.empty(1),
             accounts = emptyList(),
-            categoryState = CategoryState.Empty
+            categoryState = CategoryState.Empty,
+            downloadedState = DownloadedState.Empty
         )
     }
 }

@@ -29,6 +29,7 @@ internal fun CategoryScreenRoute(
     CategoryScreen(
         modifier = modifier,
         playlistState = currentState.playlistVideo,
+        downloadedState = currentState.downloadedState,
         activeAccount = uiState.activeAccount,
         accounts = accountState,
         categoryState = currentState.category,

@@ -40,7 +40,8 @@ public fun NavGraphBuilder.videoPlayerScreen(navigateBackToPlaylistScreen: () ->
 
 public enum class VideoPlayerNavigateScreenId(public val label: String) {
     CATEGORY("category"),
-    PLAYLIST("playlist");
+    PLAYLIST("playlist"),
+    DOWNLOADED("downloaded");
 
     public companion object {
         public fun fromLabel(label: String): VideoPlayerNavigateScreenId {
