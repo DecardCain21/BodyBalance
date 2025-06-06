@@ -1,11 +1,13 @@
 package com.example.bodybalance.core.domain.usecase.di
 
+import com.example.bodybalance.core.domain.usecase.api.DeleteSavedVideoUseCase
 import com.example.bodybalance.core.domain.usecase.api.FollowLinkUseCase
 import com.example.bodybalance.core.domain.usecase.api.GetAllPlaylistVideosUseCase
 import com.example.bodybalance.core.domain.usecase.api.GetVideoByCategoryUseCase
 import com.example.bodybalance.core.domain.usecase.api.GetVideoByIdUseCase
 import com.example.bodybalance.core.domain.usecase.api.SaveVideoInCacheUseCase
 import com.example.bodybalance.core.domain.usecase.api.ShareContentUseCase
+import com.example.bodybalance.core.domain.usecase.impl.DeleteSavedVideoUseCaseImpl
 import com.example.bodybalance.core.domain.usecase.impl.FollowLinkUseCaseImpl
 import com.example.bodybalance.core.domain.usecase.impl.GetAllPlaylistVideosUseCaseImpl
 import com.example.bodybalance.core.domain.usecase.impl.GetVideoByCategoryUseCaseImpl
@@ -50,4 +52,9 @@ public abstract class UseCaseBinder {
     public abstract fun bindSaveVideoInCache(
         saveVideoInCacheImpl: SaveVideoInCacheUseCaseImpl
     ): SaveVideoInCacheUseCase
+
+    @Binds
+    public abstract fun bindDeleteSavedVideoUseCase(
+        deleteSavedVideoUseCaseImpl: DeleteSavedVideoUseCaseImpl
+    ): DeleteSavedVideoUseCase
 }

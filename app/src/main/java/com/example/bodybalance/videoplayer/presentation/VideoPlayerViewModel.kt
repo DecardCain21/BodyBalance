@@ -3,8 +3,8 @@ package com.example.bodybalance.videoplayer.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.util.UnstableApi
-import com.example.bodybalance.category.domain.usecase.GetAllDownloadedFilesUseCase
 import com.example.bodybalance.core.domain.models.Video
+import com.example.bodybalance.core.domain.usecase.api.DeleteSavedVideoUseCase
 import com.example.bodybalance.core.domain.usecase.api.GetAllPlaylistVideosUseCase
 import com.example.bodybalance.core.domain.usecase.api.GetVideoByCategoryUseCase
 import com.example.bodybalance.core.util.DownloadCallback
@@ -16,6 +16,7 @@ import com.example.bodybalance.settings.domain.usecase.SettingsToolsUseCase
 import com.example.bodybalance.videoplayer.domain.usecase.AddPlaylistVideoUseCase
 import com.example.bodybalance.videoplayer.domain.usecase.DeletePlaylistVideoUseCase
 import com.example.bodybalance.videoplayer.domain.usecase.ExistsPlaylistVideoByIdUseCase
+import com.example.bodybalance.videoplayer.domain.usecase.GetAllSavedVideoUseCase
 import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerScreenUiEvent
 import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,7 +39,8 @@ internal class VideoPlayerViewModel @Inject constructor(
     private val existsPlaylistVideoByIdUseCase: ExistsPlaylistVideoByIdUseCase,
     private val getAllPlaylistVideosUseCase: GetAllPlaylistVideosUseCase,
     private val settingsToolsUseCase: SettingsToolsUseCase,
-    private val getAllDownloadedFilesUseCase: GetAllDownloadedFilesUseCase,
+    private val getAllSavedVideoUseCase: GetAllSavedVideoUseCase,
+    private val deleteSavedVideoUseCase: DeleteSavedVideoUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(VideoPlayerState.emptyState())
@@ -56,7 +58,7 @@ internal class VideoPlayerViewModel @Inject constructor(
             }
 
             is VideoPlayerScreenUiEvent.RemoveVideoFromCache -> {
-                removeVideoFromCache(event.fileName)
+                removeVideoFromCache(event.video)
             }
 
             is VideoPlayerScreenUiEvent.ChoiceVideo -> {
@@ -91,7 +93,7 @@ internal class VideoPlayerViewModel @Inject constructor(
 
     fun getAllDownloadedVideos(videoId: Int) {
         viewModelScope.launch {
-            val videos = getAllDownloadedFilesUseCase()
+            val videos = getAllSavedVideoUseCase()
             val newState =
                 VideoPlayerState(
                     videoState = VideoPlayerState.VideoState.Content(
@@ -202,12 +204,11 @@ internal class VideoPlayerViewModel @Inject constructor(
         )
     }
 
-    private fun removeVideoFromCache(fileName: String) {
-        fileDownloaderImpl.deleteFile(fileName = fileName).let {
+    private fun removeVideoFromCache(video: Video) {
+        fileDownloaderImpl.deleteFile(fileName = video.id.toString()).let {
             viewModelScope.launch {
-                val currentState = _uiState.value
-                setButtonsState(currentState)
-
+                deleteSavedVideoUseCase(video)
+                setButtonsState(_uiState.value)
             }
         }
     }

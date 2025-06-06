@@ -25,7 +25,10 @@ internal interface VideoCacheDao {
     suspend fun getById(id: Int): SavedVideoEntity?
 
     @Query("SELECT * FROM saved_video")
-    fun getAll(): Flow<List<SavedVideoEntity>>
+    fun getAllFlow(): Flow<List<SavedVideoEntity>>
+
+    @Query("SELECT * FROM saved_video")
+    suspend fun getAll(): List<SavedVideoEntity>
 
     @Query("SELECT * FROM saved_video WHERE name = :category")
     suspend fun getByCategory(category: String): List<SavedVideoEntity>

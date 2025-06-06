@@ -5,7 +5,11 @@ import kotlinx.coroutines.flow.Flow
 
 public interface SavedVideoRepository {
 
-    public fun getAllSavedVideo(): Flow<List<Video>>
+    public fun getAllSavedVideoFlow(): Flow<List<Video>>
+
+    public suspend fun getAllSavedVideo(): List<Video>
 
     public suspend fun insertVideo(video: Video)
+
+    public suspend fun deleteSavedVideo(video: Video)
 }

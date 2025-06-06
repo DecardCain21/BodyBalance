@@ -2,14 +2,12 @@ package com.example.bodybalance.category.di
 
 import com.example.bodybalance.category.domain.usecase.ActivateAccountUseCase
 import com.example.bodybalance.category.domain.usecase.GetAllAccountsUseCase
-import com.example.bodybalance.category.domain.usecase.GetAllDownloadedFilesUseCase
-import com.example.bodybalance.category.domain.usecase.GetAllSavedVideoUseCase
+import com.example.bodybalance.category.domain.usecase.GetAllSavedVideoFlowUseCase
 import com.example.bodybalance.category.domain.usecase.GetCategoryUseCase
 import com.example.bodybalance.category.domain.usecase.UpdateOrderPlaylistVideoUseCase
 import com.example.bodybalance.category.domain.usecase.impl.ActivateAccountUseCaseImpl
 import com.example.bodybalance.category.domain.usecase.impl.GetAllAccountsUseCaseImpl
-import com.example.bodybalance.category.domain.usecase.impl.GetAllDownloadedFilesUseCaseImpl
-import com.example.bodybalance.category.domain.usecase.impl.GetAllSavedVideoUseCaseImpl
+import com.example.bodybalance.category.domain.usecase.impl.GetAllSavedVideoFlowUseCaseImpl
 import com.example.bodybalance.category.domain.usecase.impl.GetCategoryUseCaseImpl
 import com.example.bodybalance.category.domain.usecase.impl.UpdateOrderPlaylistVideoUseCaseImpl
 import dagger.Binds
@@ -42,12 +40,7 @@ internal abstract class CategoryModuleBinder {
     ): UpdateOrderPlaylistVideoUseCase
 
     @Binds
-    abstract fun bindGetAllDownloadedFilesUseCase(
-        getAllDownloadedFilesUseCaseImpl: GetAllDownloadedFilesUseCaseImpl
-    ): GetAllDownloadedFilesUseCase
-
-    @Binds
     abstract fun bindGetAllSavedVideoUseCase(
-        getAllSavedVideoUseCaseImpl: GetAllSavedVideoUseCaseImpl
-    ): GetAllSavedVideoUseCase
+        getAllSavedVideoUseCaseImpl: GetAllSavedVideoFlowUseCaseImpl
+    ): GetAllSavedVideoFlowUseCase
 }

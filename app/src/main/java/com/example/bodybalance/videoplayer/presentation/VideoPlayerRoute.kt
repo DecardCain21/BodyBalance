@@ -86,7 +86,7 @@ internal fun VideoPlayerScreenRoute(
         removeVideoFromCache = {
             viewModel.handleEvent(
                 VideoPlayerScreenUiEvent.RemoveVideoFromCache(
-                    fileName = videoState.id.toString()
+                    video = videoState
                 )
             )
         },

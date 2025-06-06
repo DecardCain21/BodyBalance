@@ -13,15 +13,23 @@ internal class SavedVideoRepositoryImpl @Inject constructor(
     private val savedVideoDao: VideoCacheDao
 ) : SavedVideoRepository {
 
-    override fun getAllSavedVideo(): Flow<List<Video>> {
-        return savedVideoDao.getAll().map { list ->
+    override fun getAllSavedVideoFlow(): Flow<List<Video>> {
+        return savedVideoDao.getAllFlow().map { list ->
             list.map { video ->
                 video.convertToVideo()
             }
         }
     }
 
+    override suspend fun getAllSavedVideo(): List<Video> {
+        return savedVideoDao.getAll().map { it.convertToVideo() }
+    }
+
     override suspend fun insertVideo(video: Video) {
         savedVideoDao.insert(video.convertToSavedVideo())
+    }
+
+    override suspend fun deleteSavedVideo(video: Video) {
+        savedVideoDao.delete(video.convertToSavedVideo())
     }
 }

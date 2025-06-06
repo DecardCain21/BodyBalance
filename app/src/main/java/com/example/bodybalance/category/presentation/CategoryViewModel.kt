@@ -4,14 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bodybalance.category.domain.usecase.ActivateAccountUseCase
 import com.example.bodybalance.category.domain.usecase.GetAllAccountsUseCase
-import com.example.bodybalance.category.domain.usecase.GetAllDownloadedFilesUseCase
-import com.example.bodybalance.category.domain.usecase.GetAllSavedVideoUseCase
+import com.example.bodybalance.category.domain.usecase.GetAllSavedVideoFlowUseCase
 import com.example.bodybalance.category.domain.usecase.GetCategoryUseCase
 import com.example.bodybalance.category.domain.usecase.UpdateOrderPlaylistVideoUseCase
 import com.example.bodybalance.category.presentation.state.CategoryScreenUiEvent
 import com.example.bodybalance.category.presentation.state.CategoryScreenState
 import com.example.bodybalance.core.domain.models.Account
 import com.example.bodybalance.core.domain.models.Video
+import com.example.bodybalance.core.domain.usecase.api.DeleteSavedVideoUseCase
 import com.example.bodybalance.core.domain.usecase.api.GetAllPlaylistVideosUseCase
 import com.example.bodybalance.videoplayer.domain.usecase.DeletePlaylistVideoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,8 +30,8 @@ internal class CategoryViewModel @Inject constructor(
     private val getAllAccountsUseCase: GetAllAccountsUseCase,
     private val deletePlaylistVideoUseCase: DeletePlaylistVideoUseCase,
     private val updateOrderPlaylistVideoUseCase: UpdateOrderPlaylistVideoUseCase,
-    private val getAllDownloadedFilesUseCase: GetAllDownloadedFilesUseCase,
-    private val getAllSavedVideoUseCase: GetAllSavedVideoUseCase,
+    private val getAllSavedVideoFlowUseCase: GetAllSavedVideoFlowUseCase,
+    private val deleteSavedVideoUseCase: DeleteSavedVideoUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CategoryScreenState.emptyState())
@@ -65,7 +65,7 @@ internal class CategoryViewModel @Inject constructor(
                 }
 
                 getAllPlaylistVideosUseCase().collect { playlistVideo ->
-                    getAllSavedVideoUseCase().collect { savedVideo ->
+                    getAllSavedVideoFlowUseCase().collect { savedVideo ->
                         val playlistState = if (playlistVideo.isEmpty()) {
                             CategoryScreenState.PlaylistState.Empty
                         }else {
