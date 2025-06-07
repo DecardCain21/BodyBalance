@@ -20,6 +20,7 @@
     <string name="sing_in">Войти</string>
     <string name="get_login">Получить логин</string>
     <string name="clear">Очистить</string>
+    <string name="link_get_login">https://t.me/bocharnikovdoctor</string>
 
     <!--IntroductionScreen-->
     <string name="introduction">Введение</string>
@@ -56,5 +57,11 @@
     <string name="download">Скачать</string>
     <string name="added_to_playlist">Добавлено в плейлист</string>
     <string name="add_to_playlist">Добавить в плейлист</string>
+
+    <!--Developers-->
+    <string name="name_Marat">Марат</string>
+    <string name="name_Nikita">Никита</string>
+    <string name="name_Anastasia">Анастасия</string>
+    <string name="name_Sergey">Сергей</string>
 
 </resources>
