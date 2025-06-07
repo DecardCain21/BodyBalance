@@ -102,6 +102,8 @@ internal fun CategoryScreen(
     changeUser: (Account) -> Unit,
     deleteVideoFromPlaylist: (Video) -> Unit,
     updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit,
+    deleteSavedVideoFrom: (Video) -> Unit,
+    updateOrderSavedVideo: (id: Int, order: Int) -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -135,7 +137,9 @@ internal fun CategoryScreen(
                     navigateToVideoPlayerScreen(VideoPlayerNavigateScreenId.PLAYLIST, it)
                 },
                 deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) },
-                updateOrderPlaylistVideo = updateOrderPlaylistVideo
+                updateOrderPlaylistVideo = updateOrderPlaylistVideo,
+                deleteSavedVideoFrom = { deleteSavedVideoFrom(it) },
+                updateOrderSavedVideo = updateOrderSavedVideo
             )
         }
     }
@@ -269,7 +273,9 @@ private fun CategoryPages(
     navigateToVideoPlayerScreenFromPlaylist: (Int) -> Unit, // Int - Id видео
     navigateToVideoScreenFromDownloaded: (Int) -> Unit, // Int - Id видео
     deleteVideoFromPlaylist: (Video) -> Unit,
-    updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit
+    updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit,
+    deleteSavedVideoFrom: (Video) -> Unit,
+    updateOrderSavedVideo: (id: Int, order: Int) -> Unit,
 ) {
     val tabs = listOf(
         stringResource(R.string.playlist), stringResource(R.string.exercises),
@@ -311,15 +317,18 @@ private fun CategoryPages(
         when (page) {
             0 -> {
                 when (playlistState) {
-                    is PlaylistState.Content -> PlaylistScreen(
+                    is PlaylistState.Content -> VideoItemsScreen(
                         playlistVideo = playlistState.playlistVideo,
                         navigateToVideoPlayerScreenFromPlaylist = navigateToVideoPlayerScreenFromPlaylist,
-                        deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) },
-                        updateOrderPlaylistVideo = updateOrderPlaylistVideo
+                        deleteVideoFrom = { deleteVideoFromPlaylist(it) },
+                        updateOrderVideoItems = updateOrderPlaylistVideo
                     )
 
                     is PlaylistState.Empty ->
-                        PlaylistEmptyScreen(modifier = Modifier.padding(bottom = 56.dp))
+                        PlaylistEmptyScreen(
+                            modifier = Modifier.padding(bottom = 56.dp),
+                            stringResource(id = R.string.placeholder_subtext_playlist)
+                        )
                 }
             }
 
@@ -340,14 +349,18 @@ private fun CategoryPages(
 
             2 -> {
                 when (savedVideos) {
-                    is DownloadedState.Content -> DownloadedScreen(
-                        downloadedVideos = savedVideos.downloadedVideo,
-                        navigateToVideoScreenFromDownloaded = navigateToVideoScreenFromDownloaded,
-                        updateOrderPlaylistVideo = updateOrderPlaylistVideo
+                    is DownloadedState.Content -> VideoItemsScreen(
+                        playlistVideo = savedVideos.downloadedVideo,
+                        navigateToVideoPlayerScreenFromPlaylist = navigateToVideoScreenFromDownloaded,
+                        deleteVideoFrom = { deleteSavedVideoFrom(it) },
+                        updateOrderVideoItems = updateOrderSavedVideo
                     )
 
                     is DownloadedState.Empty ->
-                        PlaylistEmptyScreen(modifier = Modifier.padding(bottom = 56.dp))
+                        PlaylistEmptyScreen(
+                            modifier = Modifier.padding(bottom = 56.dp),
+                            descriptionPlaceholder = stringResource(R.string.placeholder_subtext_savedVideo)
+                        )
                 }
             }
 
@@ -414,7 +427,7 @@ private fun ExerciseScreen(
 }
 
 @Composable
-private fun PlaylistEmptyScreen(modifier: Modifier = Modifier) {
+private fun PlaylistEmptyScreen(modifier: Modifier = Modifier, descriptionPlaceholder: String) {
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -428,7 +441,7 @@ private fun PlaylistEmptyScreen(modifier: Modifier = Modifier) {
         )
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = stringResource(id = R.string.placeholder_subtext_playlist),
+            text = descriptionPlaceholder,
             fontSize = 14.sp,
             color = White,
             textAlign = TextAlign.Center,
@@ -439,12 +452,12 @@ private fun PlaylistEmptyScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun PlaylistScreen(
+private fun VideoItemsScreen(
     playlistVideo: List<Video>,
     modifier: Modifier = Modifier,
     navigateToVideoPlayerScreenFromPlaylist: (Int) -> Unit,
-    deleteVideoFromPlaylist: (Video) -> Unit,
-    updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit
+    deleteVideoFrom: (Video) -> Unit,
+    updateOrderVideoItems: (id: Int, order: Int) -> Unit = { _, _ -> }
 ) {
     var showDialog by remember { mutableStateOf(false) }
     var videoToDelete by remember { mutableStateOf<Video?>(null) }
@@ -461,7 +474,7 @@ private fun PlaylistScreen(
         }
     }, onDragEnd = { _, _ ->
         list.forEachIndexed { index, video ->
-            updateOrderPlaylistVideo(video.id, index)
+            updateOrderVideoItems(video.id, index)
         }
     })
 
@@ -531,62 +544,12 @@ private fun PlaylistScreen(
             onConfirm = {
                 videoToDelete?.let { video ->
                     list = list.toMutableList().apply { remove(video) }
-                    deleteVideoFromPlaylist(video)
+                    deleteVideoFrom(video)
                 }
                 showDialog = false
                 videoToDelete = null
             }
         )
-    }
-}
-
-@Composable
-private fun DownloadedScreen(
-    downloadedVideos: List<Video>,
-    modifier: Modifier = Modifier,
-    navigateToVideoScreenFromDownloaded: (Int) -> Unit,
-    updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit
-) {
-    var list by remember { mutableStateOf(downloadedVideos) }
-
-    LaunchedEffect(downloadedVideos) {
-        list = downloadedVideos
-    }
-
-    val state = rememberReorderableLazyListState(onMove = { from, to ->
-        list = list.toMutableList().apply {
-            add(to.index, removeAt(from.index))
-        }
-    }, onDragEnd = { _, _ ->
-        list.forEachIndexed { index, video ->
-            updateOrderPlaylistVideo(video.id, index)
-        }
-    })
-
-    Box(modifier = modifier.fillMaxSize()) {
-        LazyColumn(
-            state = state.listState,
-            modifier = modifier
-                .fillMaxSize()
-                .padding(top = 16.dp)
-                .reorderable(state),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            items(items = list, key = { it.id }) { item ->
-                ReorderableItem(state = state, key = item.id) {
-                    VideoItem(
-                        modifier = Modifier.clickable {
-                            navigateToVideoScreenFromDownloaded(item.id)
-                        },
-                        imageUrl = item.imageUrl,
-                        title = item.name,
-                        showIconDrag = true,
-                        reorderState = state
-                    )
-                }
-            }
-        }
     }
 }
 
@@ -673,7 +636,9 @@ private fun PreviewPlaylist() {
             activeAccount = Account.empty(1),
             accounts = emptyList(),
             categoryState = CategoryState.Empty,
-            downloadedState = DownloadedState.Empty
+            downloadedState = DownloadedState.Empty,
+            deleteSavedVideoFrom = {},
+            updateOrderSavedVideo = { _, _ -> }
         )
     }
 }

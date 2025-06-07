@@ -8,7 +8,8 @@ internal fun Video.convertToSavedVideo() = SavedVideoEntity(
     name = name,
     videoUrl = url,
     category = category,
-    description = description
+    description = description,
+    order = 0
 )
 
 internal fun SavedVideoEntity.convertToVideo() = Video(

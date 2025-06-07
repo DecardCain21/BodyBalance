@@ -7,4 +7,6 @@ internal sealed interface CategoryScreenUiEvent {
     data class ChangeUser(val account: Account) : CategoryScreenUiEvent
     data class DeleteVideo(val video: Video) : CategoryScreenUiEvent
     data class UpdateOrderPlaylistVideo(val id: Int, val order: Int) : CategoryScreenUiEvent
+    data class UpdateOrderSavedVideo(val id: Int, val order: Int) : CategoryScreenUiEvent
+    data class DeleteSavedVideo(val video: Video) : CategoryScreenUiEvent
 }

@@ -13,6 +13,7 @@
     <string name="remove">Удалить</string>
     <string name="do_not_have_video">Видео пока нет</string>
     <string name="placeholder_subtext_playlist">Здесь будут храниться упражнения,\nкоторые вы добавите в плейлист</string>
+    <string name="placeholder_subtext_savedVideo">Здесь будут храниться упражнения,\nкоторые вы скачаете – их можно\n смотреть без интернета</string>
 
     <!--HomeScreen-->
     <string name="login">Логин</string>
