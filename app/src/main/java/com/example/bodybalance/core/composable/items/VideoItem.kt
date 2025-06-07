@@ -3,12 +3,14 @@ package com.example.bodybalance.core.composable.items
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -35,6 +37,7 @@ public fun VideoItem(
     title: String,
     modifier: Modifier = Modifier,
     imageUrl: String = "",
+    category: String = "",
     showIconDrag: Boolean = true,
     showSelectItem: Boolean = false,
     reorderState: ReorderableLazyListState? = null
@@ -56,7 +59,7 @@ public fun VideoItem(
             if (showIconDrag) {
                 Image(
                     modifier = Modifier
-                        .fillMaxHeight()
+                        .wrapContentHeight()
                         .then(reorderState?.let { Modifier.detectReorderAfterLongPress(it) }
                             ?: Modifier),
                     painter = painterResource(R.drawable.ic_drag),
@@ -71,16 +74,57 @@ public fun VideoItem(
                 contentDescription = "Image course",
                 contentScale = ContentScale.Crop,
             )
-            Text(
-                modifier = Modifier.padding(16.dp),
-                text = title,
-                fontWeight = FontWeight(500),
-                overflow = TextOverflow.Ellipsis,
-                fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.primary
-            )
+            VideoTextContent(title = title, category = category)
+
         }
     }
+}
+
+@Composable
+private fun RowScope.VideoTextContent(
+    title: String,
+    category: String = "",
+) {
+    Column(modifier = Modifier.weight(1f)) {
+        TitleText(
+            title = title,
+            maxLines = if (category.isNotEmpty()) 1 else 2
+        )
+
+        if (category.isNotEmpty()) {
+            CategoryText(category = category)
+        }
+    }
+}
+
+@Composable
+private fun TitleText(
+    title: String,
+    maxLines: Int,
+) {
+    Text(
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 18.dp, bottom = 4.dp),
+        text = title,
+        fontWeight = FontWeight(500),
+        overflow = TextOverflow.Ellipsis,
+        maxLines = maxLines,
+        fontSize = 16.sp,
+        color = MaterialTheme.colorScheme.primary
+    )
+}
+
+@Composable
+private fun CategoryText(
+    category: String,
+) {
+    Text(
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp,bottom = 18.dp),
+        text = category,
+        fontWeight = FontWeight(400),
+        overflow = TextOverflow.Ellipsis,
+        fontSize = 12.sp,
+        color = MaterialTheme.colorScheme.primary
+    )
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFF141218)
@@ -89,6 +133,7 @@ private fun VideoItemPreview() {
     BodyBalanceTheme {
         VideoItem(
             title = "Разминка перед упражнениями на отдельную группу мыщц",
+            category = "Название секции",
             imageUrl = "Some Description"
         )
     }

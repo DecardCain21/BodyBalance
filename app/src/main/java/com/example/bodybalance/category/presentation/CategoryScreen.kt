@@ -318,10 +318,11 @@ private fun CategoryPages(
             0 -> {
                 when (playlistState) {
                     is PlaylistState.Content -> VideoItemsScreen(
-                        playlistVideo = playlistState.playlistVideo,
+                        videoItems = playlistState.playlistVideo,
                         navigateToVideoPlayerScreenFromPlaylist = navigateToVideoPlayerScreenFromPlaylist,
                         deleteVideoFrom = { deleteVideoFromPlaylist(it) },
-                        updateOrderVideoItems = updateOrderPlaylistVideo
+                        updateOrderVideoItems = updateOrderPlaylistVideo,
+                        categoryOn = false
                     )
 
                     is PlaylistState.Empty ->
@@ -350,10 +351,11 @@ private fun CategoryPages(
             2 -> {
                 when (savedVideos) {
                     is DownloadedState.Content -> VideoItemsScreen(
-                        playlistVideo = savedVideos.downloadedVideo,
+                        videoItems = savedVideos.downloadedVideo,
                         navigateToVideoPlayerScreenFromPlaylist = navigateToVideoScreenFromDownloaded,
                         deleteVideoFrom = { deleteSavedVideoFrom(it) },
-                        updateOrderVideoItems = updateOrderSavedVideo
+                        updateOrderVideoItems = updateOrderSavedVideo,
+                        categoryOn = true
                     )
 
                     is DownloadedState.Empty ->
@@ -453,7 +455,8 @@ private fun PlaylistEmptyScreen(modifier: Modifier = Modifier, descriptionPlaceh
 
 @Composable
 private fun VideoItemsScreen(
-    playlistVideo: List<Video>,
+    videoItems: List<Video>,
+    categoryOn: Boolean,
     modifier: Modifier = Modifier,
     navigateToVideoPlayerScreenFromPlaylist: (Int) -> Unit,
     deleteVideoFrom: (Video) -> Unit,
@@ -462,10 +465,10 @@ private fun VideoItemsScreen(
     var showDialog by remember { mutableStateOf(false) }
     var videoToDelete by remember { mutableStateOf<Video?>(null) }
 
-    var list by remember { mutableStateOf(playlistVideo) }
+    var list by remember { mutableStateOf(videoItems) }
 
-    LaunchedEffect(playlistVideo) {
-        list = playlistVideo
+    LaunchedEffect(videoItems) {
+        list = videoItems
     }
 
     val state = rememberReorderableLazyListState(onMove = { from, to ->
@@ -525,6 +528,7 @@ private fun VideoItemsScreen(
                                 },
                                 imageUrl = item.imageUrl,
                                 title = item.name,
+                                category = if (categoryOn) item.category else "",
                                 showIconDrag = true,
                                 reorderState = state
                             )

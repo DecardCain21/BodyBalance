@@ -83,10 +83,19 @@ internal fun AboutAppScreen(
                         modifier = Modifier.combinedClickable(
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() },
+                            onClick = { openContributorLink(Contributors.DEV_SERGEY.url) }
+                        ),
+                        fieldOfWork = stringResource(R.string.develop_end),
+                        information = "Сергей "+ stringResource(R.string.link_telegram_Sergey)
+                    )
+                    ContributorsItem(
+                        modifier = Modifier.combinedClickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() },
                             onClick = { openContributorLink(Contributors.DEV_NIKITA.url) }
                         ),
-                        fieldOfWork = stringResource(R.string.develop),
-                        information = "Имя ссылка/контакт"
+                        fieldOfWork = stringResource(R.string.develop_front),
+                        information = "Никита "+ stringResource(R.string.link_telegram_Nikita)
                     )
                     ContributorsItem(
                         modifier = Modifier.combinedClickable(
@@ -94,8 +103,8 @@ internal fun AboutAppScreen(
                             interactionSource = remember { MutableInteractionSource() },
                             onClick = { openContributorLink(Contributors.DEV_MARAT.url) }
                         ),
-                        fieldOfWork = stringResource(R.string.develop),
-                        information = "Имя ссылка/контакт"
+                        fieldOfWork = stringResource(R.string.develop_front),
+                        information = "Марат "+ stringResource(R.string.link_telegram_Marat)
                     )
                     ContributorsItem(
                         modifier = Modifier.combinedClickable(
@@ -104,7 +113,7 @@ internal fun AboutAppScreen(
                             onClick = { openContributorLink(Contributors.DESIGN_ANASTASIA.url) }
                         ),
                         fieldOfWork = stringResource(R.string.interface_design),
-                        information = "Имя ссылка/контакт"
+                        information = "Анастасия "+ stringResource(R.string.link_telegram_Anastasia)
                     )
                 }
             }
