@@ -67,9 +67,9 @@ internal class SettingsViewModel @Inject constructor(
             _snackBarEvent.emit(
                 SnackbarEventParams(message = uiState.value.cacheSize.convertToFileSize() + ACTION_CLEAN_CACHE)
             )
+            clearCacheUseCase()
+            getCacheSize()
         }
-        clearCacheUseCase()
-        getCacheSize()
     }
 
     private fun changeDownloadSettings(flag: Boolean) {

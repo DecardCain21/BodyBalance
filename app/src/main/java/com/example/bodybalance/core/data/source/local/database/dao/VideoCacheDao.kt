@@ -18,6 +18,9 @@ internal interface VideoCacheDao {
     @Delete
     suspend fun delete(savedVideoEntity: SavedVideoEntity)
 
+    @Query("DELETE FROM saved_video")
+    suspend fun deleteAllSavedVideo()
+
     @Query("DELETE FROM saved_video WHERE id = :id")
     suspend fun deleteById(id: Int)
 

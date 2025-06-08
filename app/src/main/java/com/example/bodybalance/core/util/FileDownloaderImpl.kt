@@ -44,6 +44,7 @@ public class FileDownloaderImpl @Inject constructor(
                     return
                 }
 
+                val test = response.headers["Content-Length"] // todo:
                 try {
                     val file = File(context.filesDir, video.id.toString())
                     response.body?.byteStream()?.use { input ->
