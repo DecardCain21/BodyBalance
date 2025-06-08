@@ -42,8 +42,8 @@
     <string name="cansel">Отмена</string>
 
     <!--AboutAppScreen-->
-    <string name="develop_front">Разработка/Frontend</string>
-    <string name="develop_end">Разработка/Backend</string>
+    <string name="develop_android">Разработка/Android</string>
+    <string name="develop_backend">Разработка/Backend</string>
     <string name="interface_design">Проектирование интерфейса</string>
     <string name="vertion">Версия</string>
     <string name="tell_about_body_balance">Рассказать о Body Balance</string>
