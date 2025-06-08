@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.NavigateNext
 import androidx.compose.material3.BottomSheetDefaults
@@ -19,6 +21,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,7 +41,7 @@ import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import com.example.bodybalance.ui.theme.BottomSheetTextBlack
 import com.example.bodybalance.ui.theme.BottomSheetTextGrey
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun AboutAppScreen(
     modifier: Modifier = Modifier,
@@ -46,7 +49,7 @@ internal fun AboutAppScreen(
     openContributorLink: (String) -> Unit = {},
     shareApp: () -> Unit = {}
 ) {
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showBottomSheet by remember { mutableStateOf(false) }
 
     Column(
@@ -66,6 +69,10 @@ internal fun AboutAppScreen(
         DevelopersRow(onClick = { showBottomSheet = true })
 
         if (showBottomSheet) {
+            LaunchedEffect(Unit) {
+                sheetState.expand()
+            }
+
             ModalBottomSheet(
                 onDismissRequest = { showBottomSheet = false },
                 sheetState = sheetState,
@@ -79,21 +86,21 @@ internal fun AboutAppScreen(
                         .padding(horizontal = 16.dp)
                 ) {
                     ContributorsItem(
-                        fieldOfWork = stringResource(R.string.develop_end),
+                        fieldOfWork = stringResource(R.string.develop_backend),
                         name = stringResource(R.string.name_Sergey),
                         basicLink = stringResource(R.string.link_telegram_Sergey),
                         additionalLink = Contributors.DEV_SERGEY.url,
                         openContributorLink = openContributorLink
                     )
                     ContributorsItem(
-                        fieldOfWork = stringResource(R.string.develop_front),
+                        fieldOfWork = stringResource(R.string.develop_android),
                         name = stringResource(R.string.name_Nikita),
                         basicLink = stringResource(R.string.link_telegram_Nikita),
                         additionalLink = Contributors.DEV_NIKITA.url,
                         openContributorLink = openContributorLink
                     )
                     ContributorsItem(
-                        fieldOfWork = stringResource(R.string.develop_front),
+                        fieldOfWork = stringResource(R.string.develop_android),
                         name = stringResource(R.string.name_Marat),
                         basicLink = stringResource(R.string.link_telegram_Marat),
                         additionalLink = Contributors.DEV_MARAT.url,

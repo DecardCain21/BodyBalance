@@ -7,4 +7,6 @@ public class CategoryDto(
     public val id: Int,
     @SerializedName("name")
     public val name: String,
+    @SerializedName("img_url")
+    public val imageUrl: String,
 )

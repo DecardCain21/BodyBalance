@@ -71,6 +71,8 @@ dependencies {
     implementation(libs.support.annotations)
     implementation (libs.androidx.foundation)
     implementation(libs.reorderable)
+    implementation(libs.coil.compose)
+    implementation(libs.accompanist.systemuicontroller)
 
     // Material Icons
     implementation(libs.androidx.material.icons.extended)
@@ -88,10 +90,6 @@ dependencies {
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
-
-    // Image Loading (Glide)
-    implementation(libs.glide)
-    ksp(libs.ksp)
 
     // Database (Room)
     implementation(libs.androidx.room.runtime)
@@ -116,7 +114,4 @@ dependencies {
     // Debugging
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
-    // StatusBar
-    implementation(libs.accompanist.systemuicontroller)
 }

@@ -278,10 +278,11 @@ private fun CategoryPages(
     updateOrderSavedVideo: (id: Int, order: Int) -> Unit,
 ) {
     val tabs = listOf(
-        stringResource(R.string.playlist), stringResource(R.string.exercises),
-        stringResource(R.string.downloaded)
+        stringResource(R.string.playlist),
+        stringResource(R.string.exercises),
+        stringResource(R.string.downloaded),
     )
-    val pagerState = rememberPagerState { tabs.size }
+    val pagerState = rememberPagerState(initialPage = 1) { tabs.size }
     val scope = rememberCoroutineScope()
 
     TabRow(
@@ -322,7 +323,9 @@ private fun CategoryPages(
                         navigateToVideoPlayerScreenFromPlaylist = navigateToVideoPlayerScreenFromPlaylist,
                         deleteVideoFrom = { deleteVideoFromPlaylist(it) },
                         updateOrderVideoItems = updateOrderPlaylistVideo,
-                        categoryOn = false
+                        categoryOn = false,
+                        titleDialog = stringResource(R.string.delete_video_from_playlist),
+                        subtitleDialog = stringResource(R.string.delete_playlist_video_dialog_message)
                     )
 
                     is PlaylistState.Empty ->
@@ -355,7 +358,8 @@ private fun CategoryPages(
                         navigateToVideoPlayerScreenFromPlaylist = navigateToVideoScreenFromDownloaded,
                         deleteVideoFrom = { deleteSavedVideoFrom(it) },
                         updateOrderVideoItems = updateOrderSavedVideo,
-                        categoryOn = true
+                        categoryOn = true,
+                        titleDialog = stringResource(R.string.delete_saved_video_dialog_message),
                     )
 
                     is DownloadedState.Empty ->
@@ -400,7 +404,6 @@ private fun ExerciseEmptyScreen(modifier: Modifier = Modifier) {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ExerciseScreen(
     category: List<Category>,
@@ -419,9 +422,11 @@ private fun ExerciseScreen(
                 ExerciseItem(
                     modifier = Modifier.combinedClickable(
                         indication = null,
-                        interactionSource = remember { MutableInteractionSource() },
+                        interactionSource = null,
                         onClick = { navigateToVideoPlayerScreen(item.id) }
-                    ), title = item.name
+                    ),
+                    title = item.name,
+                    imageUrl = item.imageUrl
                 )
             }
         }
@@ -429,7 +434,10 @@ private fun ExerciseScreen(
 }
 
 @Composable
-private fun PlaylistEmptyScreen(modifier: Modifier = Modifier, descriptionPlaceholder: String) {
+private fun PlaylistEmptyScreen(
+    modifier: Modifier = Modifier,
+    descriptionPlaceholder: String
+) {
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -457,9 +465,11 @@ private fun PlaylistEmptyScreen(modifier: Modifier = Modifier, descriptionPlaceh
 private fun VideoItemsScreen(
     videoItems: List<Video>,
     categoryOn: Boolean,
-    modifier: Modifier = Modifier,
     navigateToVideoPlayerScreenFromPlaylist: (Int) -> Unit,
     deleteVideoFrom: (Video) -> Unit,
+    titleDialog: String,
+    modifier: Modifier = Modifier,
+    subtitleDialog: String? = null,
     updateOrderVideoItems: (id: Int, order: Int) -> Unit = { _, _ -> }
 ) {
     var showDialog by remember { mutableStateOf(false) }
@@ -552,7 +562,9 @@ private fun VideoItemsScreen(
                 }
                 showDialog = false
                 videoToDelete = null
-            }
+            },
+            titleDialog = titleDialog,
+            subtitleDialog = subtitleDialog
         )
     }
 }
@@ -590,27 +602,30 @@ private fun DismissBackground(visible: Boolean) {
 private fun DeleteVideoDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
+    titleDialog: String,
+    subtitleDialog: String?,
     modifier: Modifier = Modifier
 ) {
-
     AlertDialog(
         modifier = modifier,
         onDismissRequest = { onDismiss() },
         title = {
             Text(
                 modifier = Modifier.padding(end = 30.dp),
-                text = stringResource(R.string.delete_video_from_playlist),
+                text = titleDialog,
                 color = MaterialTheme.colorScheme.primary
             )
         },
-        text = {
-            Text(
-                text = stringResource(R.string.delete_video_dilog_message),
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 14.sp,
-                fontWeight = FontWeight(400)
-            )
-        },
+        text = if (subtitleDialog != null) {
+            {
+                Text(
+                    text = subtitleDialog,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight(400)
+                )
+            }
+        } else null,
         confirmButton = {
             Button(onClick = { onConfirm() }) {
                 Text(text = stringResource(R.string.remove))

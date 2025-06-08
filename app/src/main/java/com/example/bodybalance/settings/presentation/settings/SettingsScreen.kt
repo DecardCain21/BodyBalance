@@ -19,20 +19,19 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -44,7 +43,6 @@ import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.core.composable.snackbar.CustomSnackbarHost
 import com.example.bodybalance.core.util.convertToFileSize
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
-import kotlinx.coroutines.launch
 
 @Composable
 internal fun SettingsScreen(
@@ -60,7 +58,6 @@ internal fun SettingsScreen(
     showLogoutDialog: Boolean,
     changeVisibilitySingOutDialog: (Boolean) -> Unit
 ) {
-
     Scaffold(
         topBar = {
             BaseTopAppBar(
@@ -82,9 +79,9 @@ internal fun SettingsScreen(
                 .padding(paddingValues),
             horizontalAlignment = Alignment.Start
         ) {
-            ClearCacheRow(
-                cacheSize = cacheSize,
-            ) { clearCache() }
+            ClearCacheRow(cacheSize = cacheSize) {
+                clearCache()
+            }
             DownloadOnlyWifiRow(
                 checked = downloadOnlyWifi,
                 onCheckedChange = changeDownloadSettings
@@ -118,8 +115,6 @@ private fun ClearCacheRow(
     cacheSize: Long,
     onClear: () -> Unit
 ) {
-    val coroutineScope = rememberCoroutineScope()
-
     Box {
         Row(
             modifier = Modifier
@@ -162,6 +157,7 @@ private fun ClearCacheRow(
                     .align(Alignment.Top),
                 text = cacheSize.convertToFileSize(),
                 fontSize = 11.sp,
+                fontWeight = FontWeight.Medium,
                 color = colorResource(R.color.white),
                 textAlign = TextAlign.End
             )
@@ -236,7 +232,8 @@ private fun AboutAppRow(onClick: () -> Unit) {
         Text(
             modifier = Modifier.padding(vertical = 16.dp),
             text = stringResource(R.string.version_app, BuildConfig.VERSION_NAME),
-            fontSize = 16.sp,
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Medium,
             color = colorResource(R.color.white),
         )
         Spacer(modifier = Modifier.padding(end = 16.dp))

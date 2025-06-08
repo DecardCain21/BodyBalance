@@ -13,5 +13,7 @@ public interface SavedVideoRepository {
 
     public suspend fun deleteSavedVideo(video: Video)
 
+    public suspend fun deleteAllSavedVideo()
+
     public suspend fun updateOrderSavedVideo(id: Int, order: Int)
 }
