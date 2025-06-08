@@ -4,7 +4,7 @@ import com.example.bodybalance.core.domain.api.PlaylistVideoRepository
 import com.example.bodybalance.videoplayer.domain.usecase.ExistsPlaylistVideoByIdUseCase
 import javax.inject.Inject
 
-internal class ExistsPlaylistVideoByIdUseCaseImpl @Inject constructor(
+public class ExistsPlaylistVideoByIdUseCaseImpl @Inject constructor(
     private val playlistVideoRepository: PlaylistVideoRepository
 ) : ExistsPlaylistVideoByIdUseCase {
 

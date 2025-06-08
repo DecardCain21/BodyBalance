@@ -1,6 +1,6 @@
 package com.example.bodybalance.videoplayer.domain.usecase
 
-internal interface ExistsPlaylistVideoByIdUseCase {
+public interface ExistsPlaylistVideoByIdUseCase {
 
-    suspend operator fun invoke(id: Int): Boolean
+    public suspend operator fun invoke(id: Int): Boolean
 }

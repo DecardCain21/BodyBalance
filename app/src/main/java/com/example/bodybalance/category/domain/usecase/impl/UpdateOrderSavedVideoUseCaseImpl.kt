@@ -4,7 +4,7 @@ import com.example.bodybalance.category.domain.usecase.UpdateOrderSavedVideoUseC
 import com.example.bodybalance.core.domain.api.SavedVideoRepository
 import javax.inject.Inject
 
-internal class UpdateOrderSavedVideoUseCaseImpl @Inject constructor(
+public class UpdateOrderSavedVideoUseCaseImpl @Inject constructor(
     private val savedVideoRepository: SavedVideoRepository
 ) : UpdateOrderSavedVideoUseCase {
     override suspend fun invoke(id: Int, order: Int) {

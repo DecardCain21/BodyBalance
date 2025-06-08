@@ -1,6 +1,6 @@
 package com.example.bodybalance.introduction.domain.usecase
 
-internal interface GetIntroductionCodeUseCase {
+public interface GetIntroductionCodeUseCase {
 
-    operator fun invoke(): String
+    public operator fun invoke(): String
 }

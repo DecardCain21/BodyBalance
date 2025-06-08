@@ -4,7 +4,7 @@ import com.example.bodybalance.core.data.source.local.IntroProvider
 import com.example.bodybalance.introduction.domain.usecase.GetIntroductionVideoUseCase
 import javax.inject.Inject
 
-internal class GetIntroductionVideoUseCaseImpl @Inject constructor(
+public class GetIntroductionVideoUseCaseImpl @Inject constructor(
     private val introProvider: IntroProvider
 ) : GetIntroductionVideoUseCase {
 

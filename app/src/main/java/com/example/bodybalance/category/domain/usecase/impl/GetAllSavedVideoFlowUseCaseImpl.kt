@@ -6,7 +6,7 @@ import com.example.bodybalance.core.domain.models.Video
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-internal class GetAllSavedVideoFlowUseCaseImpl @Inject constructor(
+public class GetAllSavedVideoFlowUseCaseImpl @Inject constructor(
     private val savedVideoRepository: SavedVideoRepository
 ) : GetAllSavedVideoFlowUseCase {
 

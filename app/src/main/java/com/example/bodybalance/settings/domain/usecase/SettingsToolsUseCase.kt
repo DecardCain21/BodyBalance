@@ -1,8 +1,8 @@
 package com.example.bodybalance.settings.domain.usecase
 
-internal interface SettingsToolsUseCase {
+public interface SettingsToolsUseCase {
 
-    fun setWifiFlag(flag: Boolean)
+    public fun setWifiFlag(flag: Boolean)
 
-    fun getWifiFlag(): Boolean
+    public fun getWifiFlag(): Boolean
 }

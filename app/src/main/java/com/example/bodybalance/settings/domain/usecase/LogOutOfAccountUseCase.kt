@@ -1,6 +1,6 @@
 package com.example.bodybalance.settings.domain.usecase
 
-internal interface LogOutOfAccountUseCase {
+public interface LogOutOfAccountUseCase {
 
-    suspend operator fun invoke()
+    public suspend operator fun invoke()
 }
