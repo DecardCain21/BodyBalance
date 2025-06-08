@@ -4,7 +4,7 @@ import com.example.bodybalance.category.domain.usecase.UpdateOrderPlaylistVideoU
 import com.example.bodybalance.core.domain.api.PlaylistVideoRepository
 import javax.inject.Inject
 
-internal class UpdateOrderPlaylistVideoUseCaseImpl @Inject constructor(
+public class UpdateOrderPlaylistVideoUseCaseImpl @Inject constructor(
     private val playlistVideoRepository: PlaylistVideoRepository
 ) : UpdateOrderPlaylistVideoUseCase {
 

@@ -5,7 +5,7 @@ import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.videoplayer.domain.usecase.DeletePlaylistVideoUseCase
 import javax.inject.Inject
 
-internal class DeletePlaylistVideoUseCaseImpl @Inject constructor(
+public class DeletePlaylistVideoUseCaseImpl @Inject constructor(
     private val playlistVideoRepository: PlaylistVideoRepository
 ) : DeletePlaylistVideoUseCase {
 

@@ -5,7 +5,7 @@ import com.example.bodybalance.core.util.api.FileDownloader
 import com.example.bodybalance.settings.domain.usecase.ClearCacheUseCase
 import javax.inject.Inject
 
-internal class ClearCacheUseCaseImpl @Inject constructor(
+public class ClearCacheUseCaseImpl @Inject constructor(
     private val fileDownloaderImpl: FileDownloader,
     private val savedVideoRepository: SavedVideoRepository
 ) : ClearCacheUseCase {

@@ -4,9 +4,9 @@ import com.example.bodybalance.core.domain.api.UserAccountRepository
 import com.example.bodybalance.settings.domain.usecase.LogOutOfAccountUseCase
 import javax.inject.Inject
 
-internal class LogOutOfAccountUseCaseUseCaseImpl @Inject constructor(
+public class LogOutOfAccountUseCaseUseCaseImpl @Inject constructor(
     private val userAccountRepository: UserAccountRepository
 ) : LogOutOfAccountUseCase {
 
-    override suspend fun invoke() = userAccountRepository.deleteActiveAccount()
+    override suspend fun invoke(): Unit = userAccountRepository.deleteActiveAccount()
 }

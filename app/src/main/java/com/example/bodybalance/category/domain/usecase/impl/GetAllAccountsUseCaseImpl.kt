@@ -5,7 +5,7 @@ import com.example.bodybalance.core.domain.api.UserAccountRepository
 import com.example.bodybalance.core.domain.models.Account
 import javax.inject.Inject
 
-internal class GetAllAccountsUseCaseImpl @Inject constructor(
+public class GetAllAccountsUseCaseImpl @Inject constructor(
     private val userAccountRepository: UserAccountRepository
 ) : GetAllAccountsUseCase {
 

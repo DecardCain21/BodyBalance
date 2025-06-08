@@ -2,7 +2,7 @@ package com.example.bodybalance.category.domain.usecase
 
 import com.example.bodybalance.core.domain.models.Account
 
-internal interface ActivateAccountUseCase {
+public interface ActivateAccountUseCase {
 
-    suspend operator fun invoke(account: Account)
+    public suspend operator fun invoke(account: Account)
 }

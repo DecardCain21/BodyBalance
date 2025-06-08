@@ -2,7 +2,7 @@ package com.example.bodybalance.category.domain.usecase
 
 import com.example.bodybalance.core.domain.models.Category
 
-internal interface GetCategoryUseCase {
+public interface GetCategoryUseCase {
 
-    suspend operator fun invoke(): Result<List<Category>>
+    public suspend operator fun invoke(): Result<List<Category>>
 }
