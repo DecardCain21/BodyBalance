@@ -177,6 +177,20 @@ private fun BodyVideoPlayerScreen(
 ) {
     LazyRow(contentPadding = PaddingValues(horizontal = 16.dp)) {
         item {
+            if (isAddPlaylist) {
+                BodyBalanceActionButton(
+                    onClick = { onClickRemoveFromPlaylist() },
+                    text = stringResource(R.string.added_to_playlist),
+                    imageVector = Icons.Default.Bookmark
+                )
+            } else {
+                BodyBalanceActionButton(
+                    onClick = { onClickAddToPlaylist() },
+                    text = stringResource(R.string.add_to_playlist),
+                    imageVector = Icons.Default.BookmarkBorder
+                )
+            }
+            Spacer(modifier = Modifier.padding(horizontal = 4.dp))
             if (isDownloadState) {
                 BodyBalanceActionButton(
                     onClick = {
@@ -192,25 +206,10 @@ private fun BodyVideoPlayerScreen(
                     imageVector = Icons.Default.Download
                 )
             }
-            Spacer(modifier = Modifier.padding(horizontal = 4.dp))
-            if (isAddPlaylist) {
-                BodyBalanceActionButton(
-                    onClick = { onClickRemoveFromPlaylist() },
-                    text = stringResource(R.string.added_to_playlist),
-                    imageVector = Icons.Default.Bookmark
-                )
-            } else {
-                BodyBalanceActionButton(
-                    onClick = { onClickAddToPlaylist() },
-                    text = stringResource(R.string.add_to_playlist),
-                    imageVector = Icons.Default.BookmarkBorder
-                )
-            }
         }
     }
 }
 
-@kotlin.OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun VideoList(
     currentVideo: Video,

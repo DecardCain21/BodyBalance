@@ -9,7 +9,8 @@
     <string name="exercises">Упражнения</string>
     <string name="downloaded">Скачанные</string>
     <string name="delete_video_from_playlist">Удалить видео из плейлиста?</string>
-    <string name="delete_video_dilog_message">Видео останется в разделе упражнения</string>
+    <string name="delete_playlist_video_dialog_message">Видео останется в разделе упражнения</string>
+    <string name="delete_saved_video_dialog_message">Удалить скаченное видео?</string>
     <string name="remove">Удалить</string>
     <string name="do_not_have_video">Видео пока нет</string>
     <string name="placeholder_subtext_playlist">Здесь будут храниться упражнения,\nкоторые вы добавите в плейлист</string>

@@ -19,12 +19,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.example.bodybalance.R
 import com.example.bodybalance.ui.theme.Black
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
@@ -42,7 +45,7 @@ public fun VideoItem(
     showSelectItem: Boolean = false,
     reorderState: ReorderableLazyListState? = null
 ) {
-
+    val imageModel = imageUrl.takeIf { it.isNotBlank() }
     val colorBackground = if (showSelectItem) Grey else Black
 
     Box(
@@ -70,12 +73,18 @@ public fun VideoItem(
                 modifier = Modifier
                     .width(142.dp)
                     .clip(RoundedCornerShape(12.dp)),
-                painter = painterResource(R.drawable.ic_launcher_background),
+                painter = rememberAsyncImagePainter(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(imageModel)
+                        .placeholder(R.drawable.ic_launcher_background)
+                        .error(R.drawable.ic_launcher_background)
+                        .crossfade(true)
+                        .build()
+                ),
                 contentDescription = "Image course",
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.Crop
             )
             VideoTextContent(title = title, category = category)
-
         }
     }
 }
@@ -101,9 +110,10 @@ private fun RowScope.VideoTextContent(
 private fun TitleText(
     title: String,
     maxLines: Int,
+    modifier: Modifier = Modifier,
 ) {
     Text(
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 18.dp, bottom = 4.dp),
+        modifier = modifier.padding(start = 16.dp, end = 16.dp, top = 18.dp, bottom = 4.dp),
         text = title,
         fontWeight = FontWeight(500),
         overflow = TextOverflow.Ellipsis,
@@ -116,9 +126,10 @@ private fun TitleText(
 @Composable
 private fun CategoryText(
     category: String,
+    modifier: Modifier = Modifier,
 ) {
     Text(
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp,bottom = 18.dp),
+        modifier = modifier.padding(start = 16.dp, end = 16.dp,bottom = 18.dp),
         text = category,
         fontWeight = FontWeight(400),
         overflow = TextOverflow.Ellipsis,

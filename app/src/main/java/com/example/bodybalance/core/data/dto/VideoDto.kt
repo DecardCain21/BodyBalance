@@ -13,4 +13,6 @@ public class VideoDto(
     public val description: String,
     @SerializedName("category")
     public val category: String,
+    @SerializedName("img_url")
+    public val imageUrl: String,
 )

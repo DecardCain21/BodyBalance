@@ -14,12 +14,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.example.bodybalance.R
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 
@@ -29,6 +32,8 @@ public fun ExerciseItem(
     modifier: Modifier = Modifier,
     imageUrl: String = ""
 ) {
+    val imageModel = imageUrl.takeIf { it.isNotBlank() }
+
     Surface(
         shape = RoundedCornerShape(12.dp),
         modifier = modifier
@@ -40,11 +45,17 @@ public fun ExerciseItem(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-
             Image(
-                painter = painterResource(R.drawable.ic_launcher_background),
+                painter = rememberAsyncImagePainter(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(imageModel)
+                        .placeholder(R.drawable.ic_launcher_background)
+                        .error(R.drawable.ic_launcher_background)
+                        .crossfade(true)
+                        .build()
+                ),
                 contentDescription = "Изображение курса",
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.Crop
             )
             Text(
                 modifier = Modifier
@@ -56,7 +67,6 @@ public fun ExerciseItem(
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.primary
             )
-
         }
     }
 }
