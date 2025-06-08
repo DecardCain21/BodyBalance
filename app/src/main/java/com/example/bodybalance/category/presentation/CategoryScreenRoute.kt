@@ -47,6 +47,12 @@ internal fun CategoryScreenRoute(
                     id = id, order = order
                 )
             )
+        },
+        deleteSavedVideoFrom = { viewModel.handleEvent(CategoryScreenUiEvent.DeleteSavedVideo(it)) },
+        updateOrderSavedVideo = { id, order ->
+            viewModel.handleEvent(
+                CategoryScreenUiEvent.UpdateOrderSavedVideo(id = id, order = order)
+            )
         }
     )
 }

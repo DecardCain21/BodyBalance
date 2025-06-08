@@ -4,7 +4,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -80,31 +79,32 @@ internal fun AboutAppScreen(
                         .padding(horizontal = 16.dp)
                 ) {
                     ContributorsItem(
-                        modifier = Modifier.combinedClickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() },
-                            onClick = { openContributorLink(Contributors.DEV_NIKITA.url) }
-                        ),
-                        fieldOfWork = stringResource(R.string.develop),
-                        information = "Имя ссылка/контакт"
+                        fieldOfWork = stringResource(R.string.develop_end),
+                        name = stringResource(R.string.name_Sergey),
+                        basicLink = stringResource(R.string.link_telegram_Sergey),
+                        additionalLink = Contributors.DEV_SERGEY.url,
+                        openContributorLink = openContributorLink
                     )
                     ContributorsItem(
-                        modifier = Modifier.combinedClickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() },
-                            onClick = { openContributorLink(Contributors.DEV_MARAT.url) }
-                        ),
-                        fieldOfWork = stringResource(R.string.develop),
-                        information = "Имя ссылка/контакт"
+                        fieldOfWork = stringResource(R.string.develop_front),
+                        name = stringResource(R.string.name_Nikita),
+                        basicLink = stringResource(R.string.link_telegram_Nikita),
+                        additionalLink = Contributors.DEV_NIKITA.url,
+                        openContributorLink = openContributorLink
                     )
                     ContributorsItem(
-                        modifier = Modifier.combinedClickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() },
-                            onClick = { openContributorLink(Contributors.DESIGN_ANASTASIA.url) }
-                        ),
+                        fieldOfWork = stringResource(R.string.develop_front),
+                        name = stringResource(R.string.name_Marat),
+                        basicLink = stringResource(R.string.link_telegram_Marat),
+                        additionalLink = Contributors.DEV_MARAT.url,
+                        openContributorLink = openContributorLink
+                    )
+                    ContributorsItem(
                         fieldOfWork = stringResource(R.string.interface_design),
-                        information = "Имя ссылка/контакт"
+                        name = stringResource(R.string.name_Anastasia),
+                        basicLink = stringResource(R.string.link_telegram_Anastasia),
+                        additionalLink = "",
+                        openContributorLink = openContributorLink
                     )
                 }
             }
@@ -192,12 +192,15 @@ private fun DevelopersRow(
 private fun ContributorsItem(
     modifier: Modifier = Modifier,
     fieldOfWork: String,
-    information: String
+    name: String,
+    basicLink: String,
+    additionalLink: String,
+    openContributorLink: (String) -> Unit
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
+            .padding(vertical = 12.dp)
     ) {
         Text(
             text = fieldOfWork,
@@ -205,10 +208,24 @@ private fun ContributorsItem(
             color = BottomSheetTextGrey
         )
         Text(
-            text = information,
+            text = name,
             fontSize = 16.sp,
             color = BottomSheetTextBlack
         )
+        Text(
+            modifier = Modifier.clickable { openContributorLink(basicLink) },
+            text = basicLink,
+            fontSize = 16.sp,
+            color = BottomSheetTextBlack
+        )
+        if (additionalLink.isNotEmpty()) {
+            Text(
+                modifier = Modifier.clickable { openContributorLink(additionalLink) },
+                text = additionalLink,
+                fontSize = 16.sp,
+                color = BottomSheetTextBlack
+            )
+        }
     }
 }
 

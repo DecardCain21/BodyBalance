@@ -32,4 +32,8 @@ internal class SavedVideoRepositoryImpl @Inject constructor(
     override suspend fun deleteSavedVideo(video: Video) {
         savedVideoDao.delete(video.convertToSavedVideo())
     }
+
+    override suspend fun updateOrderSavedVideo(id: Int, order: Int) {
+        savedVideoDao.updateOrder(id = id, order = order)
+    }
 }

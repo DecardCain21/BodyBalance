@@ -24,7 +24,7 @@ internal interface VideoCacheDao {
     @Query("SELECT * FROM saved_video WHERE id = :id")
     suspend fun getById(id: Int): SavedVideoEntity?
 
-    @Query("SELECT * FROM saved_video")
+    @Query("SELECT * FROM saved_video ORDER BY `order` ASC")
     fun getAllFlow(): Flow<List<SavedVideoEntity>>
 
     @Query("SELECT * FROM saved_video")
@@ -32,6 +32,9 @@ internal interface VideoCacheDao {
 
     @Query("SELECT * FROM saved_video WHERE name = :category")
     suspend fun getByCategory(category: String): List<SavedVideoEntity>
+
+    @Query("UPDATE saved_video SET `order` = :order WHERE id = :id")
+    suspend fun updateOrder(id: Int, order: Int)
 
     @Update
     suspend fun update(savedVideoEntity: SavedVideoEntity)

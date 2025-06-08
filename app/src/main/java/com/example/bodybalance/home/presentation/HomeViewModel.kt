@@ -38,7 +38,7 @@ internal class HomeViewModel @Inject constructor(
         when (event) {
             is HomeScreenUiEvent.InputLogin -> inputLoginManagement(event.text)
             is HomeScreenUiEvent.Enter -> onLoginAttempt()
-            is HomeScreenUiEvent.GetLogin -> requestLogin()
+            is HomeScreenUiEvent.GetLogin -> requestLogin(event.link)
             is HomeScreenUiEvent.ClearAll -> clearAll()
         }
     }
@@ -102,8 +102,8 @@ internal class HomeViewModel @Inject constructor(
     }
 
     // todo: заменить ссылку
-    private fun requestLogin() {
-        followLinkUseCase("")
+    private fun requestLogin(url: String) {
+        followLinkUseCase(url)
     }
 
     private fun clearAll() {

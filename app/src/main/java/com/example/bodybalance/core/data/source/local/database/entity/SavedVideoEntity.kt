@@ -11,5 +11,6 @@ internal data class SavedVideoEntity(
     val videoUrl: String,
     val description: String,
     val category: String = "",
-    val imageUrl: String? = ""
+    val imageUrl: String? = "",
+    val order: Int
 )

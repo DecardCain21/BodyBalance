@@ -51,8 +51,9 @@ public class FileDownloaderImpl @Inject constructor(
                             input.copyTo(output)
                         }
                     }
+                    val filePath = file.absolutePath
                     CoroutineScope(Dispatchers.IO).launch {
-                        saveVideoInCacheUseCase(video)
+                        saveVideoInCacheUseCase(video.copy(url = filePath))
                     }
                     callback.onSuccess(file.absolutePath)
                 } catch (e: Exception) {

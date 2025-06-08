@@ -11,8 +11,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.bodybalance.R
 import com.example.bodybalance.home.presentation.state.HomeScreenUiEvent.ClearAll
 import com.example.bodybalance.home.presentation.state.HomeScreenUiEvent.Enter
 import com.example.bodybalance.home.presentation.state.HomeScreenUiEvent.GetLogin
@@ -52,6 +54,7 @@ internal fun HomeScreenRoute(
             }
         }
     }
+    val link = stringResource(R.string.link_get_login)
 
     HomeScreen(
         modifier = modifier,
@@ -60,7 +63,7 @@ internal fun HomeScreenRoute(
         inputLogin = { viewModel.handleEvent(InputLogin(it)) },
         clearAll = { viewModel.handleEvent(ClearAll) },
         accountEnter = { viewModel.handleEvent(Enter) },
-        getLogin = { viewModel.handleEvent(GetLogin) },
+        getLogin = { viewModel.handleEvent(GetLogin(link)) },
         isLoading = uiState.isLoading
     )
 }

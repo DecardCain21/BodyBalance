@@ -13,12 +13,14 @@
     <string name="remove">Удалить</string>
     <string name="do_not_have_video">Видео пока нет</string>
     <string name="placeholder_subtext_playlist">Здесь будут храниться упражнения,\nкоторые вы добавите в плейлист</string>
+    <string name="placeholder_subtext_savedVideo">Здесь будут храниться упражнения,\nкоторые вы скачаете – их можно\n смотреть без интернета</string>
 
     <!--HomeScreen-->
     <string name="login">Логин</string>
     <string name="sing_in">Войти</string>
     <string name="get_login">Получить логин</string>
     <string name="clear">Очистить</string>
+    <string name="link_get_login">https://t.me/bocharnikovdoctor</string>
 
     <!--IntroductionScreen-->
     <string name="introduction">Введение</string>
@@ -39,16 +41,27 @@
     <string name="cansel">Отмена</string>
 
     <!--AboutAppScreen-->
-    <string name="develop">Разработка</string>
+    <string name="develop_front">Разработка/Frontend</string>
+    <string name="develop_end">Разработка/Backend</string>
     <string name="interface_design">Проектирование интерфейса</string>
     <string name="vertion">Версия</string>
     <string name="tell_about_body_balance">Рассказать о Body Balance</string>
     <string name="developers">Разработчики</string>
+    <string name="link_telegram_Sergey">https://t.me/langowen</string>
+    <string name="link_telegram_Marat">https://t.me/DeckardCainF</string>
+    <string name="link_telegram_Nikita">https://t.me/fargoNT</string>
+    <string name="link_telegram_Anastasia">https://t.me/AnastasiaGee</string>
 
     <!--VideoPlayerScreen-->
     <string name="remove_from_device">Удалить с устройства</string>
     <string name="download">Скачать</string>
     <string name="added_to_playlist">Добавлено в плейлист</string>
     <string name="add_to_playlist">Добавить в плейлист</string>
+
+    <!--Developers-->
+    <string name="name_Marat">Марат</string>
+    <string name="name_Nikita">Никита</string>
+    <string name="name_Anastasia">Анастасия</string>
+    <string name="name_Sergey">Сергей</string>
 
 </resources>

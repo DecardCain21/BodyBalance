@@ -13,5 +13,6 @@ internal sealed interface AboutAppScreenUiEvent {
 internal enum class Contributors(val url: String) {
     DEV_NIKITA("https://github.com/Fargo02"),
     DEV_MARAT("https://github.com/DecardCain21"),
-    DESIGN_ANASTASIA("")
+    DEV_SERGEY("https://github.com/langowen"),
+    DESIGN_ANASTASIA("https://t.me/AnastasiaGee")
 }
