@@ -3,8 +3,8 @@ package com.example.bodybalance.core.util
 import android.content.Context
 import com.example.bodybalance.core.domain.api.SettingsToolsRepository
 import com.example.bodybalance.core.domain.models.Video
-import com.example.bodybalance.core.util.api.FileDownloader
 import com.example.bodybalance.core.domain.usecase.api.SaveVideoInCacheUseCase
+import com.example.bodybalance.core.util.api.FileDownloader
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
     tableName = "user_account",
     indices = [Index(value = ["name"], unique = true)]
 )
-internal data class AccountEntity(
+public data class AccountEntity(
     @PrimaryKey(autoGenerate = false)
     val id: Int,
     val name: String,
