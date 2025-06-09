@@ -79,9 +79,9 @@ public fun exoPlayer(
 
     var currentPosition by rememberSaveable { mutableLongStateOf(0L) }
 
-    LaunchedEffect(video.url) {
+    LaunchedEffect(video.remoteVideoUrl) {
         exoPlayer.apply {
-            val mediaItem = MediaItem.fromUri(Uri.parse(video.url))
+            val mediaItem = MediaItem.fromUri(Uri.parse(video.remoteVideoUrl))
             setMediaItem(mediaItem)
             seekTo(currentPosition)
             prepare()

@@ -8,7 +8,8 @@ internal data class SavedVideoEntity(
     @PrimaryKey
     val id: Int,
     val name: String,
-    val videoUrl: String,
+    val remoteVideoUrl: String,
+    val localVideoUrl: String,
     val description: String,
     val category: String = "",
     val imageUrl: String = "",

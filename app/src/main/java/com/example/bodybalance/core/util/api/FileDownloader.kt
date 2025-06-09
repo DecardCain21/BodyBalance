@@ -16,6 +16,4 @@ public interface FileDownloader {
     public fun getFilesCacheSize(): Long
 
     public fun getFilePathIfExists(fileName: String): String?
-
-    public fun getAllDownloadedVideos(): List<Video>
 }

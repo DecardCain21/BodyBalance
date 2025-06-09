@@ -236,6 +236,7 @@ private fun VideoList(
             VideoItem(
                 title = item.name,
                 showIconDrag = false,
+                imageUrl = item.imageUrl,
                 showSelectItem = selectItemIndex == index,
                 modifier = Modifier
                     .combinedClickable(

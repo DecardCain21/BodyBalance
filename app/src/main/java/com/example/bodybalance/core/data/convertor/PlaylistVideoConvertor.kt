@@ -6,7 +6,7 @@ import com.example.bodybalance.core.domain.models.Video
 internal fun Video.convertEntity() = PlaylistVideoEntity(
     id = id,
     name = name,
-    url = url,
+    url = remoteVideoUrl,
     category = category,
     description = description,
     imageUrl = imageUrl,
@@ -16,7 +16,7 @@ internal fun Video.convertEntity() = PlaylistVideoEntity(
 internal fun PlaylistVideoEntity.convertToVideo() = Video(
     id = id,
     name = name,
-    url = url,
+    remoteVideoUrl = url,
     category = category,
     description = description,
     imageUrl = imageUrl

@@ -25,7 +25,7 @@ public class FileDownloaderImpl @Inject constructor(
 ) : FileDownloader {
 
     override fun downloadFile(video: Video, callback: DownloadCallback) {
-        val request = Request.Builder().url(video.url).build()
+        val request = Request.Builder().url(video.remoteVideoUrl).build()
         val downloadOnlyWifi = settingsToolsRepository.getDownloadWifiFlag()
         if (downloadOnlyWifi && isConnectedToWifi()) {
             callback.onError(FileDownloaderError.WIFI_ERROR)
@@ -54,9 +54,9 @@ public class FileDownloaderImpl @Inject constructor(
                     }
                     val filePath = file.absolutePath
                     CoroutineScope(Dispatchers.IO).launch {
-                        saveVideoInCacheUseCase(video.copy(url = filePath))
+                        saveVideoInCacheUseCase(video.copy(localVideoUrl = filePath))
                     }
-                    callback.onSuccess(file.absolutePath)
+                    callback.onSuccess()
                 } catch (e: Exception) {
                     deleteFile(video.id.toString())
                     callback.onError(FileDownloaderError.FILE_SAVE_ERROR)
@@ -106,35 +106,10 @@ public class FileDownloaderImpl @Inject constructor(
         val file = File(context.filesDir, fileName)
         return file.takeIf { it.exists() }?.absolutePath
     }
-
-    override fun getAllDownloadedVideos(): List<Video> {
-        val filesDir = context.filesDir
-        val files = filesDir.listFiles() ?: return emptyList()
-
-        return files.mapNotNull { file ->
-            try {
-                // Предполагаем, что имя файла - это ID видео
-                val videoId = file.nameWithoutExtension.toInt()
-
-                Video(
-                    id = videoId,
-                    name = "Видео $videoId", // Можно заменить на реальное имя из БД
-                    url = file.absolutePath, // Локальный путь к файлу
-                    category = "Скачанные", // Категория для скачанных видео
-                    description = "Скачанное видео ${file.name}",
-                    imageUrl = "" // Можно добавить путь к превью, если есть
-                )
-            } catch (e: NumberFormatException) {
-                // Пропускаем файлы, которые не могут быть преобразованы в ID видео
-                null
-            }
-        }
-    }
-
 }
 
 public interface DownloadCallback {
-    public fun onSuccess(url: String)
+    public fun onSuccess()
     public fun onError(error: FileDownloaderError)
 }
 

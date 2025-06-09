@@ -20,6 +20,8 @@ import com.example.bodybalance.videoplayer.domain.usecase.GetAllSavedVideoUseCas
 import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerScreenUiEvent
 import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -50,6 +52,7 @@ internal class VideoPlayerViewModel @Inject constructor(
     val snackBarEvent = _snackBarEvent.asSharedFlow()
 
     private var isInitialized = false
+    private lateinit var deleteJob: Job
 
     fun handleEvent(event: VideoPlayerScreenUiEvent) {
         when (event) {
@@ -145,7 +148,7 @@ internal class VideoPlayerViewModel @Inject constructor(
 
     private fun getVideoFromCache(video: Video): Video {
         val url = fileDownloaderImpl.getFilePathIfExists(video.id.toString())
-        return video.copy(url = url ?: video.url)
+        return video.copy(localVideoUrl = url ?: video.remoteVideoUrl)
     }
 
     private fun addToPlaylist(video: Video) {
@@ -153,7 +156,6 @@ internal class VideoPlayerViewModel @Inject constructor(
             addPlaylistVideoUseCase(video = video)
             val currentState = _uiState.value
             setButtonsState(currentState)
-
         }
     }
 
@@ -174,7 +176,7 @@ internal class VideoPlayerViewModel @Inject constructor(
         fileDownloaderImpl.downloadFile(
             video = video,
             object : DownloadCallback {
-                override fun onSuccess(url: String) {
+                override fun onSuccess() {
                     viewModelScope.launch {
                         _snackBarEvent.emit(SnackbarEventParams(message = VIDEO_DOWNLOADED))
 
@@ -205,12 +207,23 @@ internal class VideoPlayerViewModel @Inject constructor(
     }
 
     private fun removeVideoFromCache(video: Video) {
-        fileDownloaderImpl.deleteFile(fileName = video.id.toString()).let {
-            viewModelScope.launch {
+        deleteJob = viewModelScope.launch {
+            _snackBarEvent.emit((SnackbarEventParams(
+                    message = "Удаление",
+                    actionLabel = "Отмена",
+                    onAction = { cancelDeleteJob() }))
+            )
+            delay(4000L)
+            fileDownloaderImpl.deleteFile(fileName = video.id.toString()).let {
                 deleteSavedVideoUseCase(video)
                 setButtonsState(_uiState.value)
             }
+            deleteJob.cancel()
         }
+    }
+
+    private fun cancelDeleteJob() {
+        deleteJob.cancel()
     }
 
     private suspend fun setButtonsState(state: VideoPlayerState) {

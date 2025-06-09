@@ -47,7 +47,7 @@ internal class IntroductionViewModel @Inject constructor(
             _uiState.value = IntroductionScreenState(
                 inputValue = inputState, IntroductionPlayerState.Content(
                     video = Video.emptyVideo(1).copy(
-                        url = getIntroductionVideoUseCase(),
+                        remoteVideoUrl = getIntroductionVideoUseCase(),
                         category = "Введение",
                         description = """
                             Это видео поможет вам быстро разобраться, как всё работает. 
