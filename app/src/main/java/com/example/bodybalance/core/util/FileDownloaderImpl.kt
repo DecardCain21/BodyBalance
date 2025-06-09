@@ -74,15 +74,8 @@ public class FileDownloaderImpl @Inject constructor(
                     activeDownloads.remove(video.id)
                 } catch (e: Exception) {
                     deleteFile(video.id.toString())
-
-                    val isCanceled = e.message?.contains("stream was reset: CANCEL", ignoreCase = true) == true
                     activeDownloads.remove(video.id)
-
-                    if (isCanceled || call.isCanceled()) {
-                        //callback.onError(FileDownloaderError.CANCELED)
-                    } else {
-                        callback.onError(FileDownloaderError.FILE_SAVE_ERROR)
-                    }
+                    callback.onError(FileDownloaderError.FILE_SAVE_ERROR)
                 }
             }
         })
