@@ -114,7 +114,7 @@ public class FileDownloaderImpl @Inject constructor(
 
         var allDeleted = true
         for (file in files) {
-            if (!file.delete()) {
+            if (file.name != "intro_video.mp4" && !file.delete()) {
                 allDeleted = false
             }
         }
