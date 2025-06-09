@@ -13,4 +13,6 @@ internal interface VideoPlayerScreenUiEvent {
     data class AddToPlaylist(val video: Video) : VideoPlayerScreenUiEvent
 
     data class RemoveFromPlaylist(val video: Video) : VideoPlayerScreenUiEvent
+
+    data class CanselDownloadVideo(val videoId: Int): VideoPlayerScreenUiEvent
 }

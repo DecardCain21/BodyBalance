@@ -9,6 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -24,22 +25,28 @@ public class FileDownloaderImpl @Inject constructor(
     private val saveVideoInCacheUseCase: SaveVideoInCacheUseCase,
 ) : FileDownloader {
 
+    private val activeDownloads = mutableMapOf<Int, Call>()
+
     override fun downloadFile(video: Video, callback: DownloadCallback) {
         val request = Request.Builder().url(video.remoteVideoUrl).build()
         val downloadOnlyWifi = settingsToolsRepository.getDownloadWifiFlag()
-        if (downloadOnlyWifi && isConnectedToWifi()) {
+        if (downloadOnlyWifi && !isConnectedToWifi()) {
             callback.onError(FileDownloaderError.WIFI_ERROR)
             return
         }
-        okHttpClient.newCall(request).enqueue(object : okhttp3.Callback {
-            override fun onFailure(call: okhttp3.Call, e: IOException) {
-                // Обработка ошибки
+        val call = okHttpClient.newCall(request)
+        activeDownloads[video.id] = call
+
+        call.enqueue(object : okhttp3.Callback {
+            override fun onFailure(call: Call, e: IOException) {
                 e.printStackTrace()
+                activeDownloads.remove(video.id)
                 callback.onError(FileDownloaderError.NETWORK_ERROR)
             }
 
-            override fun onResponse(call: okhttp3.Call, response: Response) {
+            override fun onResponse(call: Call, response: Response) {
                 if (!response.isSuccessful) {
+                    activeDownloads.remove(video.id)
                     callback.onError(FileDownloaderError.HTTP_ERROR)
                     return
                 }
@@ -56,13 +63,38 @@ public class FileDownloaderImpl @Inject constructor(
                     CoroutineScope(Dispatchers.IO).launch {
                         saveVideoInCacheUseCase(video.copy(localVideoUrl = filePath))
                     }
+                    activeDownloads.remove(video.id)
                     callback.onSuccess()
+                } catch (e: java.net.SocketException) { // Потеря интернета
+                    deleteFile(video.id.toString())
+                    activeDownloads.remove(video.id)
+                    callback.onError(FileDownloaderError.NETWORK_ERROR)
+                } catch (e: okhttp3.internal.http2.StreamResetException) { // Отмена скачивания
+                    deleteFile(video.id.toString())
+                    activeDownloads.remove(video.id)
                 } catch (e: Exception) {
                     deleteFile(video.id.toString())
-                    callback.onError(FileDownloaderError.FILE_SAVE_ERROR)
+
+                    val isCanceled = e.message?.contains("stream was reset: CANCEL", ignoreCase = true) == true
+                    activeDownloads.remove(video.id)
+
+                    if (isCanceled || call.isCanceled()) {
+                        //callback.onError(FileDownloaderError.CANCELED)
+                    } else {
+                        callback.onError(FileDownloaderError.FILE_SAVE_ERROR)
+                    }
                 }
             }
         })
+    }
+
+    override fun cancelDownload(videoId: Int) {
+        activeDownloads[videoId]?.cancel()
+        activeDownloads.remove(videoId)
+    }
+
+    override fun checkDownloadingProcess(videoId: Int): Boolean {
+        return activeDownloads.containsKey(key = videoId)
     }
 
     override fun fileExists(fileName: String): Boolean {

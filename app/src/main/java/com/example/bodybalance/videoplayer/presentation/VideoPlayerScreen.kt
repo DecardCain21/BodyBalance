@@ -2,7 +2,6 @@ package com.example.bodybalance.videoplayer.presentation
 
 import android.content.res.Configuration
 import androidx.annotation.OptIn
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -23,6 +22,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material3.CircularProgressIndicator
@@ -73,7 +73,8 @@ internal fun VideoPlayerScreen(
     removeVideoFromCache: () -> Unit,
     onClickAddToPlaylist: () -> Unit,
     onClickRemoveFromPlaylist: () -> Unit,
-    videoInCache: Boolean,
+    onClickCancelDownload: () -> Unit,
+    videoInCache: VideoPlayerState.DownloadButtonState,
     videoInPlaylist: Boolean
 ) {
     val configuration = LocalConfiguration.current
@@ -105,6 +106,7 @@ internal fun VideoPlayerScreen(
                         isAddPlaylist = videoInPlaylist,
                         isDownloadState = videoInCache,
                         onClickDownload = onClickDownload,
+                        onClickCancelDownload = onClickCancelDownload,
                         removeVideoFromCache = removeVideoFromCache,
                         onClickAddToPlaylist = onClickAddToPlaylist,
                         onClickRemoveFromPlaylist = onClickRemoveFromPlaylist
@@ -169,8 +171,9 @@ private fun HeaderVideoPlayerScreen(video: Video) {
 @Composable
 private fun BodyVideoPlayerScreen(
     isAddPlaylist: Boolean,
-    isDownloadState: Boolean,
+    isDownloadState: VideoPlayerState.DownloadButtonState,
     onClickDownload: () -> Unit,
+    onClickCancelDownload: () -> Unit,
     removeVideoFromCache: () -> Unit,
     onClickAddToPlaylist: () -> Unit,
     onClickRemoveFromPlaylist: () -> Unit,
@@ -191,20 +194,30 @@ private fun BodyVideoPlayerScreen(
                 )
             }
             Spacer(modifier = Modifier.padding(horizontal = 4.dp))
-            if (isDownloadState) {
-                BodyBalanceActionButton(
-                    onClick = {
-                        removeVideoFromCache()
-                    },
-                    text = stringResource(R.string.remove_from_device),
-                    imageVector = Icons.Default.DeleteOutline
-                )
-            } else {
-                BodyBalanceActionButton(
-                    onClick = onClickDownload,
-                    text = stringResource(R.string.download),
-                    imageVector = Icons.Default.Download
-                )
+            when (isDownloadState) {
+                VideoPlayerState.DownloadButtonState.Download -> {
+                    BodyBalanceActionButton(
+                        onClick = onClickDownload,
+                        text = stringResource(R.string.download),
+                        imageVector = Icons.Default.Download
+                    )
+                }
+
+                VideoPlayerState.DownloadButtonState.Loading -> {
+                    BodyBalanceActionButton(
+                        onClick = onClickCancelDownload,
+                        text = "Остановить скачивание",
+                        imageVector = Icons.Default.Close
+                    )
+                }
+
+                VideoPlayerState.DownloadButtonState.Remove -> {
+                    BodyBalanceActionButton(
+                        onClick = removeVideoFromCache,
+                        text = stringResource(R.string.remove_from_device),
+                        imageVector = Icons.Default.DeleteOutline
+                    )
+                }
             }
         }
     }
@@ -266,8 +279,9 @@ private fun IntroductionPreview() {
             onClickAddToPlaylist = {},
             onClickRemoveFromPlaylist = {},
             removeVideoFromCache = {},
-            videoInCache = false,
+            videoInCache = VideoPlayerState.DownloadButtonState.Download,
             videoInPlaylist = false,
+            onClickCancelDownload = {},
             videoListState = VideoPlayerState.VideoListState.Content(
                 listOf(Video.emptyVideo(1), Video.emptyVideo(2))
             )

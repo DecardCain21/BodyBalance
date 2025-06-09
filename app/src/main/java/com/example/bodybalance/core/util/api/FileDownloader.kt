@@ -7,6 +7,10 @@ public interface FileDownloader {
 
     public fun downloadFile(video: Video, callback: DownloadCallback)
 
+    public fun cancelDownload(videoId: Int)
+
+    public fun checkDownloadingProcess(videoId: Int): Boolean
+
     public fun fileExists(fileName: String): Boolean
 
     public fun deleteFile(fileName: String): Boolean

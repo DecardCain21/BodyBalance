@@ -98,6 +98,11 @@ internal fun VideoPlayerScreenRoute(
                 VideoPlayerScreenUiEvent.RemoveFromPlaylist(video = videoState)
             )
         },
+        onClickCancelDownload = {
+            viewModel.handleEvent(
+                VideoPlayerScreenUiEvent.CanselDownloadVideo(videoId = videoState.id)
+            )
+        },
         videoInCache = currentState.videoInCache,
         videoInPlaylist = currentState.videoInPlaylist
     )

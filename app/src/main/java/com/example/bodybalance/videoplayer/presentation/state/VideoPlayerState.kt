@@ -5,9 +5,15 @@ import com.example.bodybalance.core.domain.models.Video
 internal data class VideoPlayerState(
     val videoState: VideoState,
     val videoListState: VideoListState,
-    val videoInCache: Boolean = false,
+    val videoInCache: DownloadButtonState = DownloadButtonState.Download, //пока что поставлю дефолтное значение
     val videoInPlaylist: Boolean = false
 ) {
+
+    sealed interface DownloadButtonState {
+        data object Loading : DownloadButtonState
+        data object Download : DownloadButtonState
+        data object Remove : DownloadButtonState
+    }
 
     sealed interface VideoState {
         data object Empty : VideoState
