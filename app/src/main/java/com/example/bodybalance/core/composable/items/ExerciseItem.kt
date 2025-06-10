@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.bodybalance.R
+import com.example.bodybalance.core.util.nonScaledSp
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 
 @Composable
@@ -64,7 +65,7 @@ public fun ExerciseItem(
                 text = title,
                 overflow = TextOverflow.Ellipsis,
                 fontWeight = FontWeight(500),
-                fontSize = 16.sp,
+                fontSize = 16.nonScaledSp,
                 color = MaterialTheme.colorScheme.primary
             )
         }

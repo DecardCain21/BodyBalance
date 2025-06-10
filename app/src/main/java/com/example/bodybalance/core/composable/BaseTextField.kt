@@ -22,6 +22,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.bodybalance.core.util.nonScaledSp
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 
 @Composable
@@ -55,7 +56,7 @@ public fun CustomTextField(
         singleLine = true,
         textStyle = TextStyle(
             color = MaterialTheme.colorScheme.primary,
-            fontSize = 16.sp
+            fontSize = 16.nonScaledSp
         ),
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,

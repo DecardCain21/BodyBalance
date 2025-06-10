@@ -55,6 +55,7 @@ import androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT
 import androidx.media3.ui.PlayerView
 import com.example.bodybalance.R
 import com.example.bodybalance.core.domain.models.Video
+import com.example.bodybalance.core.util.nonScaledSp
 import com.example.bodybalance.ui.theme.White
 
 @OptIn(UnstableApi::class)
@@ -232,7 +233,7 @@ private fun VideoTitle(
         Text(
             text = text,
             color = White,
-            fontSize = 22.sp,
+            fontSize = 22.nonScaledSp,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
@@ -256,7 +257,7 @@ private fun EnterCodeButton(
         ) {
             Text(
                 text = stringResource(R.string.enter_code),
-                fontSize = 14.sp,
+                fontSize = 14.nonScaledSp,
                 color = Color.Black
             )
         }

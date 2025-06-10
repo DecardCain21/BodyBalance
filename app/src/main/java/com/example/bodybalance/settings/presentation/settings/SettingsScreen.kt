@@ -42,6 +42,7 @@ import com.example.bodybalance.core.composable.BaseTopAppBar
 import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.core.composable.snackbar.CustomSnackbarHost
 import com.example.bodybalance.core.util.convertToFileSize
+import com.example.bodybalance.core.util.nonScaledSp
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 
 @Composable
@@ -142,12 +143,12 @@ private fun ClearCacheRow(
             ) {
                 Text(
                     text = stringResource(R.string.clear_cashe),
-                    fontSize = 16.sp,
+                    fontSize = 16.nonScaledSp,
                     color = colorResource(R.color.white),
                 )
                 Text(
                     text = stringResource(R.string.clear_cashe_description),
-                    fontSize = 12.sp,
+                    fontSize = 12.nonScaledSp,
                     color = colorResource(R.color.white),
                 )
             }
@@ -156,7 +157,7 @@ private fun ClearCacheRow(
                     .padding(vertical = 12.dp)
                     .align(Alignment.Top),
                 text = cacheSize.convertToFileSize(),
-                fontSize = 11.sp,
+                fontSize = 11.nonScaledSp,
                 fontWeight = FontWeight.Medium,
                 color = colorResource(R.color.white),
                 textAlign = TextAlign.End
@@ -188,7 +189,7 @@ private fun DownloadOnlyWifiRow(
         Text(
             modifier = Modifier.padding(vertical = 8.dp),
             text = stringResource(R.string.download_wi_fi_only),
-            fontSize = 16.sp,
+            fontSize = 16.nonScaledSp,
             color = colorResource(R.color.white),
         )
         Spacer(modifier = Modifier.weight(1f))
@@ -225,14 +226,14 @@ private fun AboutAppRow(onClick: () -> Unit) {
         Text(
             modifier = Modifier.padding(start = 16.dp),
             text = stringResource(R.string.about_app),
-            fontSize = 16.sp,
+            fontSize = 16.nonScaledSp,
             color = colorResource(R.color.white),
         )
         Spacer(modifier = Modifier.weight(1f))
         Text(
             modifier = Modifier.padding(vertical = 16.dp),
             text = stringResource(R.string.version_app, BuildConfig.VERSION_NAME),
-            fontSize = 11.sp,
+            fontSize = 11.nonScaledSp,
             fontWeight = FontWeight.Medium,
             color = colorResource(R.color.white),
         )

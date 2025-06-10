@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.bodybalance.R
+import com.example.bodybalance.core.util.nonScaledSp
 import com.example.bodybalance.ui.theme.Black
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import com.example.bodybalance.ui.theme.Grey
@@ -118,7 +119,7 @@ private fun TitleText(
         fontWeight = FontWeight(500),
         overflow = TextOverflow.Ellipsis,
         maxLines = maxLines,
-        fontSize = 16.sp,
+        fontSize = 16.nonScaledSp,
         color = MaterialTheme.colorScheme.primary
     )
 }
@@ -133,7 +134,7 @@ private fun CategoryText(
         text = category,
         fontWeight = FontWeight(400),
         overflow = TextOverflow.Ellipsis,
-        fontSize = 12.sp,
+        fontSize = 12.nonScaledSp,
         color = MaterialTheme.colorScheme.primary
     )
 }

@@ -77,6 +77,7 @@ import com.example.bodybalance.core.composable.items.VideoItem
 import com.example.bodybalance.core.domain.models.Account
 import com.example.bodybalance.core.domain.models.Category
 import com.example.bodybalance.core.domain.models.Video
+import com.example.bodybalance.core.util.nonScaledSp
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import com.example.bodybalance.ui.theme.TabRowDividerColor
 import com.example.bodybalance.ui.theme.White
@@ -309,7 +310,7 @@ private fun CategoryPages(
             Tab(
                 selected = pagerState.currentPage == index,
                 onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
-                text = { Text(text = title, fontWeight = FontWeight(700), fontSize = 14.sp) }
+                text = { Text(text = title, fontWeight = FontWeight(700), fontSize = 14.nonScaledSp) }
             )
         }
     }
@@ -323,7 +324,7 @@ private fun CategoryPages(
                         navigateToVideoPlayerScreenFromPlaylist = navigateToVideoPlayerScreenFromPlaylist,
                         deleteVideoFrom = { deleteVideoFromPlaylist(it) },
                         updateOrderVideoItems = updateOrderPlaylistVideo,
-                        categoryOn = false,
+                        categoryOn = true,
                         titleDialog = stringResource(R.string.delete_video_from_playlist),
                         subtitleDialog = stringResource(R.string.delete_playlist_video_dialog_message)
                     )

@@ -43,6 +43,7 @@ import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.core.composable.CustomTextField
 import com.example.bodybalance.core.composable.exoPlayer
 import com.example.bodybalance.core.domain.models.Video
+import com.example.bodybalance.core.util.nonScaledSp
 import com.example.bodybalance.introduction.presentation.state.IntroductionScreenState
 import com.example.bodybalance.introduction.presentation.state.IntroductionScreenState.Input
 import com.example.bodybalance.introduction.presentation.state.IntroductionScreenState.IntroductionPlayerState
@@ -163,7 +164,7 @@ private fun IntroductionScreenContent(
                 .padding(top = 16.dp),
             text = stringResource(R.string.introduction),
             textAlign = TextAlign.Start,
-            fontSize = 22.sp,
+            fontSize = 22.nonScaledSp,
             color = colorResource(R.color.white)
         )
         Text(
@@ -175,7 +176,7 @@ private fun IntroductionScreenContent(
                     "\n" +
                     "После просмотра введите кодовое слово из видео, чтобы продолжить",
             textAlign = TextAlign.Start,
-            fontSize = 14.sp,
+            fontSize = 14.nonScaledSp,
             color = colorResource(R.color.white)
         )
         CustomTextField(

@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import com.example.bodybalance.BuildConfig
 import com.example.bodybalance.R
 import com.example.bodybalance.core.composable.BaseTopAppBar
+import com.example.bodybalance.core.util.nonScaledSp
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import com.example.bodybalance.ui.theme.BottomSheetTextBlack
 import com.example.bodybalance.ui.theme.BottomSheetTextGrey
@@ -211,25 +212,25 @@ private fun ContributorsItem(
     ) {
         Text(
             text = fieldOfWork,
-            fontSize = 12.sp,
+            fontSize = 12.nonScaledSp,
             color = BottomSheetTextGrey
         )
         Text(
             text = name,
-            fontSize = 16.sp,
+            fontSize = 16.nonScaledSp,
             color = BottomSheetTextBlack
         )
         Text(
             modifier = Modifier.clickable { openContributorLink(basicLink) },
             text = basicLink,
-            fontSize = 16.sp,
+            fontSize = 16.nonScaledSp,
             color = BottomSheetTextBlack
         )
         if (additionalLink.isNotEmpty()) {
             Text(
                 modifier = Modifier.clickable { openContributorLink(additionalLink) },
                 text = additionalLink,
-                fontSize = 16.sp,
+                fontSize = 16.nonScaledSp,
                 color = BottomSheetTextBlack
             )
         }

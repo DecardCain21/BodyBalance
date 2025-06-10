@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.bodybalance.core.util.nonScaledSp
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -53,7 +54,7 @@ public fun BodyBalanceActionButton(
             text = text,
             color = Color.Black,
             fontWeight = FontWeight.Medium,
-            fontSize = 14.sp,
+            fontSize = 14.nonScaledSp,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )

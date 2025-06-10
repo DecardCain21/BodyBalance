@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.bodybalance.core.util.nonScaledSp
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 
 @Composable
@@ -41,7 +42,7 @@ public fun BasicButton(
     ) {
         Text(
             text = text,
-            fontSize = 14.sp,
+            fontSize = 14.nonScaledSp,
             color =
             if (isEnabled) {
                 enabledTextColor
