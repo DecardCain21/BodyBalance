@@ -4,14 +4,13 @@ import android.annotation.SuppressLint
 
 @SuppressLint("DefaultLocale")
 public fun Long.convertToFileSize(): String {
-    val kb = this / 1024.0
-    val mb = kb / 1024.0
-    val gb = mb / 1024.0
+    require(this >= 0) { "File size cannot be negative" }
 
     return when {
-        gb >= 1 -> String.format("%.2f GB", gb)
-        mb >= 1 -> String.format("%.2f MB", mb)
-        kb >= 1 -> String.format("%.2f KB", kb)
-        else -> "$this MB"
+        this == 0L -> "0 B"
+        this < 1024 -> "$this B"
+        this < 1024 * 1024 -> "%.1f KB".format(this / 1024.0)
+        this < 1024 * 1024 * 1024 -> "%.1f MB".format(this / (1024.0 * 1024.0))
+        else -> "%.1f GB".format(this / (1024.0 * 1024.0 * 1024.0))
     }
 }

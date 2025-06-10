@@ -8,7 +8,6 @@ import java.util.zip.ZipInputStream
 
 public class IntroProvider(private val context: Context) {
 
-    private val sharedPrefs = context.getSharedPreferences("video_prefs", Context.MODE_PRIVATE)
     private val videoFile = File(context.filesDir, "intro_video.mp4")
 
     public fun getVideoUri(): Uri? {
@@ -20,31 +19,27 @@ public class IntroProvider(private val context: Context) {
     }
 
     public fun unpackVideoIfNeeded(): Boolean {
-        if (sharedPrefs.getBoolean("is_unpacked", false) && videoFile.exists()) {
+        // Проверяем, нужно ли распаковывать (флаг + существует ли файл)
+        if (videoFile.exists()) {
             return true
         }
 
         return try {
-            context.assets.open("intro_video.zip").use { assetStream ->
-                ZipInputStream(assetStream).use { zipStream ->
-                    zipStream.nextEntry?.let { entry ->
-                        if (!entry.isDirectory) {
-                            FileOutputStream(videoFile).use { output ->
-                                zipStream.copyTo(output)
-                            }
-                            sharedPrefs.edit().putBoolean("is_unpacked", true).apply()
-                            true
-                        } else false
-                    } ?: false
+            // Открываем файл напрямую из assets
+            context.assets.open("intro_video.mp4").use { inputStream ->
+                FileOutputStream(videoFile).use { outputStream ->
+                    // Копируем содержимое
+                    inputStream.copyTo(outputStream)
                 }
             }
+            true
         } catch (e: Exception) {
+            e.printStackTrace()
             false
         }
     }
 
     public fun deleteVideo() {
         videoFile.delete()
-        sharedPrefs.edit().putBoolean("is_unpacked", false).apply()
     }
 }

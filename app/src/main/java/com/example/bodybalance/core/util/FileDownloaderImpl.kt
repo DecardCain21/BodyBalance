@@ -26,6 +26,7 @@ public class FileDownloaderImpl @Inject constructor(
 ) : FileDownloader {
 
     private val activeDownloads = mutableMapOf<Int, Call>()
+    private val excluded = setOf("intro_video.mp4", "profileInstalled")
 
     override fun downloadFile(video: Video, callback: DownloadCallback) {
         val request = Request.Builder().url(video.remoteVideoUrl).build()
@@ -114,7 +115,7 @@ public class FileDownloaderImpl @Inject constructor(
 
         var allDeleted = true
         for (file in files) {
-            if (file.name != "intro_video.mp4" && !file.delete()) {
+            if (!excluded.contains(file.name) && !file.delete()) {
                 allDeleted = false
             }
         }
@@ -123,8 +124,11 @@ public class FileDownloaderImpl @Inject constructor(
     }
 
     override fun getFilesCacheSize(): Long {
-        val files = context.filesDir.listFiles() ?: return 0L
-        return files.sumOf { it.length() }
+        return context.filesDir
+            ?.listFiles()
+            ?.filter { it.isFile && !excluded.contains(it.name) }
+            ?.sumOf { it.length() }
+            ?: 0L
     }
 
     override fun getFilePathIfExists(fileName: String): String? {
