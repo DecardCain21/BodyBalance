@@ -525,13 +525,17 @@ private fun VideoItemsScreen(
 
                 var showDeleteBackground by remember { mutableStateOf(true) }
 
-                SwipeToDismissBox(
-                    state = dismissState,
-                    enableDismissFromStartToEnd = false, // Отключаем свайп вправо
-                    backgroundContent = { DismissBackground(showDeleteBackground) },
-                    content = {
-                        ReorderableItem(state = state, key = item.id) { isDragging ->
-                            showDeleteBackground = !isDragging
+                ReorderableItem(
+                    state = state,
+                    key = item.id
+                ) { isDragging ->
+                    showDeleteBackground = !isDragging
+
+                    SwipeToDismissBox(
+                        state = dismissState,
+                        enableDismissFromStartToEnd = false, // Отключаем свайп вправо
+                        backgroundContent = { DismissBackground(showDeleteBackground) },
+                        content = {
                             VideoItem(
                                 modifier = Modifier.clickable {
                                     navigateToVideoPlayerScreenFromPlaylist(item.id)
@@ -543,8 +547,8 @@ private fun VideoItemsScreen(
                                 reorderState = state
                             )
                         }
-                    }
-                )
+                    )
+                }
             }
         }
     }
