@@ -60,6 +60,8 @@ internal class CategoryViewModel @Inject constructor(
                 id = event.id,
                 order = event.order
             )
+
+            is CategoryScreenUiEvent.UpdateExercise -> updateExercise()
         }
     }
 
@@ -105,6 +107,22 @@ internal class CategoryViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 _uiState.update { CategoryScreenState.emptyState() }
+            }
+        }
+    }
+
+    private fun updateExercise() {
+        viewModelScope.launch {
+            val categories = getCategoryUseCase().getOrNull()
+            val categoryState = if (categories.isNullOrEmpty()) {
+                CategoryScreenState.CategoryState.Empty
+            } else {
+                CategoryScreenState.CategoryState.Content(categories)
+            }
+            _uiState.update { state ->
+                state.copy(
+                    category = categoryState
+                )
             }
         }
     }

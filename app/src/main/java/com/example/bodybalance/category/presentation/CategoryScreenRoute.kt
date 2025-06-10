@@ -53,6 +53,7 @@ internal fun CategoryScreenRoute(
             viewModel.handleEvent(
                 CategoryScreenUiEvent.UpdateOrderSavedVideo(id = id, order = order)
             )
-        }
+        },
+        updateExercise = { viewModel.handleEvent(CategoryScreenUiEvent.UpdateExercise) }
     )
 }

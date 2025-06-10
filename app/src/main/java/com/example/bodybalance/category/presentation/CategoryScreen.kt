@@ -105,6 +105,7 @@ internal fun CategoryScreen(
     updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit,
     deleteSavedVideoFrom: (Video) -> Unit,
     updateOrderSavedVideo: (id: Int, order: Int) -> Unit,
+    updateExercise: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -140,7 +141,8 @@ internal fun CategoryScreen(
                 deleteVideoFromPlaylist = { deleteVideoFromPlaylist(it) },
                 updateOrderPlaylistVideo = updateOrderPlaylistVideo,
                 deleteSavedVideoFrom = { deleteSavedVideoFrom(it) },
-                updateOrderSavedVideo = updateOrderSavedVideo
+                updateOrderSavedVideo = updateOrderSavedVideo,
+                updateExercise = updateExercise
             )
         }
     }
@@ -270,6 +272,7 @@ private fun CategoryPages(
     categoryState: CategoryState,
     playlistState: PlaylistState,
     savedVideos: DownloadedState,
+    updateExercise: () -> Unit,
     navigateToVideoPlayerScreen: (Int) -> Unit, // Int - Id категории
     navigateToVideoPlayerScreenFromPlaylist: (Int) -> Unit, // Int - Id видео
     navigateToVideoScreenFromDownloaded: (Int) -> Unit, // Int - Id видео
@@ -310,7 +313,13 @@ private fun CategoryPages(
             Tab(
                 selected = pagerState.currentPage == index,
                 onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
-                text = { Text(text = title, fontWeight = FontWeight(700), fontSize = 14.nonScaledSp) }
+                text = {
+                    Text(
+                        text = title,
+                        fontWeight = FontWeight(700),
+                        fontSize = 14.nonScaledSp
+                    )
+                }
             )
         }
     }
@@ -345,7 +354,10 @@ private fun CategoryPages(
                     )
 
                     is CategoryState.Empty ->
-                        ExerciseEmptyScreen(modifier = Modifier.padding(bottom = 56.dp))
+                        ExerciseEmptyScreen(
+                            modifier = Modifier.padding(bottom = 56.dp),
+                            updateExercise = updateExercise
+                        )
 
                     is CategoryState.Loading ->
                         ExerciseLoadingScreen(modifier = Modifier.padding(bottom = 56.dp))
@@ -388,20 +400,23 @@ private fun ExerciseLoadingScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun ExerciseEmptyScreen(modifier: Modifier = Modifier) {
+private fun ExerciseEmptyScreen(
+    modifier: Modifier = Modifier,
+    updateExercise: () -> Unit
+) {
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Проверьте соединение с интернетом",
+            text = "Нет интернета",
             fontSize = 22.sp,
             color = White,
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(12.dp))
-        BasicButton(text = "Обновить", onClick = { })
+        BasicButton(text = "Обновить", onClick = { updateExercise() })
     }
 }
 
@@ -662,7 +677,8 @@ private fun PreviewPlaylist() {
             categoryState = CategoryState.Empty,
             downloadedState = DownloadedState.Empty,
             deleteSavedVideoFrom = {},
-            updateOrderSavedVideo = { _, _ -> }
+            updateOrderSavedVideo = { _, _ -> },
+            updateExercise = {}
         )
     }
 }
