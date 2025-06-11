@@ -151,7 +151,8 @@ internal fun HomeScreen(
             BasicButton(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 6.dp),
+                    .padding(bottom = 6.dp)
+                    .padding(bottom = 24.dp),
                 text = stringResource(R.string.get_login),
                 buttonColor = Color.Transparent,
                 enabledTextColor = MaterialTheme.colorScheme.primary,

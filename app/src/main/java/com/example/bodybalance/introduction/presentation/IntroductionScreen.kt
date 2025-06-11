@@ -205,7 +205,8 @@ private fun IntroductionScreenContent(
         BasicButton(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 24.dp),
             text = stringResource(R.string.continue_button),
             buttonColor = MaterialTheme.colorScheme.primary,
             enabledTextColor = MaterialTheme.colorScheme.onPrimary,
