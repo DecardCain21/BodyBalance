@@ -213,7 +213,6 @@ internal class VideoPlayerViewModel @Inject constructor(
                 setButtonsState()
             }
         }
-
         fileDownloader.downloadFile(
             video = video,
             object : DownloadCallback {
@@ -231,8 +230,11 @@ internal class VideoPlayerViewModel @Inject constructor(
                                 _snackBarEvent.emit(
                                     SnackbarEventParams(
                                         message = error.error,
-                                        actionLabel = ACTION_LABEL_UNPLUG,
-                                        onAction = { settingsToolsUseCase.setWifiFlag(false) }
+                                        actionLabel = ACTION_LABEL_DOWNLOAD,
+                                        onAction = {
+                                            settingsToolsUseCase.setWifiFlag(false)
+                                            downloadVideo(video = video)
+                                        }
                                     )
                                 )
                             }
@@ -296,7 +298,7 @@ internal class VideoPlayerViewModel @Inject constructor(
     companion object {
         private const val VIDEO_IS_BEING_DOWNLOADED = "Видео скачивается"
         private const val VIDEO_DOWNLOADED = "Видео скачено"
-        private const val ACTION_LABEL_UNPLUG = "Отключить"
+        private const val ACTION_LABEL_DOWNLOAD = "Скачать"
         private const val REMOVE = "Видео удаляется"
         private const val CANCEL = "Отмена"
         private const val DOWNLOAD_CANCEL = "Загрузка видео была отменена"

@@ -35,7 +35,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.bodybalance.BuildConfig
 import com.example.bodybalance.R
 import com.example.bodybalance.core.composable.BaseTopAppBar
@@ -116,7 +115,7 @@ private fun ClearCacheRow(
     cacheSize: Long,
     onClear: () -> Unit
 ) {
-    Box {
+    Box{
         Row(
             modifier = Modifier
                 .padding(top = 16.dp)
@@ -187,7 +186,8 @@ private fun DownloadOnlyWifiRow(
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
         )
         Text(
-            modifier = Modifier.padding(vertical = 8.dp),
+            modifier = Modifier
+                .padding(vertical = 8.dp),
             text = stringResource(R.string.download_wi_fi_only),
             fontSize = 16.nonScaledSp,
             color = colorResource(R.color.white),
