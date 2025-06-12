@@ -44,7 +44,6 @@ public fun VideoItem(
     category: String = "",
     showIconDrag: Boolean = true,
     showSelectItem: Boolean = false,
-    reorderState: ReorderableLazyListState? = null
 ) {
     val imageModel = imageUrl.takeIf { it.isNotBlank() }
     val colorBackground = if (showSelectItem) Grey else Black
@@ -62,10 +61,6 @@ public fun VideoItem(
         ) {
             if (showIconDrag) {
                 Image(
-                    modifier = Modifier
-                        .wrapContentHeight()
-                        .then(reorderState?.let { Modifier.detectReorderAfterLongPress(it) }
-                            ?: Modifier),
                     painter = painterResource(R.drawable.ic_drag),
                     contentDescription = "Icon drag"
                 )
@@ -145,8 +140,8 @@ private fun VideoItemPreview() {
     BodyBalanceTheme {
         VideoItem(
             title = "Разминка перед упражнениями на отдельную группу мыщц",
-            category = "Название секции",
-            imageUrl = "Some Description"
+            imageUrl = "Some Description",
+            showIconDrag = false,
         )
     }
 }

@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -96,13 +98,13 @@ internal fun VideoPlayerScreen(
             modifier = modifier
                 .fillMaxSize()
                 .padding(paddingValue),
-            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             HeaderVideoPlayerScreen(video = currentVideo)
 
             when (videoListState) {
                 is VideoPlayerState.VideoListState.Content -> {
                     BodyVideoPlayerScreen(
+                        modifier = Modifier.padding(top = 12.dp),
                         isAddPlaylist = videoInPlaylist,
                         isDownloadState = videoInCache,
                         onClickDownload = onClickDownload,
@@ -139,37 +141,44 @@ private fun VideoListLoading(modifier: Modifier = Modifier) {
 private fun HeaderVideoPlayerScreen(video: Video) {
     val isPreview = LocalInspectionMode.current
 
-    if (isPreview) {
-        Box(
-            modifier = Modifier
-                .height(240.dp)
-                .aspectRatio(3 / 4f)
-                .padding(top = 50.dp)
-                .background(Color.Gray),
-            contentAlignment = Alignment.Center
-        ) {
-            Text("ExoPlayer Placeholder", color = Color.White)
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        if (isPreview) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(16 / 9f)
+                    .background(Color.Gray),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("ExoPlayer Placeholder", color = Color.White)
+            }
+        } else {
+            exoPlayer(
+                context = LocalContext.current,
+                video = video
+            )
         }
-    } else {
-        exoPlayer(
-            context = LocalContext.current,
-            video = video
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            text = video.name,
+            overflow = TextOverflow.Ellipsis,
+            fontWeight = FontWeight.W400,
+            fontSize = 22.sp,
+            color = MaterialTheme.colorScheme.primary
         )
     }
-    Text(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        text = video.name,
-        overflow = TextOverflow.Ellipsis,
-        fontWeight = FontWeight(400),
-        fontSize = 22.sp,
-        color = MaterialTheme.colorScheme.primary
-    )
 }
 
 @Composable
 private fun BodyVideoPlayerScreen(
+    modifier: Modifier = Modifier,
     isAddPlaylist: Boolean,
     isDownloadState: VideoPlayerState.DownloadButtonState,
     onClickDownload: () -> Unit,
@@ -178,7 +187,11 @@ private fun BodyVideoPlayerScreen(
     onClickAddToPlaylist: () -> Unit,
     onClickRemoveFromPlaylist: () -> Unit,
 ) {
-    LazyRow(contentPadding = PaddingValues(horizontal = 16.dp)) {
+    LazyRow(
+        modifier = modifier,
+        contentPadding = PaddingValues(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
         item {
             if (isAddPlaylist) {
                 BodyBalanceActionButton(
@@ -193,7 +206,8 @@ private fun BodyVideoPlayerScreen(
                     imageVector = Icons.Default.BookmarkBorder
                 )
             }
-            Spacer(modifier = Modifier.padding(horizontal = 4.dp))
+        }
+        item {
             when (isDownloadState) {
                 VideoPlayerState.DownloadButtonState.Download -> {
                     BodyBalanceActionButton(
@@ -271,7 +285,7 @@ private fun VideoList(
 private fun IntroductionPreview() {
     BodyBalanceTheme {
         VideoPlayerScreen(
-            currentVideo = Video.emptyVideo(1),
+            currentVideo = Video.emptyVideo(1).copy(description = "sdfsfsfsffssdfs", name = "asfasfssf"),
             snackBarHostState = SnackbarHostState(),
             navigateBackToPlaylistScreen = {},
             onItemSelected = {},
@@ -283,7 +297,10 @@ private fun IntroductionPreview() {
             videoInPlaylist = false,
             onClickCancelDownload = {},
             videoListState = VideoPlayerState.VideoListState.Content(
-                listOf(Video.emptyVideo(1), Video.emptyVideo(2))
+                listOf(
+                    Video.emptyVideo(1),
+                    Video.emptyVideo(2)
+                )
             )
         )
     }

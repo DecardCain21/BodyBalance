@@ -85,6 +85,7 @@ import com.example.bodybalance.videoplayer.presentation.navigation.VideoPlayerNa
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.burnoutcrew.reorderable.ReorderableItem
+import org.burnoutcrew.reorderable.detectReorderAfterLongPress
 import org.burnoutcrew.reorderable.rememberReorderableLazyListState
 import org.burnoutcrew.reorderable.reorderable
 
@@ -553,14 +554,15 @@ private fun VideoItemsScreen(
                         backgroundContent = { DismissBackground(showDeleteBackground) },
                         content = {
                             VideoItem(
-                                modifier = Modifier.clickable {
-                                    navigateToVideoPlayerScreenFromPlaylist(item.id)
-                                },
+                                modifier = Modifier
+                                    .detectReorderAfterLongPress(state)
+                                    .clickable {
+                                        navigateToVideoPlayerScreenFromPlaylist(item.id)
+                                    },
                                 imageUrl = item.imageUrl,
                                 title = item.name,
                                 category = if (categoryOn) item.category else "",
-                                showIconDrag = true,
-                                reorderState = state
+                                showIconDrag = true
                             )
                         }
                     )
