@@ -93,7 +93,8 @@ private fun RowScope.VideoTextContent(
     Column(modifier = Modifier.weight(1f)) {
         TitleText(
             title = title,
-            maxLines = if (category.isNotEmpty()) 1 else 2
+            maxLines = if (category.isNotEmpty()) 1 else 2,
+            paddingTop = if(category.isNotEmpty()) 18 else 0
         )
 
         if (category.isNotEmpty()) {
@@ -106,10 +107,11 @@ private fun RowScope.VideoTextContent(
 private fun TitleText(
     title: String,
     maxLines: Int,
+    paddingTop:Int,
     modifier: Modifier = Modifier,
 ) {
     Text(
-        modifier = modifier.padding(start = 16.dp, end = 16.dp, top = 18.dp, bottom = 4.dp),
+        modifier = modifier.padding(start = 16.dp, end = 16.dp, bottom = 4.dp, top = paddingTop.dp),
         text = title,
         fontWeight = FontWeight(500),
         overflow = TextOverflow.Ellipsis,
