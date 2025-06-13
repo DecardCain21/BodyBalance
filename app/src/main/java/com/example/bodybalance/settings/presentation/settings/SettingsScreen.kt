@@ -42,6 +42,7 @@ import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.core.composable.snackbar.CustomSnackbarHost
 import com.example.bodybalance.core.util.convertToFileSize
 import com.example.bodybalance.core.util.nonScaledSp
+import com.example.bodybalance.settings.presentation.settings.state.DialogData
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 
 @Composable
@@ -52,11 +53,12 @@ internal fun SettingsScreen(
     navigateToAboutAppScreen: () -> Unit,
     downloadOnlyWifi: Boolean,
     cacheSize: Long,
-    signOut: () -> Unit,
+    dialogData: DialogData,
     clearCache: () -> Unit,
+    signOut: () -> Unit,
     changeDownloadSettings: (Boolean) -> Unit,
     showLogoutDialog: Boolean,
-    changeVisibilitySingOutDialog: (Boolean) -> Unit
+    closeDialog: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -80,7 +82,7 @@ internal fun SettingsScreen(
             horizontalAlignment = Alignment.Start
         ) {
             ClearCacheRow(cacheSize = cacheSize) {
-                clearCache()
+                if (cacheSize != 0L) clearCache()
             }
             DownloadOnlyWifiRow(
                 checked = downloadOnlyWifi,
@@ -95,16 +97,17 @@ internal fun SettingsScreen(
                 text = stringResource(R.string.exit),
                 buttonColor = Color.Transparent,
                 enabledTextColor = MaterialTheme.colorScheme.primary,
-                onClick = { changeVisibilitySingOutDialog(true) }
+                onClick = { signOut() }
             )
         }
 
         LogoutDialog(
+            dialogData = dialogData,
             showDialog = showLogoutDialog,
-            onDismiss = { changeVisibilitySingOutDialog(false) },
+            onDismiss = { closeDialog() },
             onConfirm = {
-                changeVisibilitySingOutDialog(false)
-                signOut()
+                closeDialog()
+                dialogData.onAction()
             }
         )
     }
@@ -243,6 +246,7 @@ private fun AboutAppRow(onClick: () -> Unit) {
 
 @Composable
 private fun LogoutDialog(
+    dialogData: DialogData,
     showDialog: Boolean,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
@@ -255,13 +259,13 @@ private fun LogoutDialog(
             title = {
                 Text(
                     modifier = Modifier.padding(end = 30.dp),
-                    text = stringResource(R.string.logout_of_account),
+                    text = dialogData.title,
                     color = MaterialTheme.colorScheme.primary
                 )
             },
             confirmButton = {
                 Button(onClick = { onConfirm() }) {
-                    Text(text = stringResource(R.string.logout))
+                    Text(text = dialogData.action)
                 }
             },
             dismissButton = {
@@ -285,9 +289,10 @@ private fun PreviewSettingsScreen() {
             downloadOnlyWifi = true,
             clearCache = {},
             changeDownloadSettings = {},
-            signOut = {},
+            dialogData = DialogData(),
             showLogoutDialog = false,
-            changeVisibilitySingOutDialog = {}
+            closeDialog = {},
+            signOut = {}
         )
     }
 }

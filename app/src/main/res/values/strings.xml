@@ -37,8 +37,6 @@
     <string name="about_app">О приложении</string>
     <string name="version_app">Версия %1$s</string>
     <string name="exit">Выйти</string>
-    <string name="logout_of_account">Выйти из аккаунта?</string>
-    <string name="logout">Выйти</string>
     <string name="cansel">Отмена</string>
 
     <!--AboutAppScreen-->

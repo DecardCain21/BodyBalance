@@ -8,11 +8,12 @@ import com.example.bodybalance.settings.domain.usecase.ClearCacheUseCase
 import com.example.bodybalance.settings.domain.usecase.GetFilesCacheSizeUseCase
 import com.example.bodybalance.settings.domain.usecase.LogOutOfAccountUseCase
 import com.example.bodybalance.settings.domain.usecase.SettingsToolsUseCase
+import com.example.bodybalance.settings.presentation.settings.state.DialogData
 import com.example.bodybalance.settings.presentation.settings.state.SettingsScreenState
 import com.example.bodybalance.settings.presentation.settings.state.SettingsScreenUiEvent
 import com.example.bodybalance.settings.presentation.settings.state.SettingsScreenUiEvent.ChangeDownloadSettings
-import com.example.bodybalance.settings.presentation.settings.state.SettingsScreenUiEvent.ChangeVisibilitySingOutDialog
 import com.example.bodybalance.settings.presentation.settings.state.SettingsScreenUiEvent.ClearCache
+import com.example.bodybalance.settings.presentation.settings.state.SettingsScreenUiEvent.CloseDialog
 import com.example.bodybalance.settings.presentation.settings.state.SettingsScreenUiEvent.SingOut
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -45,30 +46,58 @@ internal class SettingsViewModel @Inject constructor(
     fun handleEvent(event: SettingsScreenUiEvent) {
         when (event) {
             is ChangeDownloadSettings -> changeDownloadSettings(event.flag)
-            is ChangeVisibilitySingOutDialog -> changeVisibilitySingOutDialog(event.flag)
+            is CloseDialog -> closeDialog()
             is ClearCache -> clearCache()
             is SingOut -> signOut()
         }
     }
 
-    private fun changeVisibilitySingOutDialog(flag: Boolean) {
-        _uiState.update { it.copy(showLogoutDialog = flag) }
+
+    private fun closeDialog() {
+        _uiState.update { it.copy(showDialog = false) }
     }
 
     private fun signOut() {
-        viewModelScope.launch {
-            logOutOfAccountUseCase()
-            _uiState.update { it.copy(navigateToHome = true) }
+        _uiState.update { state ->
+            state.copy(
+                showDialog = true,
+                dialogData = DialogData(
+                    title = "Выйти из аккаунта?",
+                    action = "Выйти",
+                    onAction = {
+                        viewModelScope.launch {
+                            logOutOfAccountUseCase()
+                            _uiState.update { it.copy(navigateToHome = true) }
+                        }
+                    }
+                )
+            )
         }
     }
 
     private fun clearCache() {
-        viewModelScope.launch {
-            _snackBarEvent.emit(
-                SnackbarEventParams(message = uiState.value.cacheSize.convertToFileSize() + ACTION_CLEAN_CACHE)
+        _uiState.update { state ->
+            state.copy(
+                showDialog = true,
+                dialogData = DialogData(
+                    title = "Очистить кэш?",
+                    action = "Очистить",
+                    onAction = {
+                        viewModelScope.launch {
+                            _snackBarEvent.emit(
+                                SnackbarEventParams(
+                                    message = uiState
+                                        .value
+                                        .cacheSize
+                                        .convertToFileSize() + ACTION_CLEAN_CACHE
+                                )
+                            )
+                            clearCacheUseCase()
+                            getCacheSize()
+                        }
+                    }
+                )
             )
-            clearCacheUseCase()
-            getCacheSize()
         }
     }
 

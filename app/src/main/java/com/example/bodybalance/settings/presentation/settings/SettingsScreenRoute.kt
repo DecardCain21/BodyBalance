@@ -12,8 +12,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.bodybalance.settings.presentation.settings.state.SettingsScreenUiEvent
 import com.example.bodybalance.settings.presentation.settings.state.SettingsScreenUiEvent.ChangeDownloadSettings
-import com.example.bodybalance.settings.presentation.settings.state.SettingsScreenUiEvent.ChangeVisibilitySingOutDialog
+import com.example.bodybalance.settings.presentation.settings.state.SettingsScreenUiEvent.CloseDialog
 import com.example.bodybalance.settings.presentation.settings.state.SettingsScreenUiEvent.ClearCache
 import com.example.bodybalance.settings.presentation.settings.state.SettingsScreenUiEvent.SingOut
 import kotlinx.coroutines.Job
@@ -64,7 +65,8 @@ internal fun SettingsScreenRoute(
         clearCache = { viewModel.handleEvent(ClearCache) },
         changeDownloadSettings = { viewModel.handleEvent(ChangeDownloadSettings(it)) },
         signOut = { viewModel.handleEvent(SingOut) },
-        showLogoutDialog = uiState.showLogoutDialog,
-        changeVisibilitySingOutDialog = { viewModel.handleEvent(ChangeVisibilitySingOutDialog(it)) }
+        showLogoutDialog = uiState.showDialog,
+        closeDialog = { viewModel.handleEvent(CloseDialog) },
+        dialogData = uiState.dialogData
     )
 }
