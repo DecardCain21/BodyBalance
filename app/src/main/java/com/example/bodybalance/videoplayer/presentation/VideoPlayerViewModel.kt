@@ -89,12 +89,11 @@ internal class VideoPlayerViewModel @Inject constructor(
             val downloadState = getButtonDownloadState(videoId)
             val inPlaylist = existsPlaylistVideoByIdUseCase(videoId)
             getAllPlaylistVideosUseCase().collect { playlistVideos ->
+                val video = getVideoFromCache(playlistVideos.find { it.id == videoId }
+                    ?: Video.emptyVideo(1))
                 _uiState.update { state ->
                     state.copy(
-                        videoState = VideoPlayerState.VideoState.Content(
-                            playlistVideos.find { it.id == videoId }
-                                ?: Video.emptyVideo(1)
-                        ),
+                        videoState = VideoPlayerState.VideoState.Content(video),
                         videoListState = VideoPlayerState.VideoListState.Content(playlistVideos),
                         videoInPlaylist = inPlaylist,
                         videoInCache = downloadState

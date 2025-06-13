@@ -57,6 +57,7 @@ import com.example.bodybalance.R
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.core.util.nonScaledSp
 import com.example.bodybalance.ui.theme.White
+import androidx.core.net.toUri
 
 @OptIn(UnstableApi::class)
 @Composable
@@ -79,10 +80,12 @@ public fun exoPlayer(
     }
 
     var currentPosition by rememberSaveable { mutableLongStateOf(0L) }
+    val url = if (video.localVideoUrl == "") video.remoteVideoUrl else video.localVideoUrl
 
-    LaunchedEffect(video.remoteVideoUrl) {
+
+    LaunchedEffect(url) {
         exoPlayer.apply {
-            val mediaItem = MediaItem.fromUri(Uri.parse(video.remoteVideoUrl))
+            val mediaItem = MediaItem.fromUri(url.toUri())
             setMediaItem(mediaItem)
             seekTo(currentPosition)
             prepare()
