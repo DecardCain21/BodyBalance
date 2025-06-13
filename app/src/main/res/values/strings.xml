@@ -52,10 +52,11 @@
     <string name="link_telegram_Anastasia">https://t.me/AnastasiaGee</string>
 
     <!--VideoPlayerScreen-->
-    <string name="remove_from_device">Удалить с устройства</string>
+    <string name="remove_from_device">Удалить</string>
+    <string name="cansel_download">Остановить</string>
     <string name="download">Скачать</string>
-    <string name="added_to_playlist">Добавлено в плейлист</string>
-    <string name="add_to_playlist">Добавить в плейлист</string>
+    <string name="button_playlist">Плейлист</string>
+
 
     <!--Developers-->
     <string name="name_Marat">Марат</string>

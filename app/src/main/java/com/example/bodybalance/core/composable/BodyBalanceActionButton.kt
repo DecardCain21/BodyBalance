@@ -1,6 +1,5 @@
 package com.example.bodybalance.core.composable
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
@@ -22,11 +21,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.bodybalance.core.util.nonScaledSp
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 public fun BodyBalanceActionButton(
     onClick: () -> Unit,
@@ -34,9 +31,10 @@ public fun BodyBalanceActionButton(
     text: String
 ) {
     Row(
-        modifier = Modifier.combinedClickable {
-            onClick()
-        }
+        modifier = Modifier
+            .combinedClickable {
+                onClick()
+            }
             .background(
                 Color.White,
                 shape = RoundedCornerShape(100.dp)

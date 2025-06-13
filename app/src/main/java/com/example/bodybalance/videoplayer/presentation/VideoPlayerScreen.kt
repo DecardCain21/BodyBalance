@@ -9,18 +9,21 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
@@ -28,6 +31,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
@@ -59,6 +63,7 @@ import com.example.bodybalance.core.composable.exoPlayer
 import com.example.bodybalance.core.composable.items.VideoItem
 import com.example.bodybalance.core.composable.snackbar.CustomSnackbarHost
 import com.example.bodybalance.core.domain.models.Video
+import com.example.bodybalance.core.util.nonScaledSp
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerState
 
@@ -196,13 +201,13 @@ private fun BodyVideoPlayerScreen(
             if (isAddPlaylist) {
                 BodyBalanceActionButton(
                     onClick = { onClickRemoveFromPlaylist() },
-                    text = stringResource(R.string.added_to_playlist),
+                    text = stringResource(R.string.button_playlist),
                     imageVector = Icons.Default.Bookmark
                 )
             } else {
                 BodyBalanceActionButton(
                     onClick = { onClickAddToPlaylist() },
-                    text = stringResource(R.string.add_to_playlist),
+                    text = stringResource(R.string.button_playlist),
                     imageVector = Icons.Default.BookmarkBorder
                 )
             }
@@ -218,11 +223,38 @@ private fun BodyVideoPlayerScreen(
                 }
 
                 VideoPlayerState.DownloadButtonState.Loading -> {
-                    BodyBalanceActionButton(
+                    Row(
+                        modifier = Modifier
+                            .combinedClickable {
+                                onClickCancelDownload()
+                            }
+                            .background(
+                                Color.White,
+                                shape = RoundedCornerShape(100.dp)
+                            )
+                            .padding(top = 10.dp, bottom = 10.dp, start = 16.dp, end = 24.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(18.dp),
+                            trackColor = Color.Black,
+                            strokeWidth = 2.dp
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(
+                            text = stringResource(R.string.cansel_download),
+                            color = Color.Black,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 14.nonScaledSp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                  /*  BodyBalanceActionButton(
                         onClick = onClickCancelDownload,
-                        text = "Остановить скачивание",
+                        text = stringResource(R.string.cansel_download),
                         imageVector = Icons.Default.Close
-                    )
+                    )*/
                 }
 
                 VideoPlayerState.DownloadButtonState.Remove -> {
