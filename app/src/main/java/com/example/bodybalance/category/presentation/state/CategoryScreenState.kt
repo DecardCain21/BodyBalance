@@ -9,7 +9,8 @@ internal data class CategoryScreenState(
     val accounts: AccountsState,
     val category: CategoryState,
     val playlistVideo: PlaylistState,
-    val downloadedState: DownloadedState
+    val downloadedState: DownloadedState,
+    val isCategoryRefreshing: Boolean = false
 ) {
 
     sealed interface AccountsState {

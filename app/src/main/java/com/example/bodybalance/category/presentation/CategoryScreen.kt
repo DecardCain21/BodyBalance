@@ -4,10 +4,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.forEachGesture
-import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -51,6 +47,7 @@ import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
@@ -64,7 +61,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -90,9 +86,6 @@ import com.example.bodybalance.videoplayer.presentation.navigation.VideoPlayerNa
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.burnoutcrew.reorderable.ReorderableItem
-import org.burnoutcrew.reorderable.ReorderableLazyListState
-import org.burnoutcrew.reorderable.detectReorder
-import org.burnoutcrew.reorderable.detectReorderAfterLongPress
 import org.burnoutcrew.reorderable.rememberReorderableLazyListState
 import org.burnoutcrew.reorderable.reorderable
 
@@ -113,7 +106,9 @@ internal fun CategoryScreen(
     updateOrderPlaylistVideo: (id: Int, order: Int) -> Unit,
     deleteSavedVideoFrom: (Video) -> Unit,
     updateOrderSavedVideo: (id: Int, order: Int) -> Unit,
-    updateExercise: () -> Unit
+    updateExercise: () -> Unit,
+    pullToRefreshExercise: () -> Unit,
+    isCategoryRefreshing: Boolean
 ) {
     Scaffold(
         topBar = {
@@ -150,7 +145,9 @@ internal fun CategoryScreen(
                 updateOrderPlaylistVideo = updateOrderPlaylistVideo,
                 deleteSavedVideoFrom = { deleteSavedVideoFrom(it) },
                 updateOrderSavedVideo = updateOrderSavedVideo,
-                updateExercise = updateExercise
+                updateExercise = updateExercise,
+                pullToRefreshExercise = pullToRefreshExercise,
+                isCategoryRefreshing = isCategoryRefreshing
             )
         }
     }
@@ -281,6 +278,8 @@ private fun CategoryPages(
     playlistState: PlaylistState,
     savedVideos: DownloadedState,
     updateExercise: () -> Unit,
+    isCategoryRefreshing: Boolean,
+    pullToRefreshExercise: () -> Unit,
     navigateToVideoPlayerScreen: (Int) -> Unit, // Int - Id категории
     navigateToVideoPlayerScreenFromPlaylist: (Int) -> Unit, // Int - Id видео
     navigateToVideoScreenFromDownloaded: (Int) -> Unit, // Int - Id видео
@@ -358,7 +357,9 @@ private fun CategoryPages(
                 when (categoryState) {
                     is CategoryState.Content -> ExerciseScreen(
                         category = categoryState.categoryList,
-                        navigateToVideoPlayerScreen = navigateToVideoPlayerScreen
+                        navigateToVideoPlayerScreen = navigateToVideoPlayerScreen,
+                        isRefreshing = isCategoryRefreshing,
+                        onRefresh = pullToRefreshExercise
                     )
 
                     is CategoryState.Empty ->
@@ -428,30 +429,39 @@ private fun ExerciseEmptyScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ExerciseScreen(
     category: List<Category>,
     modifier: Modifier = Modifier,
+    isRefreshing: Boolean,
+    onRefresh: () -> Unit,
     navigateToVideoPlayerScreen: (Int) -> Unit
 ) {
+
     Box {
-        LazyColumn(
-            modifier = modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(16.dp),
-            state = rememberLazyListState()
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            onRefresh = onRefresh,
         ) {
-            items(items = category, key = { it.id }) { item ->
-                ExerciseItem(
-                    modifier = Modifier.combinedClickable(
-                        indication = null,
-                        interactionSource = null,
-                        onClick = { navigateToVideoPlayerScreen(item.id) }
-                    ),
-                    title = item.name,
-                    imageUrl = item.imageUrl
-                )
+            LazyColumn(
+                modifier = modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(16.dp),
+                state = rememberLazyListState()
+            ) {
+                items(items = category, key = { it.id }) { item ->
+                    ExerciseItem(
+                        modifier = Modifier.combinedClickable(
+                            indication = null,
+                            interactionSource = null,
+                            onClick = { navigateToVideoPlayerScreen(item.id) }
+                        ),
+                        title = item.name,
+                        imageUrl = item.imageUrl
+                    )
+                }
             }
         }
     }
@@ -687,7 +697,9 @@ private fun PreviewPlaylist() {
             downloadedState = DownloadedState.Empty,
             deleteSavedVideoFrom = {},
             updateOrderSavedVideo = { _, _ -> },
-            updateExercise = {}
+            updateExercise = {},
+            pullToRefreshExercise = {},
+            isCategoryRefreshing = false
         )
     }
 }

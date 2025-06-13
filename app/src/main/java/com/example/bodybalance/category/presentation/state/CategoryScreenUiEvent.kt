@@ -10,4 +10,5 @@ internal sealed interface CategoryScreenUiEvent {
     data class UpdateOrderSavedVideo(val id: Int, val order: Int) : CategoryScreenUiEvent
     data class DeleteSavedVideo(val video: Video) : CategoryScreenUiEvent
     data object UpdateExercise : CategoryScreenUiEvent
+    data object PullToRefreshExercise : CategoryScreenUiEvent
 }

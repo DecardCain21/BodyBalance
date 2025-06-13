@@ -54,6 +54,8 @@ internal fun CategoryScreenRoute(
                 CategoryScreenUiEvent.UpdateOrderSavedVideo(id = id, order = order)
             )
         },
-        updateExercise = { viewModel.handleEvent(CategoryScreenUiEvent.UpdateExercise) }
+        updateExercise = { viewModel.handleEvent(CategoryScreenUiEvent.UpdateExercise) },
+        pullToRefreshExercise = { viewModel.handleEvent(CategoryScreenUiEvent.PullToRefreshExercise)},
+        isCategoryRefreshing = uiState.isCategoryRefreshing
     )
 }

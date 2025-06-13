@@ -62,6 +62,21 @@ internal class CategoryViewModel @Inject constructor(
             )
 
             is CategoryScreenUiEvent.UpdateExercise -> updateExercise()
+            is CategoryScreenUiEvent.PullToRefreshExercise -> pullToRefreshExercise()
+        }
+    }
+
+    private fun pullToRefreshExercise() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isCategoryRefreshing = true) }
+            val categories = getCategoryUseCase().getOrNull()
+            val categoryState = if (categories.isNullOrEmpty()) {
+                CategoryScreenState.CategoryState.Empty
+            } else {
+                CategoryScreenState.CategoryState.Content(categories)
+            }
+
+            _uiState.update { it.copy(category = categoryState, isCategoryRefreshing = false) }
         }
     }
 
