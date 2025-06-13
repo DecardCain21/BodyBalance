@@ -34,6 +34,7 @@ import com.example.bodybalance.ui.theme.Black
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import com.example.bodybalance.ui.theme.Grey
 import org.burnoutcrew.reorderable.ReorderableLazyListState
+import org.burnoutcrew.reorderable.detectReorder
 import org.burnoutcrew.reorderable.detectReorderAfterLongPress
 
 @Composable
@@ -44,6 +45,7 @@ public fun VideoItem(
     category: String = "",
     showIconDrag: Boolean = true,
     showSelectItem: Boolean = false,
+    reorderState: ReorderableLazyListState? = null
 ) {
     val imageModel = imageUrl.takeIf { it.isNotBlank() }
     val colorBackground = if (showSelectItem) Grey else Black
@@ -61,6 +63,11 @@ public fun VideoItem(
         ) {
             if (showIconDrag) {
                 Image(
+                    modifier = Modifier
+                        .width(30.dp)
+                        .wrapContentHeight()
+                        .then(reorderState?.let { Modifier.detectReorder(it) }
+                            ?: Modifier),
                     painter = painterResource(R.drawable.ic_drag),
                     contentDescription = "Icon drag"
                 )
@@ -141,7 +148,7 @@ private fun VideoItemPreview() {
         VideoItem(
             title = "Разминка перед упражнениями на отдельную группу мыщц",
             imageUrl = "Some Description",
-            showIconDrag = false,
+            showIconDrag = true,
         )
     }
 }
