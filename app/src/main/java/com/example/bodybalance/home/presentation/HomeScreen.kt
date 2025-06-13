@@ -3,6 +3,7 @@ package com.example.bodybalance.home.presentation
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.FocusInteraction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -26,6 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -39,8 +41,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -74,6 +80,7 @@ internal fun HomeScreen(
 
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
 
     LaunchedEffect(interactionSource) {
         interactionSource.interactions.collect { interaction ->
@@ -84,103 +91,121 @@ internal fun HomeScreen(
         }
     }
 
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp)
-    ) {
-        Column {
-            Image(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = 144.dp, bottom = 60.dp),
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = "Logo",
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
+    Scaffold(
+        snackbarHost = {
+            CustomSnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.padding(16.dp)
             )
-            with(uiState) {
-                CustomTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp),
-                    value = inputValue,
-                    isError = inputError,
-                    label = stringResource(id = R.string.login),
-                    supportingText = supportText.message,
-                    interactionSource = interactionSource,
-                    onValueChange = { inputLogin(it) },
-                    trailingIcon = {
-                        if (isFocused && inputValue.isNotEmpty() || inputError) {
-                            LabelIcon(
-                                clearAll = { clearAll() },
-                                isError = inputError
-                            )
-                        }
-                    }
-                )
-            }
         }
-        Column(modifier = Modifier.align(Alignment.BottomCenter)) {
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 6.dp),
-                onClick = { accountEnter() },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    disabledContainerColor = OnSurfaceOpacity12,
-                    disabledContentColor = OnSurfaceOpacity12,
-                ),
-                shape = RoundedCornerShape(12.dp),
-                contentPadding = PaddingValues(top = 18.dp, bottom = 18.dp)
-            ) {
-                if (isLoading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(18.dp),
-                        strokeWidth = 2.dp,
-                        color = Black
+    ) { paddingValue ->
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+                .padding(paddingValue)
+        ) {
+            Column {
+                Image(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = 144.dp, bottom = 60.dp),
+                    painter = painterResource(id = R.drawable.logo),
+                    contentDescription = "Logo",
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
+                )
+                with(uiState) {
+                    CustomTextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp),
+                        value = inputValue,
+                        isError = inputError,
+                        label = stringResource(id = R.string.login),
+                        supportingText = supportText.message,
+                        interactionSource = interactionSource,
+                        onValueChange = { inputLogin(it) },
+                        trailingIcon = {
+                            when {
+                                isFocused && inputValue.isNotEmpty() -> {
+                                    IconButton(onClick = clearAll) {
+                                        Icon(
+                                            imageVector = Icons.Default.HighlightOff,
+                                            contentDescription = stringResource(R.string.clear)
+                                        )
+                                    }
+                                }
+                                inputError -> {
+                                    Icon(
+                                        imageVector = Icons.Default.Error,
+                                        contentDescription = stringResource(R.string.error),
+                                    )
+                                }
+                                else -> Unit
+                            }
+                        }
                     )
                 }
-                Spacer(modifier = Modifier.padding(end = 8.dp))
-                Text(
-                    text = stringResource(R.string.sing_in),
-                    fontSize = 14.sp,
-                )
             }
-
-            BasicButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 6.dp)
-                    .padding(bottom = 24.dp),
-                text = stringResource(R.string.get_login),
-                buttonColor = Color.Transparent,
-                enabledTextColor = MaterialTheme.colorScheme.primary,
-                onClick = { showBottomSheet = true }
-            )
-        }
-
-        if (showBottomSheet) {
-            ModalBottomSheet(
-                onDismissRequest = { showBottomSheet = false },
-                sheetState = sheetState,
-                dragHandle = {
-                    BottomSheetDefaults.DragHandle(color = MaterialTheme.colorScheme.outline)
+            Column(modifier = Modifier.align(Alignment.BottomCenter)) {
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 6.dp),
+                    onClick = {
+                        accountEnter()
+                        focusManager.clearFocus()
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        disabledContainerColor = OnSurfaceOpacity12,
+                        disabledContentColor = OnSurfaceOpacity12,
+                    ),
+                    shape = RoundedCornerShape(12.dp),
+                    contentPadding = PaddingValues(top = 18.dp, bottom = 18.dp)
+                ) {
+                    if (isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(18.dp),
+                            strokeWidth = 2.dp,
+                            color = Black
+                        )
+                        Spacer(modifier = Modifier.padding(end = 8.dp))
+                    }
+                    Text(
+                        text = stringResource(R.string.sing_in),
+                        fontSize = 14.sp,
+                    )
                 }
-            ) {
-                GetLoginBlockBottomSheet(
-                    sheetState = sheetState,
-                    showBottomSheetAction = { showBottomSheet = false },
-                    getLogin = { getLogin() }
+
+                BasicButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 6.dp)
+                        .padding(bottom = 24.dp),
+                    text = stringResource(R.string.get_login),
+                    buttonColor = Color.Transparent,
+                    enabledTextColor = MaterialTheme.colorScheme.primary,
+                    onClick = { showBottomSheet = true }
                 )
             }
+
+            if (showBottomSheet) {
+                ModalBottomSheet(
+                    onDismissRequest = { showBottomSheet = false },
+                    sheetState = sheetState,
+                    dragHandle = {
+                        BottomSheetDefaults.DragHandle(color = MaterialTheme.colorScheme.outline)
+                    }
+                ) {
+                    GetLoginBlockBottomSheet(
+                        sheetState = sheetState,
+                        showBottomSheetAction = { showBottomSheet = false },
+                        getLogin = { getLogin() }
+                    )
+                }
+            }
         }
-        CustomSnackbarHost(
-            hostState = snackbarHostState,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(16.dp)
-        )
     }
 }
 
@@ -231,26 +256,6 @@ private fun GetLoginBlockBottomSheet(
                 }
             }
         )
-    }
-}
-
-@Composable
-private fun LabelIcon(
-    isError: Boolean,
-    clearAll: () -> Unit,
-) {
-    if (isError) {
-        Icon(
-            imageVector = Icons.Default.Error,
-            contentDescription = stringResource(R.string.error),
-        )
-    } else {
-        IconButton(onClick = clearAll) {
-            Icon(
-                imageVector = Icons.Default.HighlightOff,
-                contentDescription = stringResource(R.string.clear)
-            )
-        }
     }
 }
 
