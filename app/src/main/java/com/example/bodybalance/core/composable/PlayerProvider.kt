@@ -105,10 +105,12 @@ public fun exoPlayer(
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
-                Lifecycle.Event.ON_PAUSE -> currentPosition = exoPlayer.currentPosition
+                Lifecycle.Event.ON_PAUSE -> {
+                    currentPosition = exoPlayer.currentPosition
+                    exoPlayer.pause()
+                }
                 Lifecycle.Event.ON_RESUME -> {
                     exoPlayer.seekTo(currentPosition)
-                    exoPlayer.playWhenReady
                 }
 
                 Lifecycle.Event.ON_DESTROY -> exoPlayer.release()

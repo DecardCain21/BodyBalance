@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -58,29 +59,31 @@ internal fun IntroductionScreen(
     eventContinue: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    Scaffold { paddingValues ->
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            when (uiState.videoState) {
+                is IntroductionPlayerState.Content -> {
+                    val input: String =
+                        when (uiState.inputValue) {
+                            Input.Empty -> ""
+                            is Input.Text -> uiState.inputValue.value
+                        }
+                    IntroductionScreenContent(
+                        video = uiState.videoState.video,
+                        navToPlaylist = navToPlaylist,
+                        eventContinue = eventContinue,
+                        inputValue = input,
+                        inputCodeWord = { inputCodeWord(it) },
+                        isEnabledButton = uiState.buttonIsEnabled,
+                        supportText = uiState.supportText
 
-    Column(
-        modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        when (uiState.videoState) {
-            is IntroductionPlayerState.Content -> {
-                val input: String =
-                    when (uiState.inputValue) {
-                        Input.Empty -> ""
-                        is Input.Text -> uiState.inputValue.value
-                    }
-                IntroductionScreenContent(
-                    video = uiState.videoState.video,
-                    navToPlaylist = navToPlaylist,
-                    eventContinue = eventContinue,
-                    inputValue = input,
-                    inputCodeWord = { inputCodeWord(it) },
-                    isEnabledButton = uiState.buttonIsEnabled,
-                    supportText = uiState.supportText
-
-                )
+                    )
+                }
             }
         }
     }

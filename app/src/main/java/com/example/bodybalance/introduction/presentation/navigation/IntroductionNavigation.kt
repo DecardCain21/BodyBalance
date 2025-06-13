@@ -9,10 +9,11 @@ public const val INTRODUCTION_ROUTE: String = "introduction"
 
 // Функция для навконтроллера , кладёт в граф/стек навигации
 public fun NavController.navigateToIntroductionScreen() {
-    navigate(
-        route = INTRODUCTION_ROUTE,
-    ) {
+    navigate(INTRODUCTION_ROUTE) {
         launchSingleTop = true
+        popUpTo(graph.startDestinationId) {
+            inclusive = true
+        }
     }
 }
 
