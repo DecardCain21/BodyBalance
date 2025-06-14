@@ -108,6 +108,11 @@ internal fun VideoPlayerScreenRoute(
             viewModel.handleEvent(
                 VideoPlayerScreenUiEvent.EmptyEvent
             )
+        },
+        noInternetPlayerSnackBar = {
+            viewModel.handleEvent(
+                VideoPlayerScreenUiEvent.NothingToPlayNoInternet
+            )
         }
     )
 }

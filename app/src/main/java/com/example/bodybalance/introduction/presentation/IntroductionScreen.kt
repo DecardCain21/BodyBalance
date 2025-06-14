@@ -245,7 +245,8 @@ private fun ExoPlayer(
         video = video,
         listener = listener,
         showButton = showButton,
-        shouldRequestFocus = shouldRequestFocus
+        shouldRequestFocus = shouldRequestFocus,
+        showSnackBar = {}
     )
 }
 

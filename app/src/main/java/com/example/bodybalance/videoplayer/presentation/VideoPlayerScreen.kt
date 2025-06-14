@@ -80,7 +80,8 @@ internal fun VideoPlayerScreen(
     onClickCancelDownload: () -> Unit,
     videoInCache: VideoPlayerState.DownloadButtonState,
     videoInPlaylist: Boolean,
-    emptyEvent: () -> Unit
+    emptyEvent: () -> Unit,
+    noInternetPlayerSnackBar: () -> Unit
 ) {
     val configuration = LocalConfiguration.current
 
@@ -104,7 +105,10 @@ internal fun VideoPlayerScreen(
         ) {
             when (videoListState) {
                 is VideoPlayerState.VideoListState.Content -> {
-                    HeaderVideoPlayerScreen(video = currentVideo)
+                    HeaderVideoPlayerScreen(
+                        video = currentVideo,
+                        noInternetPlayerSnackBar = noInternetPlayerSnackBar
+                    )
                     BodyVideoPlayerScreen(
                         modifier = Modifier.padding(top = 12.dp),
                         isAddPlaylist = videoInPlaylist,
@@ -146,7 +150,7 @@ private fun VideoListEmpty(emptyEvent: () -> Unit) {
 }
 
 @Composable
-private fun HeaderVideoPlayerScreen(video: Video) {
+private fun HeaderVideoPlayerScreen(video: Video, noInternetPlayerSnackBar: () -> Unit) {
     val isPreview = LocalInspectionMode.current
 
     Column(
@@ -165,7 +169,8 @@ private fun HeaderVideoPlayerScreen(video: Video) {
         } else {
             exoPlayer(
                 context = LocalContext.current,
-                video = video
+                video = video,
+                showSnackBar = noInternetPlayerSnackBar
             )
         }
 
@@ -333,7 +338,8 @@ private fun IntroductionPreview() {
                     Video.emptyVideo(2)
                 )
             ),
-            emptyEvent = {}
+            emptyEvent = {},
+            noInternetPlayerSnackBar = {}
         )
     }
 }

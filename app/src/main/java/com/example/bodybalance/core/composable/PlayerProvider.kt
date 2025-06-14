@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
-import android.net.Uri
 import android.view.View
 import android.view.WindowManager
 import androidx.annotation.OptIn
@@ -41,7 +40,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.Lifecycle
@@ -58,6 +56,7 @@ import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.core.util.nonScaledSp
 import com.example.bodybalance.ui.theme.White
 import androidx.core.net.toUri
+import androidx.media3.common.PlaybackException
 
 @OptIn(UnstableApi::class)
 @Composable
@@ -67,7 +66,8 @@ public fun exoPlayer(
     modifier: Modifier = Modifier,
     listener: Player.Listener? = null,
     showButton: Boolean = false,
-    shouldRequestFocus: () -> Unit = {}
+    shouldRequestFocus: () -> Unit = {},
+    showSnackBar: () -> Unit
 ): ExoPlayer {
 
     val exoPlayer = remember(context) {
@@ -146,7 +146,8 @@ public fun exoPlayer(
                 onFullscreenClick = { isLandscape = !isLandscape },
                 onControllerVisibilityChange = { visible ->
                     controllerVisible.value = visible
-                }
+                },
+                showSnackBar = showSnackBar
             )
 
             if (isLandscape) {
@@ -172,8 +173,25 @@ private fun VideoPlayer(
     exoPlayer: ExoPlayer,
     context: Context,
     onFullscreenClick: () -> Unit,
-    onControllerVisibilityChange: (Boolean) -> Unit
+    onControllerVisibilityChange: (Boolean) -> Unit,
+    showSnackBar: () -> Unit
 ) {
+    DisposableEffect(exoPlayer) {
+        val listener = object : Player.Listener {
+            override fun onPlayerError(error: PlaybackException) {
+                if (error.errorCode == PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED) {
+                    showSnackBar()
+                }
+            }
+        }
+
+        exoPlayer.addListener(listener)
+
+        onDispose {
+            exoPlayer.removeListener(listener)
+        }
+    }
+
     AndroidView(
         modifier = Modifier.fillMaxSize(),
         factory = {

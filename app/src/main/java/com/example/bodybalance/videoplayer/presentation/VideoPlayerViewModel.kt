@@ -1,5 +1,6 @@
 package com.example.bodybalance.videoplayer.presentation
 
+import androidx.compose.material3.SnackbarDuration
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.util.UnstableApi
@@ -85,6 +86,10 @@ internal class VideoPlayerViewModel @Inject constructor(
             is VideoPlayerScreenUiEvent.EmptyEvent -> {
                 emptyEvent()
             }
+
+            is VideoPlayerScreenUiEvent.NothingToPlayNoInternet -> {
+                nothingToPlayNoInternet()
+            }
         }
     }
 
@@ -166,6 +171,17 @@ internal class VideoPlayerViewModel @Inject constructor(
         }
     }
 
+    private fun nothingToPlayNoInternet() {
+        viewModelScope.launch {
+            _snackBarEvent.emit(
+                SnackbarEventParams(
+                    message = NO_INTERNET,
+                    duration = SnackbarDuration.Short,
+                )
+            )
+        }
+    }
+
     private fun getButtonDownloadState(videoId: Int): DownloadButtonState {
         return when {
             fileDownloader.checkDownloadingProcess(videoId) ->
@@ -221,7 +237,10 @@ internal class VideoPlayerViewModel @Inject constructor(
         if (getConnected()) {
             viewModelScope.launch {
                 _snackBarEvent.emit(
-                    SnackbarEventParams(message = VIDEO_IS_BEING_DOWNLOADED)
+                    SnackbarEventParams(
+                        message = VIDEO_IS_BEING_DOWNLOADED,
+                        duration = SnackbarDuration.Short
+                    )
                 )
                 setButtonsState()
             }
@@ -252,7 +271,14 @@ internal class VideoPlayerViewModel @Inject constructor(
                                 )
                             }
 
-                            else -> _snackBarEvent.emit(SnackbarEventParams(message = error.error))
+                            else -> _snackBarEvent.emit(
+                                SnackbarEventParams(
+                                    message = NO_INTERNET,
+                                    duration = SnackbarDuration.Indefinite,
+                                    onAction = { downloadVideo(video = video) },
+                                    actionLabel = UPDATE
+                                )
+                            )
                         }
                         setButtonsState()
                     }
@@ -316,5 +342,7 @@ internal class VideoPlayerViewModel @Inject constructor(
         private const val CANCEL = "Отмена"
         private const val DOWNLOAD_CANCEL = "Загрузка видео была отменена"
         private const val VIDEOS_IS_EMPTY = "Видео пока недоступно, загляните позже"
+        private const val NO_INTERNET = "Нет интернета"
+        private const val UPDATE = "Обновить"
     }
 }
