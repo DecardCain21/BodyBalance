@@ -13,5 +13,6 @@ internal data class SavedVideoEntity(
     val description: String,
     val category: String = "",
     val imageUrl: String = "",
-    val order: Int
+    val order: Int,
+    val timeOfAddition: Long
 )

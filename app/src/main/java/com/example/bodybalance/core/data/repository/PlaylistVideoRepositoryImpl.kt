@@ -1,6 +1,6 @@
 package com.example.bodybalance.core.data.repository
 
-import com.example.bodybalance.core.data.convertor.convertEntity
+import com.example.bodybalance.core.data.convertor.convertPlaylistEntity
 import com.example.bodybalance.core.data.convertor.convertToVideo
 import com.example.bodybalance.core.data.source.local.database.api.PlaylistVideoLocalSource
 import com.example.bodybalance.core.domain.api.PlaylistVideoRepository
@@ -20,11 +20,11 @@ internal class PlaylistVideoRepositoryImpl @Inject constructor(
     }
 
     override suspend fun insertPlaylistVideo(video: Video) {
-        playlistVideoLocalSource.insertPlaylistVideo(entity = video.convertEntity())
+        playlistVideoLocalSource.insertPlaylistVideo(entity = video.convertPlaylistEntity())
     }
 
     override suspend fun deletePlaylistVideo(video: Video) {
-        playlistVideoLocalSource.deletePlaylistVideo(entity = video.convertEntity())
+        playlistVideoLocalSource.deletePlaylistVideo(entity = video.convertPlaylistEntity())
     }
 
     override suspend fun deletePlaylistVideoById(id: Int) {
@@ -36,7 +36,7 @@ internal class PlaylistVideoRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updatePlaylistVideo(video: Video) {
-        playlistVideoLocalSource.updatePlaylistVideo(entity = video.convertEntity())
+        playlistVideoLocalSource.updatePlaylistVideo(entity = video.convertPlaylistEntity())
     }
 
     override suspend fun existsPlaylistVideoById(id: Int): Boolean {

@@ -45,7 +45,9 @@ internal class IntroductionViewModel @Inject constructor(
             val inputState = if (code.isNotEmpty()) Input.Text(code) else Input.Empty
             getIntroductionVideoUseCase.unpackVideoIfNeeded()
             _uiState.value = IntroductionScreenState(
-                inputValue = inputState, IntroductionPlayerState.Content(
+                inputValue = inputState,
+                buttonIsEnabled = code.isNotEmpty(),
+                videoState = IntroductionPlayerState.Content(
                     video = Video.emptyVideo(1).copy(
                         remoteVideoUrl = getIntroductionVideoUseCase(),
                         category = "Введение",
@@ -55,7 +57,7 @@ internal class IntroductionViewModel @Inject constructor(
                         """.trimIndent(),
                         name = "Введение"
                     )
-                ), buttonIsEnabled = code.isNotEmpty()
+                ),
             )
         }
     }

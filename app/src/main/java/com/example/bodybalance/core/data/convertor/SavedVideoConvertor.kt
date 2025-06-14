@@ -11,7 +11,8 @@ internal fun Video.convertToSavedVideo() = SavedVideoEntity(
     category = category,
     description = description,
     imageUrl = imageUrl,
-    order = 0
+    order = 0,
+    timeOfAddition = System.currentTimeMillis()
 )
 
 internal fun SavedVideoEntity.convertToVideo() = Video(

@@ -25,7 +25,8 @@ public fun BasicButton(
     buttonColor: Color = MaterialTheme.colorScheme.primary,
     enabledTextColor: Color = MaterialTheme.colorScheme.onPrimary,
     disabledTextColor: Color = MaterialTheme.colorScheme.primary,
-    isEnabled: Boolean = true
+    isEnabled: Boolean = true,
+    contentPadding: PaddingValues = PaddingValues(vertical = 18.dp)
 ) {
 
     Button(
@@ -38,7 +39,7 @@ public fun BasicButton(
             disabledContentColor = OnSurfaceOpacity12,
         ),
         shape = RoundedCornerShape(12.dp),
-        contentPadding = PaddingValues(top = 18.dp, bottom = 18.dp)
+        contentPadding = contentPadding
     ) {
         Text(
             text = text,

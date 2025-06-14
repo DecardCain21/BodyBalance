@@ -2,6 +2,7 @@ package com.example.bodybalance.core.composable
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
@@ -37,7 +39,7 @@ public fun CustomTextField(
     interactionSource: MutableInteractionSource? = null,
     focusRequester: FocusRequester? = null,
 ) {
-
+    val focusManager = LocalFocusManager.current
     val textState = remember { mutableStateOf(TextFieldValue(value)) }
 
     LaunchedEffect(value) {
@@ -64,7 +66,10 @@ public fun CustomTextField(
         ),
         shape = RoundedCornerShape(12.dp),
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password
+            keyboardType = KeyboardType.Password,
+        ),
+        keyboardActions = KeyboardActions(
+            onDone = { focusManager.clearFocus() }
         ),
         trailingIcon = trailingIcon,
         supportingText = { if (isError) Text(text = supportingText) },

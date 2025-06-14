@@ -104,6 +104,10 @@ internal fun HomeScreen(
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
                 .padding(paddingValue)
+                .combinedClickable(
+                    interactionSource = null,
+                    indication = null,
+                    onClick = { focusManager.clearFocus() })
         ) {
             Column {
                 Image(
@@ -135,12 +139,14 @@ internal fun HomeScreen(
                                         )
                                     }
                                 }
+
                                 inputError -> {
                                     Icon(
                                         imageVector = Icons.Default.Error,
                                         contentDescription = stringResource(R.string.error),
                                     )
                                 }
+
                                 else -> Unit
                             }
                         }
@@ -179,10 +185,7 @@ internal fun HomeScreen(
                 }
 
                 BasicButton(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 6.dp)
-                        .padding(bottom = 24.dp),
+                    modifier = Modifier.fillMaxWidth(),
                     text = stringResource(R.string.get_login),
                     buttonColor = Color.Transparent,
                     enabledTextColor = MaterialTheme.colorScheme.primary,

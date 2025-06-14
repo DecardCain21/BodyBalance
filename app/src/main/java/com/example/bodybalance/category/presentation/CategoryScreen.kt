@@ -425,7 +425,11 @@ private fun ExerciseEmptyScreen(
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(12.dp))
-        BasicButton(text = "Обновить", onClick = { updateExercise() })
+        BasicButton(
+            text = "Обновить",
+            contentPadding = PaddingValues(vertical = 18.dp, horizontal = 24.dp),
+            onClick = { updateExercise() }
+        )
     }
 }
 

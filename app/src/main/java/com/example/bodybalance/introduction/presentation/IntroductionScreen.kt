@@ -2,6 +2,7 @@ package com.example.bodybalance.introduction.presentation
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.FocusInteraction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -29,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -59,11 +61,18 @@ internal fun IntroductionScreen(
     eventContinue: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val focusManager = LocalFocusManager.current
+
     Scaffold { paddingValues ->
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .padding(paddingValues),
+                .padding(paddingValues)
+                .combinedClickable(
+                    interactionSource = null,
+                    indication = null,
+                    onClick = { focusManager.clearFocus() }
+                ),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             when (uiState.videoState) {
@@ -208,8 +217,7 @@ private fun IntroductionScreenContent(
         BasicButton(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 24.dp),
+                .padding(horizontal = 16.dp),
             text = stringResource(R.string.continue_button),
             buttonColor = MaterialTheme.colorScheme.primary,
             enabledTextColor = MaterialTheme.colorScheme.onPrimary,

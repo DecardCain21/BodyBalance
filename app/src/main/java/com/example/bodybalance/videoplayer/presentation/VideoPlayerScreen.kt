@@ -250,11 +250,6 @@ private fun BodyVideoPlayerScreen(
                             overflow = TextOverflow.Ellipsis
                         )
                     }
-                  /*  BodyBalanceActionButton(
-                        onClick = onClickCancelDownload,
-                        text = stringResource(R.string.cansel_download),
-                        imageVector = Icons.Default.Close
-                    )*/
                 }
 
                 VideoPlayerState.DownloadButtonState.Remove -> {
