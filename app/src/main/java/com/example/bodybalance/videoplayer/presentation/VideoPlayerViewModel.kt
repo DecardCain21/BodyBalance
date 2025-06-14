@@ -81,6 +81,10 @@ internal class VideoPlayerViewModel @Inject constructor(
             is VideoPlayerScreenUiEvent.CanselDownloadVideo -> {
                 canselDownloadVideo(event.videoId)
             }
+
+            is VideoPlayerScreenUiEvent.EmptyEvent -> {
+                emptyEvent()
+            }
         }
     }
 
@@ -130,7 +134,11 @@ internal class VideoPlayerViewModel @Inject constructor(
             val result = getVideoByCategoryUseCase(categoryId)
             val newState = when (result.exceptionOrNull()) {
                 is NetworkError.ServerError,
-                is NetworkError.NoData,
+                is NetworkError.NoData -> VideoPlayerState(
+                    videoState = VideoPlayerState.VideoState.Empty,
+                    videoListState = VideoPlayerState.VideoListState.Empty
+                )
+
                 is NetworkError.NoInternet -> VideoPlayerState.emptyState()
 
                 else -> result.getOrNull()?.let { videos ->
@@ -149,6 +157,12 @@ internal class VideoPlayerViewModel @Inject constructor(
                 }
             }
             newState?.let { _uiState.value = it }
+        }
+    }
+
+    private fun emptyEvent() {
+        viewModelScope.launch {
+            _snackBarEvent.emit(SnackbarEventParams(message = VIDEOS_IS_EMPTY))
         }
     }
 
@@ -301,5 +315,6 @@ internal class VideoPlayerViewModel @Inject constructor(
         private const val REMOVE = "Видео удаляется"
         private const val CANCEL = "Отмена"
         private const val DOWNLOAD_CANCEL = "Загрузка видео была отменена"
+        private const val VIDEOS_IS_EMPTY = "Видео пока недоступно, загляните позже"
     }
 }

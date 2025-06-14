@@ -1,7 +1,6 @@
 package com.example.bodybalance.videoplayer.presentation
 
 import androidx.annotation.OptIn
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
@@ -104,6 +103,11 @@ internal fun VideoPlayerScreenRoute(
             )
         },
         videoInCache = currentState.videoInCache,
-        videoInPlaylist = currentState.videoInPlaylist
+        videoInPlaylist = currentState.videoInPlaylist,
+        emptyEvent = {
+            viewModel.handleEvent(
+                VideoPlayerScreenUiEvent.EmptyEvent
+            )
+        }
     )
 }

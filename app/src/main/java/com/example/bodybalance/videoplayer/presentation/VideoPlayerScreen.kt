@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -27,11 +26,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
@@ -82,7 +79,8 @@ internal fun VideoPlayerScreen(
     onClickRemoveFromPlaylist: () -> Unit,
     onClickCancelDownload: () -> Unit,
     videoInCache: VideoPlayerState.DownloadButtonState,
-    videoInPlaylist: Boolean
+    videoInPlaylist: Boolean,
+    emptyEvent: () -> Unit
 ) {
     val configuration = LocalConfiguration.current
 
@@ -104,10 +102,9 @@ internal fun VideoPlayerScreen(
                 .fillMaxSize()
                 .padding(paddingValue),
         ) {
-            HeaderVideoPlayerScreen(video = currentVideo)
-
             when (videoListState) {
                 is VideoPlayerState.VideoListState.Content -> {
+                    HeaderVideoPlayerScreen(video = currentVideo)
                     BodyVideoPlayerScreen(
                         modifier = Modifier.padding(top = 12.dp),
                         isAddPlaylist = videoInPlaylist,
@@ -126,6 +123,7 @@ internal fun VideoPlayerScreen(
                 }
 
                 is VideoPlayerState.VideoListState.Loading -> VideoListLoading()
+                VideoPlayerState.VideoListState.Empty -> VideoListEmpty(emptyEvent = emptyEvent)
             }
         }
     }
@@ -140,6 +138,11 @@ private fun VideoListLoading(modifier: Modifier = Modifier) {
     ) {
         CircularProgressIndicator()
     }
+}
+
+@Composable
+private fun VideoListEmpty(emptyEvent: () -> Unit) {
+    LaunchedEffect(Unit) { emptyEvent() }
 }
 
 @Composable
@@ -312,7 +315,8 @@ private fun VideoList(
 private fun IntroductionPreview() {
     BodyBalanceTheme {
         VideoPlayerScreen(
-            currentVideo = Video.emptyVideo(1).copy(description = "sdfsfsfsffssdfs", name = "asfasfssf"),
+            currentVideo = Video.emptyVideo(1)
+                .copy(description = "sdfsfsfsffssdfs", name = "asfasfssf"),
             snackBarHostState = SnackbarHostState(),
             navigateBackToPlaylistScreen = {},
             onItemSelected = {},
@@ -328,7 +332,8 @@ private fun IntroductionPreview() {
                     Video.emptyVideo(1),
                     Video.emptyVideo(2)
                 )
-            )
+            ),
+            emptyEvent = {}
         )
     }
 }

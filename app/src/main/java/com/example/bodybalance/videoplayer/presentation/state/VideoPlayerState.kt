@@ -21,6 +21,7 @@ internal data class VideoPlayerState(
     }
 
     sealed interface VideoListState {
+        data object Empty : VideoListState
         data object Loading : VideoListState
         data class Content(val videoList: List<Video>) : VideoListState
     }
