@@ -1,6 +1,7 @@
 package com.example.bodybalance.core.composable
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -10,6 +11,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -23,7 +25,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.bodybalance.core.util.nonScaledSp
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 
@@ -36,11 +37,12 @@ public fun CustomTextField(
     supportingText: String = "",
     onValueChange: (String) -> Unit,
     trailingIcon: @Composable (() -> Unit)? = null,
-    interactionSource: MutableInteractionSource? = null,
+    interactionSource: MutableInteractionSource? = remember { MutableInteractionSource() },
     focusRequester: FocusRequester? = null,
 ) {
     val focusManager = LocalFocusManager.current
     val textState = remember { mutableStateOf(TextFieldValue(value)) }
+    val isFocused by interactionSource!!.collectIsFocusedAsState()
 
     LaunchedEffect(value) {
         textState.value = TextFieldValue(value, selection = TextRange(value.length))
@@ -72,7 +74,7 @@ public fun CustomTextField(
             onDone = { focusManager.clearFocus() }
         ),
         trailingIcon = trailingIcon,
-        supportingText = { if (isError) Text(text = supportingText) },
+        supportingText = { if (supportingText.isNotEmpty() && (isFocused && isError)) Text(text = supportingText) },
         label = { Text(text = label) },
     )
 }
