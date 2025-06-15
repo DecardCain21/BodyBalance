@@ -23,6 +23,7 @@ internal class MainActivity : ComponentActivity() {
         setContent {
             val viewModel: MainViewModel = hiltViewModel()
             val isAuthenticated by viewModel.isAuthenticated.collectAsState()
+
             BodyBalanceTheme {
                 Box(
                     modifier = Modifier

@@ -2,7 +2,10 @@ package com.example.bodybalance.core.composable
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.systemGesturesPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.systemGestureExclusion
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -30,7 +33,10 @@ public fun BasicButton(
 ) {
 
     Button(
-        modifier = modifier,
+        modifier = modifier
+            /*.navigationBarsPadding()*/ // По идее добавляет отступы от зон навигации
+            .systemGesturesPadding() // Добавляет отступы от зон жестов
+            .systemGestureExclusion(),// Отключает системные жесты во всей зоне Box
         onClick = onClick,
         enabled = isEnabled,
         colors = ButtonDefaults.buttonColors(
