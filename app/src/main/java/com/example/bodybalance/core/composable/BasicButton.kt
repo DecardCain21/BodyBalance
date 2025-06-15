@@ -2,23 +2,22 @@ package com.example.bodybalance.core.composable
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.systemGesturesPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.systemGestureExclusion
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import com.example.bodybalance.ui.theme.OnSurfaceOpacity12
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.bodybalance.core.util.nonScaledSp
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
+import com.example.bodybalance.ui.theme.OnSurfaceOpacity12
 
 @Composable
 public fun BasicButton(
@@ -29,13 +28,13 @@ public fun BasicButton(
     enabledTextColor: Color = MaterialTheme.colorScheme.onPrimary,
     disabledTextColor: Color = MaterialTheme.colorScheme.primary,
     isEnabled: Boolean = true,
-    contentPadding: PaddingValues = PaddingValues(vertical = 18.dp)
+    contentPadding: PaddingValues = PaddingValues(vertical = 18.dp),
 ) {
 
     Button(
         modifier = modifier
             /*.navigationBarsPadding()*/ // По идее добавляет отступы от зон навигации
-            .systemGesturesPadding() // Добавляет отступы от зон жестов
+            /*.systemGesturesPadding()*/ // Добавляет отступы от зон жестов
             .systemGestureExclusion(),// Отключает системные жесты во всей зоне Box
         onClick = onClick,
         enabled = isEnabled,
@@ -51,11 +50,11 @@ public fun BasicButton(
             text = text,
             fontSize = 14.nonScaledSp,
             color =
-            if (isEnabled) {
-                enabledTextColor
-            } else {
-                disabledTextColor
-            }
+                if (isEnabled) {
+                    enabledTextColor
+                } else {
+                    disabledTextColor
+                }
 
         )
     }

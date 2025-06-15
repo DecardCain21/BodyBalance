@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemGesturesPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.Icon
@@ -209,13 +210,13 @@ private fun IntroductionScreenContent(
                         contentDescription = stringResource(R.string.error),
                     )
                 }
-            }
+            },
         )
 
         Spacer(modifier = Modifier.weight(1f))
 
         BasicButton(
-            modifier = Modifier
+            modifier = Modifier.systemGesturesPadding()
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
             text = stringResource(R.string.continue_button),
