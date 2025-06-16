@@ -283,7 +283,12 @@ private fun VideoList(
     var selectItemIndex by rememberSaveable { mutableIntStateOf(currentIndex) }
     val scrollStateOfVideo = rememberLazyListState()
 
-    LaunchedEffect(videoList) { scrollStateOfVideo.animateScrollToItem(selectItemIndex) }
+    LaunchedEffect(videoList) {
+        scrollStateOfVideo.animateScrollToItem(
+            index = selectItemIndex,
+            scrollOffset = 10
+        )
+    }
 
     LazyColumn(
         modifier = modifier

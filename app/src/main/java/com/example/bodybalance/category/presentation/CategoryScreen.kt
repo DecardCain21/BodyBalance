@@ -515,10 +515,6 @@ private fun VideoItemsScreen(
 
     var list by remember { mutableStateOf(videoItems) }
 
-    LaunchedEffect(videoItems) {
-        list = videoItems
-    }
-
     val state = rememberReorderableLazyListState(onMove = { from, to ->
         list = list.toMutableList().apply {
             add(to.index, removeAt(from.index))
