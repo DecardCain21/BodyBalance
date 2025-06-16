@@ -12,8 +12,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemGesturesPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
@@ -106,7 +108,7 @@ internal fun HomeScreen(
                     indication = null,
                     onClick = { focusManager.clearFocus() })
         ) {
-            Column {
+            Column{
                 Image(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
@@ -150,7 +152,7 @@ internal fun HomeScreen(
                     )
                 }
             }
-            Column(modifier = Modifier.align(Alignment.BottomCenter)) {
+            Column(modifier = Modifier.navigationBarsPadding().align(Alignment.BottomCenter)) {
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -259,7 +261,7 @@ private fun GetLoginBlockBottomSheet(
     }
 }
 
-@Preview
+@Preview(showSystemUi = false)
 @Composable
 private fun HomeScreenPreview() {
     BodyBalanceTheme {

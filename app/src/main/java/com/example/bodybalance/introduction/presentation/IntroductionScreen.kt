@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemGesturesPadding
 import androidx.compose.material.icons.Icons
@@ -216,7 +217,7 @@ private fun IntroductionScreenContent(
         Spacer(modifier = Modifier.weight(1f))
 
         BasicButton(
-            modifier = Modifier.systemGesturesPadding()
+            modifier = Modifier.navigationBarsPadding()
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
             text = stringResource(R.string.continue_button),
