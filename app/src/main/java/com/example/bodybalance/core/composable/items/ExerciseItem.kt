@@ -54,7 +54,7 @@ public fun ExerciseItem(
                         .data(imageModel)
                         .placeholder(R.drawable.ic_launcher_background)
                         .error(R.drawable.ic_launcher_background)
-                        .crossfade(true)
+                        .crossfade(false)
                         .build()
                 ),
                 contentDescription = "Изображение курса",

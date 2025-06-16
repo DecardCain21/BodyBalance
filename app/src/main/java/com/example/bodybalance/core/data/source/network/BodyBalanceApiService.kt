@@ -26,6 +26,6 @@ public interface BodyBalanceApiService {
 
     @GET("v1/video")
     public suspend fun getVideoById(
-        @Query("video_id") videoId:Int
-    ) : VideoDto
+        @Query("video_id") videoId: Int
+    ): VideoDto
 }
