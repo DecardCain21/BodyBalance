@@ -219,6 +219,7 @@ internal class VideoPlayerViewModel @Inject constructor(
         }
         viewModelScope.launch {
             setButtonsState()
+            setDownloadButton(video.id)
         }
     }
 
