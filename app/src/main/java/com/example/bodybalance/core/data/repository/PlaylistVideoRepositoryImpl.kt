@@ -13,10 +13,14 @@ internal class PlaylistVideoRepositoryImpl @Inject constructor(
     private val playlistVideoLocalSource: PlaylistVideoLocalSource
 ) : PlaylistVideoRepository {
 
-    override fun getAllPlaylistVideos(): Flow<List<Video>> {
-        return playlistVideoLocalSource.getAllPlaylistVideos().map { list ->
+    override fun getAllPlaylistVideoFlow(): Flow<List<Video>> {
+        return playlistVideoLocalSource.getAllPlaylistVideoFlow().map { list ->
             list.map { entity -> entity.convertToVideo() }
         }
+    }
+
+    override suspend fun getAllPlaylistVideo(): List<Video> {
+        return playlistVideoLocalSource.getAllPlaylistVideo().map { it.convertToVideo() }
     }
 
     override suspend fun insertPlaylistVideo(video: Video) {

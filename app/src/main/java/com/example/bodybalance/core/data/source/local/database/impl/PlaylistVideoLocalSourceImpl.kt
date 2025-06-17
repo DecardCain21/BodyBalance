@@ -10,8 +10,12 @@ internal class PlaylistVideoLocalSourceImpl @Inject constructor(
     private val dao: PlaylistVideoDao
 ) : PlaylistVideoLocalSource {
 
-    override fun getAllPlaylistVideos(): Flow<List<PlaylistVideoEntity>> {
-        return dao.getAllPlaylistVideos()
+    override fun getAllPlaylistVideoFlow(): Flow<List<PlaylistVideoEntity>> {
+        return dao.getAllPlaylistVideoFlow()
+    }
+
+    override suspend fun getAllPlaylistVideo(): List<PlaylistVideoEntity> {
+        return dao.getAllPlaylistVideo()
     }
 
     override suspend fun insertPlaylistVideo(entity: PlaylistVideoEntity) {

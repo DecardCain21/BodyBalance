@@ -37,8 +37,8 @@ internal fun VideoPlayerScreenRoute(
     LaunchedEffect(Unit) {
         when (routeLabel) {
             VideoPlayerNavigateScreenId.CATEGORY -> viewModel.getVideo(itemId)
-            VideoPlayerNavigateScreenId.PLAYLIST -> viewModel.getPlaylistVideos(itemId)
-            VideoPlayerNavigateScreenId.DOWNLOADED -> viewModel.getAllDownloadedVideos(itemId)
+            VideoPlayerNavigateScreenId.PLAYLIST -> viewModel.getAllPlaylistVideo(itemId)
+            VideoPlayerNavigateScreenId.DOWNLOADED -> viewModel.getAllDownloadedVideo(itemId)
         }
     }
 

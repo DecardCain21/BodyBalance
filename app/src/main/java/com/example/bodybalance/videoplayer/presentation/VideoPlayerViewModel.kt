@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.media3.common.util.UnstableApi
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.core.domain.usecase.api.DeleteSavedVideoUseCase
-import com.example.bodybalance.core.domain.usecase.api.GetAllPlaylistVideosUseCase
+import com.example.bodybalance.core.domain.usecase.api.GetAllPlaylistVideoFlowUseCase
 import com.example.bodybalance.core.domain.usecase.api.GetVideoByCategoryUseCase
 import com.example.bodybalance.core.util.DownloadCallback
 import com.example.bodybalance.core.util.FileDownloaderError
@@ -18,6 +18,7 @@ import com.example.bodybalance.settings.domain.usecase.SettingsToolsUseCase
 import com.example.bodybalance.videoplayer.domain.usecase.AddPlaylistVideoUseCase
 import com.example.bodybalance.videoplayer.domain.usecase.DeletePlaylistVideoUseCase
 import com.example.bodybalance.videoplayer.domain.usecase.ExistsPlaylistVideoByIdUseCase
+import com.example.bodybalance.videoplayer.domain.usecase.GetAllPlaylistVideoUseCase
 import com.example.bodybalance.videoplayer.domain.usecase.GetAllSavedVideoUseCase
 import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerScreenUiEvent
 import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerState
@@ -42,7 +43,7 @@ internal class VideoPlayerViewModel @Inject constructor(
     private val addPlaylistVideoUseCase: AddPlaylistVideoUseCase,
     private val deletePlaylistVideoUseCase: DeletePlaylistVideoUseCase,
     private val existsPlaylistVideoByIdUseCase: ExistsPlaylistVideoByIdUseCase,
-    private val getAllPlaylistVideosUseCase: GetAllPlaylistVideosUseCase,
+    private val getAllPlaylistVideoUseCase: GetAllPlaylistVideoUseCase,
     private val settingsToolsUseCase: SettingsToolsUseCase,
     private val getAllSavedVideoUseCase: GetAllSavedVideoUseCase,
     private val deleteSavedVideoUseCase: DeleteSavedVideoUseCase,
@@ -93,26 +94,26 @@ internal class VideoPlayerViewModel @Inject constructor(
         }
     }
 
-    fun getPlaylistVideos(videoId: Int) {
+    fun getAllPlaylistVideo(videoId: Int) {
         viewModelScope.launch {
             val downloadState = getButtonDownloadState(videoId)
             val inPlaylist = existsPlaylistVideoByIdUseCase(videoId)
-            getAllPlaylistVideosUseCase().collect { playlistVideos ->
-                val video = getVideoFromCache(playlistVideos.find { it.id == videoId }
-                    ?: Video.emptyVideo(1))
-                _uiState.update { state ->
-                    state.copy(
-                        videoState = VideoPlayerState.VideoState.Content(video),
-                        videoListState = VideoPlayerState.VideoListState.Content(playlistVideos),
-                        videoInPlaylist = inPlaylist,
-                        videoInCache = downloadState
-                    )
-                }
+            val videoList = getAllPlaylistVideoUseCase()
+            val currentVideo = getVideoFromCache(videoList.find { it.id == videoId }
+                ?: Video.emptyVideo(1))
+            _uiState.update { state ->
+                state.copy(
+                    videoState = VideoPlayerState.VideoState.Content(currentVideo),
+                    videoListState = VideoPlayerState.VideoListState.Content(videoList),
+                    videoInPlaylist = inPlaylist,
+                    videoInCache = downloadState
+                )
+
             }
         }
     }
 
-    fun getAllDownloadedVideos(videoId: Int) {
+    fun getAllDownloadedVideo(videoId: Int) {
         viewModelScope.launch {
             val videos = getAllSavedVideoUseCase()
             val downloadState = getButtonDownloadState(videoId)
