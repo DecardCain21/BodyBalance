@@ -48,7 +48,6 @@ public class FileDownloaderImpl @Inject constructor(
         }
     }
 
-
     override fun downloadFile(video: Video, callback: DownloadCallback) {
         val request = Request.Builder().url(video.remoteVideoUrl).build()
         val downloadOnlyWifi = settingsToolsRepository.getDownloadWifiFlag()
