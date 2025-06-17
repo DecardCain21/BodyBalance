@@ -1,5 +1,6 @@
 package com.example.bodybalance.core.composable
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.pm.ActivityInfo
@@ -58,6 +59,7 @@ import com.example.bodybalance.ui.theme.White
 import androidx.core.net.toUri
 import androidx.media3.common.PlaybackException
 
+@SuppressLint("UnusedBoxWithConstraintsScope")
 @OptIn(UnstableApi::class)
 @Composable
 public fun exoPlayer(
@@ -199,7 +201,6 @@ private fun VideoPlayer(
                 setFullscreenButtonClickListener { onFullscreenClick() }
                 resizeMode = RESIZE_MODE_FIT
                 player = exoPlayer
-
                 setControllerVisibilityListener(
                     PlayerView.ControllerVisibilityListener { visibility ->
                         onControllerVisibilityChange(visibility == View.VISIBLE)
