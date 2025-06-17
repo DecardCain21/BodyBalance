@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.media3.common.util.UnstableApi
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.core.domain.usecase.api.DeleteSavedVideoUseCase
-import com.example.bodybalance.core.domain.usecase.api.GetAllPlaylistVideoFlowUseCase
 import com.example.bodybalance.core.domain.usecase.api.GetVideoByCategoryUseCase
 import com.example.bodybalance.core.util.DownloadCallback
 import com.example.bodybalance.core.util.FileDownloaderError
@@ -98,16 +97,15 @@ internal class VideoPlayerViewModel @Inject constructor(
         viewModelScope.launch {
             setDownloadButton(videoId)
             val inPlaylist = existsPlaylistVideoByIdUseCase(videoId)
-            getAllPlaylistVideosUseCase().collect { playlistVideos ->
-                val video = getVideoFromCache(playlistVideos.find { it.id == videoId }
-                    ?: Video.emptyVideo(1))
-                _uiState.update { state ->
-                    state.copy(
-                        videoState = VideoPlayerState.VideoState.Content(video),
-                        videoListState = VideoPlayerState.VideoListState.Content(playlistVideos),
-                        videoInPlaylist = inPlaylist,
-                    )
-                }
+            val listVideo = getAllPlaylistVideoUseCase()
+            val currentVideo = getVideoFromCache(listVideo.find { it.id == videoId }
+                ?: Video.emptyVideo(1))
+            _uiState.update { state ->
+                state.copy(
+                    videoState = VideoPlayerState.VideoState.Content(currentVideo),
+                    videoListState = VideoPlayerState.VideoListState.Content(listVideo),
+                    videoInPlaylist = inPlaylist,
+                )
             }
         }
     }
