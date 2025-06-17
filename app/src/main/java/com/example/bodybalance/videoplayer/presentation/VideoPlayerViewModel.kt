@@ -278,6 +278,16 @@ internal class VideoPlayerViewModel @Inject constructor(
                                 )
                             }
 
+                            FileDownloaderError.NETWORK_ERROR -> {
+                                _snackBarEvent.emit(
+                                    SnackbarEventParams(
+                                        message = error.error,
+                                        actionLabel = UPDATE,
+                                        onAction = { downloadVideo(video = video) }
+                                    )
+                                )
+                            }
+
                             else -> _snackBarEvent.emit(SnackbarEventParams(message = error.error))
                         }
                     }
