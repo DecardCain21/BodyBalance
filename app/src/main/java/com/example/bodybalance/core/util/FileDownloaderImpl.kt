@@ -8,6 +8,8 @@ import com.example.bodybalance.core.util.api.FileDownloader
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.OkHttpClient
@@ -16,6 +18,7 @@ import okhttp3.Response
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.util.Collections
 import javax.inject.Inject
 
 public class FileDownloaderImpl @Inject constructor(
@@ -25,8 +28,26 @@ public class FileDownloaderImpl @Inject constructor(
     private val saveVideoInCacheUseCase: SaveVideoInCacheUseCase,
 ) : FileDownloader {
 
-    private val activeDownloads = mutableMapOf<Int, Call>()
     private val excluded = setOf("intro_video.mp4", "profileInstalled")
+
+    private val activeDownloads = Collections.synchronizedMap(mutableMapOf<Int, Call>())
+    private val _activeDownloadsFlow = MutableStateFlow<Set<Int>>(emptySet())
+    public override val activeDownloadsFlow: StateFlow<Set<Int>> get() = _activeDownloadsFlow
+
+    private fun addDownload(id: Int, call: Call) {
+        synchronized(activeDownloads) {
+            activeDownloads[id] = call
+            _activeDownloadsFlow.value = activeDownloads.keys.toSet()
+        }
+    }
+
+    private fun removeDownload(id: Int) {
+        synchronized(activeDownloads) {
+            activeDownloads.remove(id)
+            _activeDownloadsFlow.value = activeDownloads.keys.toSet()
+        }
+    }
+
 
     override fun downloadFile(video: Video, callback: DownloadCallback) {
         val request = Request.Builder().url(video.remoteVideoUrl).build()
@@ -36,18 +57,18 @@ public class FileDownloaderImpl @Inject constructor(
             return
         }
         val call = okHttpClient.newCall(request)
-        activeDownloads[video.id] = call
+        addDownload(video.id, call)
 
         call.enqueue(object : okhttp3.Callback {
             override fun onFailure(call: Call, e: IOException) {
                 e.printStackTrace()
-                activeDownloads.remove(video.id)
+                removeDownload(video.id)
                 callback.onError(FileDownloaderError.NETWORK_ERROR)
             }
 
             override fun onResponse(call: Call, response: Response) {
                 if (!response.isSuccessful) {
-                    activeDownloads.remove(video.id)
+                    removeDownload(video.id)
                     callback.onError(FileDownloaderError.HTTP_ERROR)
                     return
                 }
@@ -64,18 +85,18 @@ public class FileDownloaderImpl @Inject constructor(
                     CoroutineScope(Dispatchers.IO).launch {
                         saveVideoInCacheUseCase(video.copy(localVideoUrl = filePath))
                     }
-                    activeDownloads.remove(video.id)
+                    removeDownload(video.id)
                     callback.onSuccess()
                 } catch (e: java.net.SocketException) { // Потеря интернета
                     deleteFile(video.id.toString())
-                    activeDownloads.remove(video.id)
+                    removeDownload(video.id)
                     callback.onError(FileDownloaderError.NETWORK_ERROR)
                 } catch (e: okhttp3.internal.http2.StreamResetException) { // Отмена скачивания
                     deleteFile(video.id.toString())
-                    activeDownloads.remove(video.id)
+                    removeDownload(video.id)
                 } catch (e: Exception) {
                     deleteFile(video.id.toString())
-                    activeDownloads.remove(video.id)
+                    removeDownload(video.id)
                     callback.onError(FileDownloaderError.FILE_SAVE_ERROR)
                 }
             }
@@ -84,7 +105,7 @@ public class FileDownloaderImpl @Inject constructor(
 
     override fun cancelDownload(videoId: Int) {
         activeDownloads[videoId]?.cancel()
-        activeDownloads.remove(videoId)
+        removeDownload(videoId)
     }
 
     override fun checkDownloadingProcess(videoId: Int): Boolean {

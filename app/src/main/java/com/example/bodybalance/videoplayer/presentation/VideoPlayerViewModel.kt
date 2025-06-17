@@ -95,7 +95,7 @@ internal class VideoPlayerViewModel @Inject constructor(
 
     fun getPlaylistVideos(videoId: Int) {
         viewModelScope.launch {
-            val downloadState = getButtonDownloadState(videoId)
+            setDownloadButton(videoId)
             val inPlaylist = existsPlaylistVideoByIdUseCase(videoId)
             getAllPlaylistVideosUseCase().collect { playlistVideos ->
                 val video = getVideoFromCache(playlistVideos.find { it.id == videoId }
@@ -105,7 +105,6 @@ internal class VideoPlayerViewModel @Inject constructor(
                         videoState = VideoPlayerState.VideoState.Content(video),
                         videoListState = VideoPlayerState.VideoListState.Content(playlistVideos),
                         videoInPlaylist = inPlaylist,
-                        videoInCache = downloadState
                     )
                 }
             }
@@ -115,8 +114,8 @@ internal class VideoPlayerViewModel @Inject constructor(
     fun getAllDownloadedVideos(videoId: Int) {
         viewModelScope.launch {
             val videos = getAllSavedVideoUseCase()
-            val downloadState = getButtonDownloadState(videoId)
             val inPlaylist = existsPlaylistVideoByIdUseCase(videoId)
+            setDownloadButton(videoId)
             _uiState.update { state ->
                 state.copy(
                     videoState = VideoPlayerState.VideoState.Content(
@@ -125,7 +124,6 @@ internal class VideoPlayerViewModel @Inject constructor(
                     ),
                     videoListState = VideoPlayerState.VideoListState.Content(videos),
                     videoInPlaylist = inPlaylist,
-                    videoInCache = downloadState
                 )
             }
         }
@@ -137,31 +135,55 @@ internal class VideoPlayerViewModel @Inject constructor(
 
         viewModelScope.launch {
             val result = getVideoByCategoryUseCase(categoryId)
-            val newState = when (result.exceptionOrNull()) {
+            when (result.exceptionOrNull()) {
                 is NetworkError.ServerError,
-                is NetworkError.NoData -> VideoPlayerState(
-                    videoState = VideoPlayerState.VideoState.Empty,
-                    videoListState = VideoPlayerState.VideoListState.Empty
-                )
+                is NetworkError.NoData -> {
+                    _uiState.update {
+                        it.copy(
+                            videoState = VideoPlayerState.VideoState.Empty,
+                            videoListState = VideoPlayerState.VideoListState.Empty
+                        )
+                    }
+                }
 
-                is NetworkError.NoInternet -> VideoPlayerState.emptyState()
+                is NetworkError.NoInternet -> _uiState.value = VideoPlayerState.emptyState()
 
                 else -> result.getOrNull()?.let { videos ->
                     val video = getVideoFromCache(videos.first())
 
-                    val downloadState = getButtonDownloadState(video.id)
-
                     val inPlaylist = existsPlaylistVideoByIdUseCase(video.id)
-
-                    VideoPlayerState(
-                        videoState = VideoPlayerState.VideoState.Content(video),
-                        videoListState = VideoPlayerState.VideoListState.Content(videos),
-                        videoInPlaylist = inPlaylist,
-                        videoInCache = downloadState
-                    )
+                    setDownloadButton(video.id)
+                    _uiState.update {
+                        it.copy(
+                            videoState = VideoPlayerState.VideoState.Content(video),
+                            videoListState = VideoPlayerState.VideoListState.Content(videos),
+                            videoInPlaylist = inPlaylist,
+                        )
+                    }
                 }
             }
-            newState?.let { _uiState.value = it }
+        }
+    }
+
+    private fun setDownloadButton(videoId: Int) {
+        viewModelScope.launch {
+            fileDownloader.activeDownloadsFlow.collect { downloads ->
+                _uiState.update { currentState ->
+                    when {
+                        downloads.contains(videoId) -> {
+                            currentState.copy(videoInCache = DownloadButtonState.Loading)
+                        }
+
+                        fileDownloader.fileExists(videoId.toString()) -> {
+                            currentState.copy(videoInCache = DownloadButtonState.Remove)
+                        }
+
+                        else -> {
+                            currentState.copy(videoInCache = DownloadButtonState.Download)
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -179,19 +201,6 @@ internal class VideoPlayerViewModel @Inject constructor(
                     duration = SnackbarDuration.Short,
                 )
             )
-        }
-    }
-
-    private fun getButtonDownloadState(videoId: Int): DownloadButtonState {
-        return when {
-            fileDownloader.checkDownloadingProcess(videoId) ->
-                DownloadButtonState.Loading
-
-            fileDownloader.fileExists(videoId.toString()) ->
-                DownloadButtonState.Remove
-
-            else ->
-                DownloadButtonState.Download
         }
     }
 
@@ -242,7 +251,6 @@ internal class VideoPlayerViewModel @Inject constructor(
                         duration = SnackbarDuration.Short
                     )
                 )
-                setButtonsState()
             }
         }
         fileDownloader.downloadFile(
@@ -251,7 +259,6 @@ internal class VideoPlayerViewModel @Inject constructor(
                 override fun onSuccess() {
                     viewModelScope.launch {
                         _snackBarEvent.emit(SnackbarEventParams(message = VIDEO_DOWNLOADED))
-                        setButtonsState()
                     }
                 }
 
@@ -271,16 +278,8 @@ internal class VideoPlayerViewModel @Inject constructor(
                                 )
                             }
 
-                            else -> _snackBarEvent.emit(
-                                SnackbarEventParams(
-                                    message = NO_INTERNET,
-                                    duration = SnackbarDuration.Indefinite,
-                                    onAction = { downloadVideo(video = video) },
-                                    actionLabel = UPDATE
-                                )
-                            )
+                            else -> _snackBarEvent.emit(SnackbarEventParams(message = error.error))
                         }
-                        setButtonsState()
                     }
                 }
             }
