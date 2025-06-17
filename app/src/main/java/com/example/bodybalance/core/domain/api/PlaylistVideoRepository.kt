@@ -5,7 +5,9 @@ import kotlinx.coroutines.flow.Flow
 
 public interface PlaylistVideoRepository {
 
-    public fun getAllPlaylistVideos(): Flow<List<Video>>
+    public fun getAllPlaylistVideoFlow(): Flow<List<Video>>
+
+    public suspend fun getAllPlaylistVideo(): List<Video>
 
     public suspend fun insertPlaylistVideo(video: Video)
 

@@ -13,7 +13,7 @@ import com.example.bodybalance.category.presentation.state.CategoryScreenUiEvent
 import com.example.bodybalance.core.domain.models.Account
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.core.domain.usecase.api.DeleteSavedVideoUseCase
-import com.example.bodybalance.core.domain.usecase.api.GetAllPlaylistVideosUseCase
+import com.example.bodybalance.core.domain.usecase.api.GetAllPlaylistVideoFlowUseCase
 import com.example.bodybalance.core.util.api.FileDownloader
 import com.example.bodybalance.videoplayer.domain.usecase.DeletePlaylistVideoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,7 +29,7 @@ import javax.inject.Inject
 internal class CategoryViewModel @Inject constructor(
     private val fileDownloaderImpl: FileDownloader,
     private val getCategoryUseCase: GetCategoryUseCase,
-    private val getAllPlaylistVideosUseCase: GetAllPlaylistVideosUseCase,
+    private val getAllPlaylistVideoFlowUseCase: GetAllPlaylistVideoFlowUseCase,
     private val activateAccountUseCase: ActivateAccountUseCase,
     private val getAllAccountsUseCase: GetAllAccountsUseCase,
     private val deletePlaylistVideoUseCase: DeletePlaylistVideoUseCase,
@@ -94,7 +94,7 @@ internal class CategoryViewModel @Inject constructor(
 
                 // Комбинируем два Flow без вложенных collect
                 combine(
-                    getAllPlaylistVideosUseCase(),
+                    getAllPlaylistVideoFlowUseCase(),
                     getAllSavedVideoFlowUseCase()
                 ) { playlistVideo, savedVideo ->
                     val playlistState = if (playlistVideo.isEmpty()) {

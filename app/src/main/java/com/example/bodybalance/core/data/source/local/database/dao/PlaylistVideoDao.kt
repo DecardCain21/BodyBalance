@@ -13,7 +13,10 @@ import kotlinx.coroutines.flow.Flow
 internal interface PlaylistVideoDao {
 
     @Query("SELECT * FROM playlist_video ORDER BY `order` ASC, timeOfAddition DESC")
-    fun getAllPlaylistVideos(): Flow<List<PlaylistVideoEntity>>
+    fun getAllPlaylistVideoFlow(): Flow<List<PlaylistVideoEntity>>
+
+    @Query("SELECT * FROM playlist_video")
+    suspend fun getAllPlaylistVideo():List<PlaylistVideoEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPlaylistVideo(entity: PlaylistVideoEntity)

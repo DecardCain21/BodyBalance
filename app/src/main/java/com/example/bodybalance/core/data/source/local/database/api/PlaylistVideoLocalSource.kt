@@ -5,7 +5,9 @@ import kotlinx.coroutines.flow.Flow
 
 internal interface PlaylistVideoLocalSource {
 
-    fun getAllPlaylistVideos(): Flow<List<PlaylistVideoEntity>>
+    fun getAllPlaylistVideoFlow(): Flow<List<PlaylistVideoEntity>>
+
+    suspend fun getAllPlaylistVideo(): List<PlaylistVideoEntity>
 
     suspend fun insertPlaylistVideo(entity: PlaylistVideoEntity)
 
