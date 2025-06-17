@@ -230,6 +230,12 @@ internal class VideoPlayerViewModel @Inject constructor(
     private fun addToPlaylist(video: Video) {
         viewModelScope.launch {
             addPlaylistVideoUseCase(video = video)
+            _snackBarEvent.emit(
+                SnackbarEventParams(
+                    message = VIDEO_PLAYLIST_ADDED,
+                    duration = SnackbarDuration.Short,
+                )
+            )
             setButtonsState()
         }
     }
@@ -237,6 +243,12 @@ internal class VideoPlayerViewModel @Inject constructor(
     private fun removeFromPlaylist(video: Video) {
         viewModelScope.launch {
             deletePlaylistVideoUseCase(video = video)
+            _snackBarEvent.emit(
+                SnackbarEventParams(
+                    message = VIDEO_PLAYLIST_REMOVE,
+                    duration = SnackbarDuration.Short,
+                )
+            )
             setButtonsState()
         }
     }
@@ -345,6 +357,8 @@ internal class VideoPlayerViewModel @Inject constructor(
     companion object {
         private const val VIDEO_IS_BEING_DOWNLOADED = "Видео скачивается"
         private const val VIDEO_DOWNLOADED = "Видео скачено"
+        private const val VIDEO_PLAYLIST_REMOVE = "Видео удалено из Плейлиста"
+        private const val VIDEO_PLAYLIST_ADDED = "Видео сохранено в Плейлист"
         private const val ACTION_LABEL_DOWNLOAD = "Скачать"
         private const val REMOVE = "Видео удаляется"
         private const val CANCEL = "Отмена"
