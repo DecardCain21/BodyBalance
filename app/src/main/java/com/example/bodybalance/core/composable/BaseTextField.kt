@@ -73,7 +73,7 @@ public fun CustomTextField(
         keyboardActions = KeyboardActions(
             onDone = { focusManager.clearFocus() }
         ),
-        trailingIcon = trailingIcon,
+        trailingIcon = if (!isFocused) null else trailingIcon,
         supportingText = { if (supportingText.isNotEmpty() && (isFocused && isError)) Text(text = supportingText) },
         label = { Text(text = label) },
     )
