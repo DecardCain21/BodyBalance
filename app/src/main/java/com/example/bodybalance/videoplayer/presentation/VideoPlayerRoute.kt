@@ -49,7 +49,8 @@ internal fun VideoPlayerScreenRoute(
                 val result = snackbarHostState.showSnackbar(
                     message = params.message,
                     actionLabel = params.actionLabel,
-                    duration = params.duration
+                    duration = params.duration,
+                    withDismissAction = params.withDissmiss
                 )
 
                 if (result == SnackbarResult.ActionPerformed) {

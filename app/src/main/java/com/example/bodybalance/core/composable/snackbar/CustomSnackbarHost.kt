@@ -1,5 +1,10 @@
 package com.example.bodybalance.core.composable.snackbar
 
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarData
@@ -31,8 +36,18 @@ private fun CustomSnackbar(data: SnackbarData) {
     Snackbar(
         action = {
             data.visuals.actionLabel?.let { label ->
-                TextButton(onClick = { data.performAction() }) {
-                    Text(text = label, color = MaterialTheme.colorScheme.onSurface)
+                Row {
+                    TextButton(onClick = { data.performAction() }) {
+                        Text(text = label, color = MaterialTheme.colorScheme.onSurface)
+                    }
+                    if(data.visuals.withDismissAction)
+                    IconButton(onClick = { data.dismiss() }) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Закрыть",
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                 }
             }
         }

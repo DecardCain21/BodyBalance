@@ -3,7 +3,6 @@ package com.example.bodybalance.videoplayer.presentation
 import androidx.compose.material3.SnackbarDuration
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.core.domain.usecase.api.DeleteSavedVideoUseCase
@@ -309,11 +308,20 @@ internal class VideoPlayerViewModel @Inject constructor(
                             }
 
                             FileDownloaderError.NETWORK_ERROR -> {
-                                _snackBarEvent.emit(
+                                /*_snackBarEvent.emit(
                                     SnackbarEventParams(
                                         message = error.error,
                                         actionLabel = UPDATE,
                                         onAction = { downloadVideo(video = video) }
+                                    )
+                                )*/
+                                _snackBarEvent.emit(
+                                    SnackbarEventParams(
+                                        message = NO_INTERNET,
+                                        duration = SnackbarDuration.Indefinite,
+                                        onAction = { downloadVideo(video = video) },
+                                        actionLabel = UPDATE,
+                                        withDissmiss = true
                                     )
                                 )
                             }
