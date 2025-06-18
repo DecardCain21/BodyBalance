@@ -3,6 +3,7 @@ package com.example.bodybalance.videoplayer.presentation
 import androidx.compose.material3.SnackbarDuration
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.core.domain.usecase.api.DeleteSavedVideoUseCase
@@ -12,6 +13,7 @@ import com.example.bodybalance.core.util.FileDownloaderError
 import com.example.bodybalance.core.util.NetworkError
 import com.example.bodybalance.core.util.SnackbarEventParams
 import com.example.bodybalance.core.util.api.FileDownloader
+import com.example.bodybalance.core.util.debounce
 import com.example.bodybalance.core.util.getConnected
 import com.example.bodybalance.settings.domain.usecase.SettingsToolsUseCase
 import com.example.bodybalance.videoplayer.domain.usecase.AddPlaylistVideoUseCase
@@ -57,6 +59,14 @@ internal class VideoPlayerViewModel @Inject constructor(
     private var isInitialized = false
     private lateinit var deleteJob: Job
 
+    private val removeDebounce = debounce<Video>(
+        delayMillis = 1000,
+        coroutineScope = viewModelScope,
+        useLastParam = true
+    ) { video ->
+        removeVideoFromCache(video = video)
+    }
+
     fun handleEvent(event: VideoPlayerScreenUiEvent) {
         when (event) {
             is VideoPlayerScreenUiEvent.DownloadVideo -> {
@@ -64,7 +74,15 @@ internal class VideoPlayerViewModel @Inject constructor(
             }
 
             is VideoPlayerScreenUiEvent.RemoveVideoFromCache -> {
-                removeVideoFromCache(event.video)
+                viewModelScope.launch {
+                    _snackBarEvent.emit(
+                        (SnackbarEventParams(
+                            message = REMOVE,
+                            actionLabel = CANCEL,
+                            onAction = { deleteJob.cancel() }))
+                    )
+                }
+                removeDebounce(event.video)
             }
 
             is VideoPlayerScreenUiEvent.ChoiceVideo -> {
@@ -310,12 +328,6 @@ internal class VideoPlayerViewModel @Inject constructor(
 
     private fun removeVideoFromCache(video: Video) {
         deleteJob = viewModelScope.launch {
-            _snackBarEvent.emit(
-                (SnackbarEventParams(
-                    message = REMOVE,
-                    actionLabel = CANCEL,
-                    onAction = { deleteJob.cancel() }))
-            )
             delay(4000L)
             fileDownloader.deleteFile(fileName = video.id.toString()).let {
                 deleteSavedVideoUseCase(video)
