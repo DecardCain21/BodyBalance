@@ -33,16 +33,14 @@ public fun CustomTextField(
     modifier: Modifier = Modifier,
     value: String = "",
     label: String = "",
-    isError: Boolean = false,
     supportingText: String = "",
     onValueChange: (String) -> Unit,
     trailingIcon: @Composable (() -> Unit)? = null,
-    interactionSource: MutableInteractionSource? = remember { MutableInteractionSource() },
+    interactionSource: MutableInteractionSource? = null,
     focusRequester: FocusRequester? = null,
 ) {
     val focusManager = LocalFocusManager.current
     val textState = remember { mutableStateOf(TextFieldValue(value)) }
-    val isFocused by interactionSource!!.collectIsFocusedAsState()
 
     LaunchedEffect(value) {
         textState.value = TextFieldValue(value, selection = TextRange(value.length))
@@ -73,8 +71,8 @@ public fun CustomTextField(
         keyboardActions = KeyboardActions(
             onDone = { focusManager.clearFocus() }
         ),
-        trailingIcon = if (!isFocused) null else trailingIcon,
-        supportingText = { if (supportingText.isNotEmpty() && (isFocused && isError)) Text(text = supportingText) },
+        trailingIcon = trailingIcon,
+        supportingText = { Text(text = supportingText) },
         label = { Text(text = label) },
     )
 }
@@ -87,7 +85,6 @@ private fun PreviewCustomTextField() {
             onValueChange = {},
             supportingText = "Используйте только буквы и цифры",
             label = "Логин",
-            isError = true,
         )
     }
 }

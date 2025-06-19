@@ -30,7 +30,9 @@ internal class IntroductionViewModel @Inject constructor(
     val uiState: StateFlow<IntroductionScreenState>
         get() = _uiState.asStateFlow()
 
-    init { getIntroductionVideo() }
+    init {
+        getIntroductionVideo()
+    }
 
     fun handleEvent(event: IntroductionScreenUiEvent) {
         when (event) {
@@ -69,16 +71,22 @@ internal class IntroductionViewModel @Inject constructor(
 
     private fun enterCodeWord(input: String) {
         var supportText: String = SupportTextIntroduction.ENTER_LOGIN.message
+        var validateLogin = false
         val isEnabled: Boolean = when (input) {
-            "Marat" -> true
-            "Nikita" -> true
-            "Anastasia" -> true
+            "Test" -> {
+                validateLogin = true
+                supportText = SupportTextIntroduction.VALID_LOGIN.message
+                true
+            }
+
             "" -> {
+                validateLogin = false
                 supportText = SupportTextIntroduction.ENTER_LOGIN.message
                 false
             }
 
             else -> {
+                validateLogin = false
                 supportText = SupportTextIntroduction.INVALID_LOGIN.message
                 false
             }
@@ -86,7 +94,8 @@ internal class IntroductionViewModel @Inject constructor(
         _uiState.value = uiState.value.copy(
             inputValue = Input.Text(input),
             buttonIsEnabled = isEnabled,
-            supportText = supportText
+            supportText = supportText,
+            validateLogin = validateLogin
         )
     }
 }

@@ -122,14 +122,19 @@ internal fun HomeScreen(
                             .fillMaxWidth()
                             .padding(bottom = 16.dp),
                         value = inputValue,
-                        isError = inputError,
                         label = stringResource(id = R.string.login),
                         supportingText = supportText.message,
                         interactionSource = interactionSource,
                         onValueChange = { inputLogin(it) },
                         trailingIcon = {
                             when {
-                                isFocused && inputValue.isNotEmpty() -> {
+                                isFocused && inputError -> {
+                                    Icon(
+                                        imageVector = Icons.Default.Error,
+                                        contentDescription = stringResource(R.string.error),
+                                    )
+                                }
+                                isFocused && !inputError && inputValue.isNotEmpty() -> {
                                     IconButton(onClick = clearAll) {
                                         Icon(
                                             imageVector = Icons.Default.HighlightOff,
@@ -138,11 +143,8 @@ internal fun HomeScreen(
                                     }
                                 }
 
-                                inputError -> {
-                                    Icon(
-                                        imageVector = Icons.Default.Error,
-                                        contentDescription = stringResource(R.string.error),
-                                    )
+                                inputValue.isEmpty() -> {
+                                    Unit
                                 }
 
                                 else -> Unit

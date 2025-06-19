@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemGesturesPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.Icon
@@ -91,7 +90,8 @@ internal fun IntroductionScreen(
                         inputValue = input,
                         inputCodeWord = { inputCodeWord(it) },
                         isEnabledButton = uiState.buttonIsEnabled,
-                        supportText = uiState.supportText
+                        supportText = uiState.supportText,
+                        validateLogin = uiState.validateLogin
 
                     )
                 }
@@ -110,6 +110,7 @@ private fun IntroductionScreenContent(
     navToPlaylist: () -> Unit,
     eventContinue: () -> Unit,
     inputCodeWord: (String) -> Unit,
+    validateLogin: Boolean
 ) {
 
     var shouldRequestFocus by rememberSaveable { mutableStateOf(false) }
@@ -196,28 +197,49 @@ private fun IntroductionScreenContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.Start)
-                .padding(horizontal = 16.dp)
-                .padding(top = 24.dp),
+                .padding(horizontal = 16.dp, vertical = 24.dp),
             label = stringResource(R.string.code_word),
             value = inputValue,
             onValueChange = { inputCodeWord(it) },
-            isError = !isEnabledButton,
-            supportingText = supportText,
+            supportingText = if (isFocused) supportText else "",
+            interactionSource = interactionSource,
             focusRequester = focusRequester,
             trailingIcon = {
-                if (!isEnabledButton) {
-                    Icon(
-                        imageVector = Icons.Default.Error,
-                        contentDescription = stringResource(R.string.error),
-                    )
+                when {
+                    !isFocused && inputValue.isEmpty() -> {
+                        Unit
+                    }
+
+                    isFocused && inputValue.isEmpty() -> {
+                        Unit
+                    }
+
+                    isFocused && !validateLogin -> {
+                        Icon(
+                            imageVector = Icons.Default.Error,
+                            contentDescription = stringResource(R.string.error),
+                        )
+                    }
+
+                    !isFocused && validateLogin -> {
+                        Unit
+                    }
+
+                    !isFocused && !validateLogin -> {
+                        Icon(
+                            imageVector = Icons.Default.Error,
+                            contentDescription = stringResource(R.string.error),
+                        )
+                    }
                 }
-            },
+            }
         )
 
         Spacer(modifier = Modifier.weight(1f))
 
         BasicButton(
-            modifier = Modifier.navigationBarsPadding()
+            modifier = Modifier
+                .navigationBarsPadding()
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
             text = stringResource(R.string.continue_button),
@@ -263,7 +285,8 @@ private fun IntroductionPreview() {
             inputCodeWord = { },
             isEnabledButton = true,
             eventContinue = {},
-            supportText = "Неверное кодовое слово"
+            supportText = "Неверное кодовое слово",
+            validateLogin = false
         )
     }
 }
