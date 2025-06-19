@@ -7,5 +7,5 @@ public data class SnackbarEventParams(
     val actionLabel: String? = null,
     val onAction: (() -> Unit)? = null,
     val duration: SnackbarDuration = SnackbarDuration.Short,
-    val withDissmiss: Boolean = false
+    val withDismiss: Boolean = false
 )

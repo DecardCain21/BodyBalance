@@ -50,7 +50,7 @@ internal fun VideoPlayerScreenRoute(
                     message = params.message,
                     actionLabel = params.actionLabel,
                     duration = params.duration,
-                    withDismissAction = params.withDissmiss
+                    withDismissAction = params.withDismiss
                 )
 
                 if (result == SnackbarResult.ActionPerformed) {

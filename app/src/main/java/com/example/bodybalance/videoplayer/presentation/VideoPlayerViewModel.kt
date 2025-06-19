@@ -310,7 +310,7 @@ internal class VideoPlayerViewModel @Inject constructor(
                                         duration = SnackbarDuration.Indefinite,
                                         onAction = { downloadVideo(video = video) },
                                         actionLabel = UPDATE,
-                                        withDissmiss = true
+                                        withDismiss = true
                                     )
                                 )
                             }

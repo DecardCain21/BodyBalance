@@ -2,6 +2,7 @@ package com.example.bodybalance.core.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,8 +14,10 @@ import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
@@ -30,16 +33,18 @@ public fun BodyBalanceActionButton(
     imageVector: ImageVector,
     text: String
 ) {
+    val shape = RoundedCornerShape(100.dp)
+
     Row(
         modifier = Modifier
-            .combinedClickable {
-                onClick()
-            }
-            .background(
-                Color.White,
-                shape = RoundedCornerShape(100.dp)
+            .clip(shape)
+            .background(Color.White, shape)
+            .combinedClickable(
+                interactionSource = null,
+                indication = null,
+                onClick = onClick
             )
-            .padding(top = 10.dp, bottom = 10.dp, start = 16.dp, end = 24.dp),
+            .padding(horizontal = 24.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
@@ -65,9 +70,7 @@ private fun BodyBalanceActionButtonPreview() {
     BodyBalanceTheme {
         Box {
             BodyBalanceActionButton(
-                onClick = {
-                    { }
-                },
+                onClick = {},
                 text = "Добавить в плейлист",
                 imageVector = Icons.Default.BookmarkBorder
             )

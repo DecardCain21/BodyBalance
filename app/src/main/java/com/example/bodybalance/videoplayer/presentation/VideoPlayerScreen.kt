@@ -233,9 +233,11 @@ private fun BodyVideoPlayerScreen(
                 VideoPlayerState.DownloadButtonState.Loading -> {
                     Row(
                         modifier = Modifier
-                            .combinedClickable {
-                                onClickCancelDownload()
-                            }
+                            .combinedClickable(
+                                interactionSource = null,
+                                indication = null,
+                                onClick = { onClickCancelDownload() }
+                            )
                             .background(
                                 Color.White,
                                 shape = RoundedCornerShape(100.dp)

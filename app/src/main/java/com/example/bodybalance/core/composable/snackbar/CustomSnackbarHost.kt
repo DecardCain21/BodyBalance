@@ -40,14 +40,14 @@ private fun CustomSnackbar(data: SnackbarData) {
                     TextButton(onClick = { data.performAction() }) {
                         Text(text = label, color = MaterialTheme.colorScheme.onSurface)
                     }
-                    if(data.visuals.withDismissAction)
-                    IconButton(onClick = { data.dismiss() }) {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = "Закрыть",
-                            tint = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
+                    if (data.visuals.withDismissAction)
+                        IconButton(onClick = { data.dismiss() }) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Закрыть",
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
                 }
             }
         }
@@ -67,6 +67,7 @@ private fun SnackBarPreview() {
                 override val withDismissAction: Boolean = true
                 override val duration: SnackbarDuration = SnackbarDuration.Short
             }
+
             override fun dismiss() {}
             override fun performAction() {
             }
