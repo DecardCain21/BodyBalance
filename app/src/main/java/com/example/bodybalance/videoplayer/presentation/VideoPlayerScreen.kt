@@ -88,7 +88,9 @@ internal fun VideoPlayerScreen(
     Scaffold(
         topBar = {
             if (configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
-                BaseTopAppBar(navigateBack = { navigateBackToPlaylistScreen() })
+                BaseTopAppBar(navigateBack = {
+                    navigateBackToPlaylistScreen()
+                })
             }
         },
         snackbarHost = {
@@ -150,7 +152,10 @@ private fun VideoListEmpty(emptyEvent: () -> Unit) {
 }
 
 @Composable
-private fun HeaderVideoPlayerScreen(video: Video, noInternetPlayerSnackBar: () -> Unit) {
+private fun HeaderVideoPlayerScreen(
+    video: Video,
+    noInternetPlayerSnackBar: () -> Unit
+) {
     val isPreview = LocalInspectionMode.current
 
     Column(

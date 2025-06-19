@@ -1,11 +1,8 @@
 package com.example.bodybalance.main.presentation.navigation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -34,7 +31,12 @@ public fun Navigation(isAuthenticated: Boolean) {
     NavHost(
         navController = navController,
         startDestination = if (isAuthenticated) INTRODUCTION_ROUTE else HOME_ROUTE,
-        enterTransition = {
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None },
+        popEnterTransition = { EnterTransition.None },
+        popExitTransition = { ExitTransition.None }
+        // todo: анимация свайпа при переходе между экранами
+        /*enterTransition = {
             slideInHorizontally(
                 initialOffsetX = { it },
                 animationSpec = tween(durationMillis = 700)
@@ -57,7 +59,7 @@ public fun Navigation(isAuthenticated: Boolean) {
                 targetOffsetX = { it },
                 animationSpec = tween(durationMillis = 700)
             ) + fadeOut(animationSpec = tween(durationMillis = 700))
-        }
+        }*/
     ) {
 
         homeScreen { navController.navigateToIntroductionScreen() }

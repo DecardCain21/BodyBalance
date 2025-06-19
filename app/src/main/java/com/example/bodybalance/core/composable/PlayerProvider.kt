@@ -69,7 +69,7 @@ public fun exoPlayer(
     listener: Player.Listener? = null,
     showButton: Boolean = false,
     shouldRequestFocus: () -> Unit = {},
-    showSnackBar: () -> Unit
+    showSnackBar: () -> Unit,
 ): ExoPlayer {
 
     val exoPlayer = remember(context) {
@@ -111,6 +111,7 @@ public fun exoPlayer(
                     currentPosition = exoPlayer.currentPosition
                     exoPlayer.pause()
                 }
+
                 Lifecycle.Event.ON_RESUME -> {
                     exoPlayer.seekTo(currentPosition)
                 }
@@ -122,6 +123,8 @@ public fun exoPlayer(
 
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose {
+            /*exoPlayer.stop()
+            exoPlayer.clearMediaItems()*/
             exoPlayer.release()
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
@@ -176,7 +179,7 @@ private fun VideoPlayer(
     context: Context,
     onFullscreenClick: () -> Unit,
     onControllerVisibilityChange: (Boolean) -> Unit,
-    showSnackBar: () -> Unit
+    showSnackBar: () -> Unit,
 ) {
     DisposableEffect(exoPlayer) {
         val listener = object : Player.Listener {
@@ -193,7 +196,6 @@ private fun VideoPlayer(
             exoPlayer.removeListener(listener)
         }
     }
-
     AndroidView(
         modifier = Modifier.fillMaxSize(),
         factory = {
@@ -208,7 +210,7 @@ private fun VideoPlayer(
                 )
             }
         },
-        update = { it.player = exoPlayer }
+        update = { it.player = exoPlayer },
     )
 }
 
