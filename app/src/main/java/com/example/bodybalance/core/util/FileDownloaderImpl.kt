@@ -62,7 +62,11 @@ public class FileDownloaderImpl @Inject constructor(
             override fun onFailure(call: Call, e: IOException) {
                 e.printStackTrace()
                 removeDownload(video.id)
-                callback.onError(FileDownloaderError.NETWORK_ERROR)
+                if (e.message == "Canceled") {
+                    callback.onError(FileDownloaderError.DOWNLOAD_CANCEL)
+                } else {
+                    callback.onError(FileDownloaderError.NETWORK_ERROR)
+                }
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -93,6 +97,7 @@ public class FileDownloaderImpl @Inject constructor(
                 } catch (e: okhttp3.internal.http2.StreamResetException) { // Отмена скачивания
                     deleteFile(video.id.toString())
                     removeDownload(video.id)
+                    callback.onError(FileDownloaderError.DOWNLOAD_CANCEL)
                 } catch (e: Exception) {
                     deleteFile(video.id.toString())
                     removeDownload(video.id)
@@ -103,6 +108,7 @@ public class FileDownloaderImpl @Inject constructor(
     }
 
     override fun cancelDownload(videoId: Int) {
+        deleteFile(videoId.toString())
         activeDownloads[videoId]?.cancel()
         removeDownload(videoId)
     }
@@ -166,5 +172,6 @@ public enum class FileDownloaderError(public val error: String) {
     HTTP_ERROR("Ошибка сервера"),
     WIFI_ERROR("Нет активного соединения с Wi-Fi"),
     NETWORK_ERROR("Ошибка сети"),
-    FILE_SAVE_ERROR("Ошибка сохранения файла")
+    FILE_SAVE_ERROR("Ошибка сохранения файла"),
+    DOWNLOAD_CANCEL("Загрузка видео была отменена")
 }

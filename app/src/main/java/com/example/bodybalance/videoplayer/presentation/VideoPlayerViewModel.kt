@@ -223,10 +223,6 @@ internal class VideoPlayerViewModel @Inject constructor(
     private fun canselDownloadVideo(videoId: Int) {
         viewModelScope.launch {
             fileDownloader.cancelDownload(videoId)
-            _uiState.update {
-                it.copy(videoInCache = DownloadButtonState.Download)
-            }
-            _snackBarEvent.emit(SnackbarEventParams(message = DOWNLOAD_CANCEL))
         }
     }
 
@@ -308,13 +304,6 @@ internal class VideoPlayerViewModel @Inject constructor(
                             }
 
                             FileDownloaderError.NETWORK_ERROR -> {
-                                /*_snackBarEvent.emit(
-                                    SnackbarEventParams(
-                                        message = error.error,
-                                        actionLabel = UPDATE,
-                                        onAction = { downloadVideo(video = video) }
-                                    )
-                                )*/
                                 _snackBarEvent.emit(
                                     SnackbarEventParams(
                                         message = NO_INTERNET,
@@ -383,7 +372,6 @@ internal class VideoPlayerViewModel @Inject constructor(
         private const val ACTION_LABEL_DOWNLOAD = "Скачать"
         private const val REMOVE = "Видео удаляется"
         private const val CANCEL = "Отмена"
-        private const val DOWNLOAD_CANCEL = "Загрузка видео была отменена"
         private const val VIDEOS_IS_EMPTY = "Видео пока недоступно, загляните позже"
         private const val NO_INTERNET = "Нет интернета"
         private const val UPDATE = "Обновить"

@@ -1,5 +1,11 @@
 package com.example.bodybalance.main.presentation.navigation
 
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -19,6 +25,7 @@ import com.example.bodybalance.settings.presentation.settings.navigation.setting
 import com.example.bodybalance.videoplayer.presentation.navigation.navigateToVideoPlayerScreen
 import com.example.bodybalance.videoplayer.presentation.navigation.videoPlayerScreen
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 public fun Navigation(isAuthenticated: Boolean) {
 
@@ -26,7 +33,31 @@ public fun Navigation(isAuthenticated: Boolean) {
 
     NavHost(
         navController = navController,
-        startDestination = if (isAuthenticated) INTRODUCTION_ROUTE else HOME_ROUTE
+        startDestination = if (isAuthenticated) INTRODUCTION_ROUTE else HOME_ROUTE,
+        enterTransition = {
+            slideInHorizontally(
+                initialOffsetX = { it },
+                animationSpec = tween(durationMillis = 700)
+            ) + fadeIn(animationSpec = tween(durationMillis = 700))
+        },
+        exitTransition = {
+            slideOutHorizontally(
+                targetOffsetX = { -it },
+                animationSpec = tween(durationMillis = 700)
+            ) + fadeOut(animationSpec = tween(durationMillis = 700))
+        },
+        popEnterTransition = {
+            slideInHorizontally(
+                initialOffsetX = { -it },
+                animationSpec = tween(durationMillis = 700)
+            ) + fadeIn(animationSpec = tween(durationMillis = 700))
+        },
+        popExitTransition = {
+            slideOutHorizontally(
+                targetOffsetX = { it },
+                animationSpec = tween(durationMillis = 700)
+            ) + fadeOut(animationSpec = tween(durationMillis = 700))
+        }
     ) {
 
         homeScreen { navController.navigateToIntroductionScreen() }
