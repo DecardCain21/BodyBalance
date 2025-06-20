@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,6 +27,8 @@ import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -111,8 +112,8 @@ internal fun VideoPlayerScreen(
                         video = currentVideo,
                         noInternetPlayerSnackBar = noInternetPlayerSnackBar
                     )
+                    Spacer(modifier = Modifier.height(12.dp))
                     BodyVideoPlayerScreen(
-                        modifier = Modifier.padding(top = 12.dp),
                         isAddPlaylist = videoInPlaylist,
                         isDownloadState = videoInCache,
                         onClickDownload = onClickDownload,
@@ -153,14 +154,13 @@ private fun VideoListEmpty(emptyEvent: () -> Unit) {
 
 @Composable
 private fun HeaderVideoPlayerScreen(
+    modifier: Modifier = Modifier,
     video: Video,
     noInternetPlayerSnackBar: () -> Unit
 ) {
     val isPreview = LocalInspectionMode.current
 
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
+    Column(modifier = modifier.fillMaxWidth()) {
         if (isPreview) {
             Box(
                 modifier = Modifier
@@ -205,75 +205,73 @@ private fun BodyVideoPlayerScreen(
     onClickAddToPlaylist: () -> Unit,
     onClickRemoveFromPlaylist: () -> Unit,
 ) {
-    LazyRow(
-        modifier = modifier,
-        contentPadding = PaddingValues(horizontal = 16.dp),
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
-        item {
-            if (isAddPlaylist) {
+
+        if (isAddPlaylist) {
+            BodyBalanceActionButton(
+                modifier = modifier.weight(0.5f),
+                onClick = { onClickRemoveFromPlaylist() },
+                text = stringResource(R.string.button_playlist),
+                imageVector = Icons.Default.Bookmark
+            )
+        } else {
+            BodyBalanceActionButton(
+                modifier = modifier.weight(0.5f),
+                onClick = { onClickAddToPlaylist() },
+                text = stringResource(R.string.button_playlist),
+                imageVector = Icons.Default.BookmarkBorder
+            )
+        }
+
+
+        when (isDownloadState) {
+            VideoPlayerState.DownloadButtonState.Download -> {
                 BodyBalanceActionButton(
-                    onClick = { onClickRemoveFromPlaylist() },
-                    text = stringResource(R.string.button_playlist),
-                    imageVector = Icons.Default.Bookmark
-                )
-            } else {
-                BodyBalanceActionButton(
-                    onClick = { onClickAddToPlaylist() },
-                    text = stringResource(R.string.button_playlist),
-                    imageVector = Icons.Default.BookmarkBorder
+                    modifier = modifier.weight(0.5f),
+                    onClick = onClickDownload,
+                    text = stringResource(R.string.download),
+                    imageVector = Icons.Default.Download
                 )
             }
-        }
-        item {
-            when (isDownloadState) {
-                VideoPlayerState.DownloadButtonState.Download -> {
-                    BodyBalanceActionButton(
-                        onClick = onClickDownload,
-                        text = stringResource(R.string.download),
-                        imageVector = Icons.Default.Download
+
+            VideoPlayerState.DownloadButtonState.Loading -> {
+                Button(
+                    modifier = modifier.weight(0.5f),
+                    onClick = onClickCancelDownload,
+                    shape = RoundedCornerShape(100.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.White),
+                    contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp),
+                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(18.dp),
+                        trackColor = Color.Black,
+                        strokeWidth = 2.dp
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(R.string.cansel_download),
+                        color = Color.Black,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 14.nonScaledSp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
+            }
 
-                VideoPlayerState.DownloadButtonState.Loading -> {
-                    Row(
-                        modifier = Modifier
-                            .combinedClickable(
-                                interactionSource = null,
-                                indication = null,
-                                onClick = { onClickCancelDownload() }
-                            )
-                            .background(
-                                Color.White,
-                                shape = RoundedCornerShape(100.dp)
-                            )
-                            .padding(top = 10.dp, bottom = 10.dp, start = 16.dp, end = 24.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(18.dp),
-                            trackColor = Color.Black,
-                            strokeWidth = 2.dp
-                        )
-                        Spacer(Modifier.width(8.dp))
-                        Text(
-                            text = stringResource(R.string.cansel_download),
-                            color = Color.Black,
-                            fontWeight = FontWeight.Medium,
-                            fontSize = 14.nonScaledSp,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                }
-
-                VideoPlayerState.DownloadButtonState.Remove -> {
-                    BodyBalanceActionButton(
-                        onClick = removeVideoFromCache,
-                        text = stringResource(R.string.remove_from_device),
-                        imageVector = Icons.Default.DeleteOutline
-                    )
-                }
+            VideoPlayerState.DownloadButtonState.Remove -> {
+                BodyBalanceActionButton(
+                    modifier = modifier.weight(0.5f),
+                    onClick = removeVideoFromCache,
+                    text = stringResource(R.string.remove_from_device),
+                    imageVector = Icons.Default.DeleteOutline
+                )
             }
         }
     }

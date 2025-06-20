@@ -325,7 +325,7 @@ internal class VideoPlayerViewModel @Inject constructor(
 
     private fun removeVideoFromCache(video: Video) {
         deleteJob = viewModelScope.launch {
-            delay(4000L)
+            delay(3000L)
             fileDownloader.deleteFile(fileName = video.id.toString()).let {
                 deleteSavedVideoUseCase(video)
                 setButtonsState()
