@@ -186,9 +186,7 @@ private fun IntroductionScreenContent(
                 .align(Alignment.Start)
                 .padding(horizontal = 16.dp)
                 .padding(top = 16.dp),
-            text = "Это видео поможет вам быстро разобраться, как всё работает\n" +
-                    "\n" +
-                    "После просмотра введите кодовое слово из видео, чтобы продолжить",
+            text = stringResource(R.string.description_intro),
             textAlign = TextAlign.Start,
             fontSize = 14.nonScaledSp,
             color = colorResource(R.color.white)

@@ -28,6 +28,7 @@
     <string name="code_word">Кодовое слово</string>
     <string name="error">Ошибка</string>
     <string name="continue_button">Продолжить</string>
+    <string name="description_intro">Это видео поможет вам быстро разобраться, как всё работает\n\nПосле просмотра введите кодовое слово из видео, чтобы продолжить</string>
 
     <!--SettingsScreen-->
     <string name="settings">Настройки</string>
