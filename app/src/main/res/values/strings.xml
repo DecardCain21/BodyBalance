@@ -38,6 +38,7 @@
     <string name="version_app">Версия %1$s</string>
     <string name="exit">Выйти</string>
     <string name="cansel">Отмена</string>
+    <string name="dialog_description">Видео останутся в приложении, и вы\nсможете скачать их заново</string>
 
     <!--AboutAppScreen-->
     <string name="develop_android">Разработка/Android</string>

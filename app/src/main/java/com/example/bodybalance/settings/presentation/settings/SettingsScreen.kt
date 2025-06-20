@@ -118,7 +118,7 @@ private fun ClearCacheRow(
     cacheSize: Long,
     onClear: () -> Unit
 ) {
-    Box{
+    Box {
         Row(
             modifier = Modifier
                 .padding(top = 16.dp)
@@ -258,9 +258,18 @@ private fun LogoutDialog(
             onDismissRequest = { onDismiss() },
             title = {
                 Text(
-                    modifier = Modifier.padding(end = 30.dp),
+                    modifier = Modifier.padding(end = 24.dp),
                     text = dialogData.title,
                     color = MaterialTheme.colorScheme.primary
+                )
+            },
+            text = {
+                Text(
+                    modifier = Modifier.padding(end = 24.dp),
+                    text = stringResource(R.string.dialog_description),
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = 14.nonScaledSp,
+                    fontWeight = FontWeight(400)
                 )
             },
             confirmButton = {
