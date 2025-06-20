@@ -1,8 +1,8 @@
 package com.example.bodybalance.home.presentation
 
 import android.annotation.SuppressLint
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -29,7 +29,6 @@ internal fun HomeScreenRoute(
     viewModel: HomeViewModel = hiltViewModel(),
     navigateToIntroductionScreen: () -> Unit = {},
 ) {
-
     val snackbarHostState = remember { SnackbarHostState() }
     var snackbarJob by remember { mutableStateOf<Job?>(null) }
 
@@ -46,11 +45,16 @@ internal fun HomeScreenRoute(
         viewModel.snackbarEvent.collect { params ->
             snackbarJob?.cancel()
             snackbarJob = launch {
-                snackbarHostState.showSnackbar(
+                val result = snackbarHostState.showSnackbar(
                     message = params.message,
                     actionLabel = params.actionLabel,
-                    duration = SnackbarDuration.Short
+                    duration = params.duration,
+                    withDismissAction = params.withDismiss
                 )
+
+                if (result == SnackbarResult.ActionPerformed) {
+                    params.onAction?.invoke()
+                }
             }
         }
     }

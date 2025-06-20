@@ -2,7 +2,6 @@ package com.example.bodybalance.core.data.source.local.storage.di
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.example.bodybalance.core.data.source.local.IntroProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

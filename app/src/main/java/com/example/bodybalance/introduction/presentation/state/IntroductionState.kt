@@ -3,7 +3,7 @@ package com.example.bodybalance.introduction.presentation.state
 import com.example.bodybalance.core.domain.models.Video
 
 internal data class IntroductionScreenState(
-    val validateLogin:Boolean = false,
+    val validateLogin: Boolean = false,
     val inputValue: Input,
     val videoState: IntroductionPlayerState,
     val buttonIsEnabled: Boolean = false,

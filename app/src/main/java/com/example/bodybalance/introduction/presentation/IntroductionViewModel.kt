@@ -2,7 +2,6 @@ package com.example.bodybalance.introduction.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.introduction.domain.usecase.GetIntroductionCodeUseCase
 import com.example.bodybalance.introduction.domain.usecase.GetIntroductionVideoUseCase
 import com.example.bodybalance.introduction.domain.usecase.SetIntroductionCodeUseCase
@@ -27,8 +26,7 @@ internal class IntroductionViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(IntroductionScreenState.emptyState())
-    val uiState: StateFlow<IntroductionScreenState>
-        get() = _uiState.asStateFlow()
+    val uiState: StateFlow<IntroductionScreenState> get() = _uiState.asStateFlow()
 
     init {
         getIntroductionVideo()
@@ -45,20 +43,14 @@ internal class IntroductionViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val code = getIntroductionCodeUseCase()
             val inputState = if (code.isNotEmpty()) Input.Text(code) else Input.Empty
-            getIntroductionVideoUseCase.unpackVideoIfNeeded()
+            val validateLogin = code.isNotEmpty()
+
             _uiState.value = IntroductionScreenState(
                 inputValue = inputState,
+                validateLogin = validateLogin,
                 buttonIsEnabled = code.isNotEmpty(),
                 videoState = IntroductionPlayerState.Content(
-                    video = Video.emptyVideo(1).copy(
-                        remoteVideoUrl = getIntroductionVideoUseCase(),
-                        category = "Введение",
-                        description = """
-                            Это видео поможет вам быстро разобраться, как всё работает. 
-                            После просмотра введите кодовое слово из видео, чтобы продолжить
-                        """.trimIndent(),
-                        name = "Введение"
-                    )
+                    video = getIntroductionVideoUseCase()
                 ),
             )
         }
@@ -70,32 +62,35 @@ internal class IntroductionViewModel @Inject constructor(
     }
 
     private fun enterCodeWord(input: String) {
-        var supportText: String = SupportTextIntroduction.ENTER_LOGIN.message
-        var validateLogin = false
-        val isEnabled: Boolean = when (input) {
-            "Test" -> {
-                validateLogin = true
-                supportText = SupportTextIntroduction.VALID_LOGIN.message
-                true
-            }
+        val (supportText, validateLogin, isEnabled) = when {
+            input == KOD_WORD -> Triple(
+                first = SupportTextIntroduction.VALID_LOGIN.message,
+                second = true,
+                third = true
+            )
 
-            "" -> {
-                validateLogin = false
-                supportText = SupportTextIntroduction.ENTER_LOGIN.message
-                false
-            }
+            input.isBlank() -> Triple(
+                first = SupportTextIntroduction.ENTER_LOGIN.message,
+                second = false,
+                third = false
+            )
 
-            else -> {
-                validateLogin = false
-                supportText = SupportTextIntroduction.INVALID_LOGIN.message
-                false
-            }
+            else -> Triple(
+                first = SupportTextIntroduction.INVALID_LOGIN.message,
+                second = false,
+                third = false
+            )
         }
+
         _uiState.value = uiState.value.copy(
             inputValue = Input.Text(input),
             buttonIsEnabled = isEnabled,
             supportText = supportText,
             validateLogin = validateLogin
         )
+    }
+
+    companion object {
+        private const val KOD_WORD = "Test"
     }
 }

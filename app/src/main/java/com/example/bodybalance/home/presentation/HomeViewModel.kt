@@ -1,5 +1,6 @@
 package com.example.bodybalance.home.presentation
 
+import androidx.compose.material3.SnackbarDuration
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bodybalance.core.domain.usecase.api.FollowLinkUseCase
@@ -44,69 +45,92 @@ internal class HomeViewModel @Inject constructor(
     }
 
     private fun inputLoginManagement(text: String) {
-        var isError = false
+        val (isError, supportText) = when {
+            text.isEmpty() -> false to SupportTextHome.EMPTY
 
-        val supportText = when {
-            text.isEmpty() -> SupportTextHome.EMPTY
-            text.length < 3 -> {
-                isError = true
-                SupportTextHome.LOGIN_MIN_LENGTH
-            }
+            text.length < 3 -> true to SupportTextHome.LOGIN_MIN_LENGTH
 
-            !text.matches(Regex("^[a-zA-Z0-9]+\$")) -> {
-                isError = true
-                SupportTextHome.LOGIN_REQUIREMENTS
-            }
+            !text.matches(Regex("^[a-zA-Z0-9]+$")) -> true to SupportTextHome.LOGIN_REQUIREMENTS
 
-            else -> SupportTextHome.EMPTY
+            else -> false to SupportTextHome.EMPTY
         }
-        _uiState.value =
-            uiState.value.copy(inputValue = text, inputError = isError, supportText = supportText)
+
+        _uiState.value = uiState.value.copy(
+            inputValue = text,
+            inputError = isError,
+            supportText = supportText
+        )
     }
+
 
     private fun onLoginAttempt() {
-        if (uiState.value.inputValue.isEmpty()) {
-            _uiState.value =
-                uiState.value.copy(inputError = true, supportText = SupportTextHome.ENTER_LOGIN)
-        } else {
-            viewModelScope.launch {
-                _uiState.update { it.copy(isLoading = true) }
-                checkLoginUseCase(uiState.value.inputValue)
-                    .onSuccess { _navigationEvent.emit(Unit) }
-                    .onFailure { error ->
-                        _uiState.value = uiState.value.copy(
-                            inputError = true,
-                            supportText = SupportTextHome.INVALID_LOGIN,
-                            isLoading = false
-                        )
+        val input = uiState.value.inputValue
 
-                        when (error) {
-                            is NetworkError.NoInternet -> {
-                                _snackbarEvent.emit(
-                                    SnackbarEventParams(
-                                        message = "Нет интернета",
-                                        actionLabel = "" // todo: нужна ли эта кнопка ?
-                                    )
-                                )
-                            }
+        if (input.isBlank()) {
+            _uiState.value = uiState.value.copy(
+                inputError = true,
+                supportText = SupportTextHome.ENTER_LOGIN
+            )
+            return
+        }
 
-                            else -> {
-                                _snackbarEvent.emit(
-                                    SnackbarEventParams("Что-то не так, попробуйте ещё раз")
-                                )
-                            }
-                        }
-                    }
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+
+            checkLoginUseCase(input)
+                .onSuccess {
+                    _navigationEvent.emit(Unit)
+                }
+                .onFailure { error ->
+                    handleLoginError(error)
+                }
+        }
+    }
+
+    private suspend fun handleLoginError(error: Throwable) {
+        when (error) {
+            is NetworkError.NoInternet -> {
+                _uiState.value = uiState.value.copy(
+                    inputError = true,
+                    supportText = SupportTextHome.EMPTY,
+                    isLoading = false
+                )
+
+                _snackbarEvent.emit(
+                    SnackbarEventParams(
+                        message = NO_INTERNET,
+                        duration = SnackbarDuration.Indefinite,
+                        onAction = { onLoginAttempt() },
+                        actionLabel = UPDATE,
+                        withDismiss = true
+                    )
+                )
+            }
+
+            else -> {
+                _uiState.value = uiState.value.copy(
+                    inputError = true,
+                    supportText = SupportTextHome.INVALID_LOGIN,
+                    isLoading = false
+                )
+
+                _snackbarEvent.emit(SnackbarEventParams(SOMETHING_WRONG))
             }
         }
     }
 
-    // todo: заменить ссылку
+
     private fun requestLogin(url: String) {
         followLinkUseCase(url)
     }
 
     private fun clearAll() {
         _uiState.value = uiState.value.copy(inputValue = "")
+    }
+
+    companion object {
+        private const val SOMETHING_WRONG = "Что-то не так, попробуйте ещё раз"
+        private const val NO_INTERNET = "Нет интернета"
+        private const val UPDATE = "Обновить"
     }
 }

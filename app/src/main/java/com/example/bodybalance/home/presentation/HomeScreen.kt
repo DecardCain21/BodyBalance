@@ -55,6 +55,7 @@ import com.example.bodybalance.core.composable.BasicButton
 import com.example.bodybalance.core.composable.CustomTextField
 import com.example.bodybalance.core.composable.snackbar.CustomSnackbarHost
 import com.example.bodybalance.home.presentation.state.HomeScreenState
+import com.example.bodybalance.home.presentation.state.SupportTextHome
 import com.example.bodybalance.ui.theme.Black
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import com.example.bodybalance.ui.theme.OnSurfaceOpacity12
@@ -123,17 +124,19 @@ internal fun HomeScreen(
                             .padding(bottom = 16.dp),
                         value = inputValue,
                         label = stringResource(id = R.string.login),
-                        supportingText = supportText.message,
+                        supportingText = when {
+                            !isFocused && supportText == SupportTextHome.INVALID_LOGIN || supportText == SupportTextHome.ENTER_LOGIN -> supportText.message
+                            isFocused -> supportText.message
+                            else -> ""
+                        },
                         interactionSource = interactionSource,
                         onValueChange = { inputLogin(it) },
                         trailingIcon = {
                             when {
-                                isFocused && inputError -> {
-                                    Icon(
-                                        imageVector = Icons.Default.Error,
-                                        contentDescription = stringResource(R.string.error),
-                                    )
+                                inputValue.isEmpty() && !inputError -> {
+                                    Unit
                                 }
+
                                 isFocused && !inputError && inputValue.isNotEmpty() -> {
                                     IconButton(onClick = clearAll) {
                                         Icon(
@@ -143,8 +146,11 @@ internal fun HomeScreen(
                                     }
                                 }
 
-                                inputValue.isEmpty() -> {
-                                    Unit
+                                isFocused || inputError -> {
+                                    Icon(
+                                        imageVector = Icons.Default.Error,
+                                        contentDescription = stringResource(R.string.error),
+                                    )
                                 }
 
                                 else -> Unit
@@ -153,9 +159,11 @@ internal fun HomeScreen(
                     )
                 }
             }
-            Column(modifier = Modifier
-                .navigationBarsPadding()
-                .align(Alignment.BottomCenter)) {
+            Column(
+                modifier = Modifier
+                    .navigationBarsPadding()
+                    .align(Alignment.BottomCenter)
+            ) {
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
