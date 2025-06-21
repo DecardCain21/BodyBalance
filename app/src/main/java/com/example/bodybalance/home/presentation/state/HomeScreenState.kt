@@ -2,7 +2,7 @@ package com.example.bodybalance.home.presentation.state
 
 internal data class HomeScreenState(
     val inputError: Boolean = false,
-    val inputValue: String = "base",
+    val inputValue: String = "",
     val supportText: SupportTextHome = SupportTextHome.EMPTY,
     val isLoading: Boolean = false
 )
