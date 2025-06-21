@@ -7,6 +7,7 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.view.View
 import android.view.WindowManager
+import androidx.activity.compose.BackHandler
 import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -103,6 +104,10 @@ public fun exoPlayer(
     val activity = context as Activity
 
     val controllerVisible = remember { mutableStateOf(true) }
+
+    BackHandler(enabled = isLandscape) {
+        isLandscape = false
+    }
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
