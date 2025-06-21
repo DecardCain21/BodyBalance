@@ -1,5 +1,7 @@
 package com.example.bodybalance.settings.presentation.settings.state
 
+import androidx.annotation.StringRes
+
 internal data class SettingsScreenState(
     val cacheSize: Long = 0L,
     val dialogData : DialogData = DialogData(),
@@ -9,7 +11,8 @@ internal data class SettingsScreenState(
 )
 
 internal data class DialogData(
-    val title: String = "",
-    val action: String = "",
+    @StringRes val title: Int? = null,
+    @StringRes val action: Int? = null,
+    @StringRes val description: Int? = null,
     val onAction: () -> Unit = {}
 )

@@ -33,13 +33,17 @@
     <!--SettingsScreen-->
     <string name="settings">Настройки</string>
     <string name="clear_cashe">Очистить кэш</string>
-    <string name="clear_cashe_description">Освободите память устройства. Видео останутся в приложении, и вы сможете скачать их заново</string>
+    <string name="clear_cache_description">Освободите память устройства. Видео останутся в приложении, и вы сможете скачать их заново</string>
     <string name="download_wi_fi_only">Скачивать видео только\nпо Wi-Fi</string>
     <string name="about_app">О приложении</string>
     <string name="version_app">Версия %1$s</string>
     <string name="exit">Выйти</string>
     <string name="cansel">Отмена</string>
-    <string name="dialog_description">Видео останутся в приложении, и вы\nсможете скачать их заново</string>
+    <string name="dialog_button_clear">Очистить</string>
+    <string name="dialog_button_exit">Выйти</string>
+    <string name="dialog_title_clear_cache">Очистить кэш?</string>
+    <string name="dialog_title_exit_from_account">Выйти из аккаунта?</string>
+    <string name="dialog_description">Видео останутся в приложении, и вы сможете скачать их заново</string>
 
     <!--AboutAppScreen-->
     <string name="develop_android">Разработка/Android</string>

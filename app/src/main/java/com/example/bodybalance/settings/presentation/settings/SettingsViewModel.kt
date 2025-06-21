@@ -2,6 +2,7 @@ package com.example.bodybalance.settings.presentation.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.bodybalance.R
 import com.example.bodybalance.core.util.SnackbarEventParams
 import com.example.bodybalance.core.util.convertToFileSize
 import com.example.bodybalance.settings.domain.usecase.ClearCacheUseCase
@@ -62,8 +63,8 @@ internal class SettingsViewModel @Inject constructor(
             state.copy(
                 showDialog = true,
                 dialogData = DialogData(
-                    title = "Выйти из аккаунта?",
-                    action = "Выйти",
+                    title = R.string.dialog_title_exit_from_account,
+                    action = R.string.dialog_button_exit,
                     onAction = {
                         viewModelScope.launch {
                             logOutOfAccountUseCase()
@@ -76,21 +77,18 @@ internal class SettingsViewModel @Inject constructor(
     }
 
     private fun clearCache() {
+        val cacheSize = uiState.value.cacheSize.convertToFileSize()
         _uiState.update { state ->
             state.copy(
                 showDialog = true,
                 dialogData = DialogData(
-                    title = "Очистить кэш?",
-                    action = "Очистить",
+                    title = R.string.dialog_title_clear_cache,
+                    action = R.string.dialog_button_clear,
+                    description = R.string.dialog_description,
                     onAction = {
                         viewModelScope.launch {
                             _snackBarEvent.emit(
-                                SnackbarEventParams(
-                                    message = uiState
-                                        .value
-                                        .cacheSize
-                                        .convertToFileSize() + ACTION_CLEAN_CACHE
-                                )
+                                SnackbarEventParams(message = ACTION_CLEAN_CACHE + cacheSize)
                             )
                             clearCacheUseCase()
                             getCacheSize()
@@ -115,6 +113,6 @@ internal class SettingsViewModel @Inject constructor(
     }
 
     companion object {
-        private const val ACTION_CLEAN_CACHE = " на устройстве освободилось"
+        private const val ACTION_CLEAN_CACHE = "На устройстве освободилось"
     }
 }

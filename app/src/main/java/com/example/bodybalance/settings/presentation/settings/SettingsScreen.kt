@@ -149,7 +149,7 @@ private fun ClearCacheRow(
                     color = colorResource(R.color.white),
                 )
                 Text(
-                    text = stringResource(R.string.clear_cashe_description),
+                    text = stringResource(R.string.clear_cache_description),
                     fontSize = 12.nonScaledSp,
                     color = colorResource(R.color.white),
                 )
@@ -256,25 +256,31 @@ private fun LogoutDialog(
         AlertDialog(
             modifier = modifier,
             onDismissRequest = { onDismiss() },
-            title = {
-                Text(
-                    modifier = Modifier.padding(end = 24.dp),
-                    text = dialogData.title,
-                    color = MaterialTheme.colorScheme.primary
-                )
+            title = dialogData.title?.let { title ->
+                @Composable {
+                    Text(
+                        modifier = Modifier.padding(end = 24.dp),
+                        text = stringResource(title),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
             },
-            text = {
-                Text(
-                    modifier = Modifier.padding(end = 24.dp),
-                    text = stringResource(R.string.dialog_description),
-                    color = MaterialTheme.colorScheme.primary,
-                    fontSize = 14.nonScaledSp,
-                    fontWeight = FontWeight(400)
-                )
+            text = dialogData.description?.let { resId ->
+                @Composable {
+                    Text(
+                        modifier = Modifier.padding(end = 24.dp),
+                        text = stringResource(resId),
+                        color = MaterialTheme.colorScheme.primary,
+                        fontSize = 14.nonScaledSp,
+                        fontWeight = FontWeight(400)
+                    )
+                }
             },
             confirmButton = {
-                Button(onClick = { onConfirm() }) {
-                    Text(text = dialogData.action)
+                dialogData.action?.let { action ->
+                    Button(onClick = { onConfirm() }) {
+                        Text(text = stringResource(action))
+                    }
                 }
             },
             dismissButton = {
