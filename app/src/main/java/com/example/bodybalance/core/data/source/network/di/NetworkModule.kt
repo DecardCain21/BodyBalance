@@ -1,12 +1,15 @@
 package com.example.bodybalance.core.data.source.network.di
 
+import android.content.Context
 import com.example.bodybalance.core.data.source.network.BodyBalanceApiService
 import com.example.bodybalance.core.data.source.network.client.CategoryNetworkClient
 import com.example.bodybalance.core.data.source.network.client.LoginNetworkClient
 import com.example.bodybalance.core.data.source.network.client.VideoNetworkClient
+import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -52,8 +55,15 @@ internal object NetworkModuleProvider {
     @Provides
     @Singleton
     fun provideLoginNetworkClient(
-        binListApiService: BodyBalanceApiService
+        binListApiService: BodyBalanceApiService,
+        firebaseAnalytics: FirebaseAnalytics
     ): LoginNetworkClient {
-        return LoginNetworkClient(binListApiService)
+        return LoginNetworkClient(binListApiService, firebaseAnalytics)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseAnalytics(@ApplicationContext context: Context): FirebaseAnalytics {
+        return FirebaseAnalytics.getInstance(context)
     }
 }

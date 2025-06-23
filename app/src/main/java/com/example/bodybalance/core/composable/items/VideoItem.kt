@@ -25,7 +25,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.bodybalance.R
@@ -35,7 +34,6 @@ import com.example.bodybalance.ui.theme.BodyBalanceTheme
 import com.example.bodybalance.ui.theme.Grey
 import org.burnoutcrew.reorderable.ReorderableLazyListState
 import org.burnoutcrew.reorderable.detectReorder
-import org.burnoutcrew.reorderable.detectReorderAfterLongPress
 
 @Composable
 public fun VideoItem(
@@ -101,7 +99,7 @@ private fun RowScope.VideoTextContent(
         TitleText(
             title = title,
             maxLines = if (category.isNotEmpty()) 1 else 2,
-            paddingTop = if(category.isNotEmpty()) 18 else 0
+            paddingTop = if (category.isNotEmpty()) 18 else 0
         )
 
         if (category.isNotEmpty()) {
@@ -114,7 +112,7 @@ private fun RowScope.VideoTextContent(
 private fun TitleText(
     title: String,
     maxLines: Int,
-    paddingTop:Int,
+    paddingTop: Int,
     modifier: Modifier = Modifier,
 ) {
     Text(
@@ -134,7 +132,7 @@ private fun CategoryText(
     modifier: Modifier = Modifier,
 ) {
     Text(
-        modifier = modifier.padding(start = 16.dp, end = 16.dp,bottom = 18.dp),
+        modifier = modifier.padding(start = 16.dp, end = 16.dp, bottom = 18.dp),
         text = category,
         fontWeight = FontWeight(400),
         overflow = TextOverflow.Ellipsis,

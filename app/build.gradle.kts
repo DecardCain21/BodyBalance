@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.compose.compiler)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -69,7 +70,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.support.annotations)
-    implementation (libs.androidx.foundation)
+    implementation(libs.androidx.foundation)
     implementation(libs.reorderable)
     implementation(libs.coil.compose)
     implementation(libs.accompanist.systemuicontroller)
@@ -86,7 +87,7 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.logging.interceptor)
     implementation(libs.converter.gson)
-    implementation (libs.okhttp)
+    implementation(libs.okhttp)
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
@@ -114,4 +115,8 @@ dependencies {
     // Debugging
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    //Firebase
+    implementation(platform("com.google.firebase:firebase-bom:33.15.0"))
+    implementation("com.google.firebase:firebase-analytics")
 }

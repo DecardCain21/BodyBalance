@@ -1,22 +1,41 @@
 package com.example.bodybalance.core.data.source.network.client
 
+import android.os.Build
+import android.os.Bundle
 import android.util.Log
 import com.example.bodybalance.core.data.source.network.NetworkClient
 import com.example.bodybalance.core.util.NetworkError
 import com.example.bodybalance.core.util.getConnected
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.net.SocketTimeoutException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 public abstract class RetrofitNetworkClient : NetworkClient {
-
     private val maxRetries = 10
     private val retryDelayMillis = 2000L
+    public open val firebaseAnalytics: FirebaseAnalytics? = null
+
+    private val deviceData = hashMapOf(
+        "timestamp" to SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            .format(Date(System.currentTimeMillis())),
+        "device_info" to mapOf(
+            "manufacturer" to Build.MANUFACTURER,
+            "model" to Build.MODEL,
+            "display_name" to getDeviceName(),
+            "android" to Build.VERSION.RELEASE,
+        )
+    )
 
     override suspend fun <T> doRequest(request: suspend () -> T): Result<T> {
 
-        if (!getConnected()) { return Result.failure(NetworkError.NoInternet()) }
+        if (!getConnected()) {
+            return Result.failure(NetworkError.NoInternet())
+        }
 
         var currentAttempt = 0
 
@@ -24,6 +43,17 @@ public abstract class RetrofitNetworkClient : NetworkClient {
 
             while (currentAttempt < maxRetries) {
                 try {
+                    firebaseAnalytics?.logEvent("network_attempt", Bundle().apply {
+                        putInt("attempt_number", currentAttempt)
+                        putString("status", "start")
+                        putString("timestamp", deviceData["timestamp"] as String)
+                        val deviceInfo = deviceData["device_info"] as Map<*, *>
+                        putString("manufacturer", deviceInfo["manufacturer"] as String)
+                        putString("model", deviceInfo["model"] as String)
+                        putString("display_name", deviceInfo["display_name"] as String)
+                        putString("android", deviceInfo["android"] as String)
+                    })
+
                     return@withContext Result.success(request())
                 } catch (e: retrofit2.HttpException) {
                     return@withContext when (e.code()) {
@@ -48,6 +78,14 @@ public abstract class RetrofitNetworkClient : NetworkClient {
                 }
             }
             Result.failure(NetworkError.ServerError(""))
+        }
+    }
+
+    private fun getDeviceName(): String {
+        return if (Build.MODEL.startsWith(Build.MANUFACTURER)) {
+            Build.MODEL
+        } else {
+            "${Build.MANUFACTURER} ${Build.MODEL}"
         }
     }
 }
