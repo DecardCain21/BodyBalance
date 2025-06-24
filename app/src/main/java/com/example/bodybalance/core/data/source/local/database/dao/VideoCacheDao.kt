@@ -27,7 +27,7 @@ internal interface VideoCacheDao {
     @Query("SELECT * FROM saved_video WHERE id = :id")
     suspend fun getById(id: Int): SavedVideoEntity?
 
-    @Query("SELECT * FROM saved_video ORDER BY `order` ASC")
+    @Query("SELECT * FROM saved_video ORDER BY `order` ASC, timeOfAddition DESC")
     fun getAllFlow(): Flow<List<SavedVideoEntity>>
 
     @Query("SELECT * FROM saved_video")
