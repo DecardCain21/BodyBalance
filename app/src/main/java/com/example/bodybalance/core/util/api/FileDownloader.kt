@@ -23,4 +23,6 @@ public interface FileDownloader {
     public fun getFilesCacheSize(): Long
 
     public fun getFilePathIfExists(fileName: String): String?
+
+    public fun getFileSizeOrDefault(fileName: String): Long
 }

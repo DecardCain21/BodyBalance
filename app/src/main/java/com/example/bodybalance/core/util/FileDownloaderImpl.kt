@@ -157,6 +157,12 @@ public class FileDownloaderImpl @Inject constructor(
             ?: 0L
     }
 
+    override fun getFileSizeOrDefault(fileName: String): Long {
+        return File(context.filesDir, fileName)
+            .takeIf { it.exists() && it.isFile }
+            ?.length() ?: 0L
+    }
+
     override fun getFilePathIfExists(fileName: String): String? {
         val file = File(context.filesDir, fileName)
         return file.takeIf { it.exists() }?.absolutePath

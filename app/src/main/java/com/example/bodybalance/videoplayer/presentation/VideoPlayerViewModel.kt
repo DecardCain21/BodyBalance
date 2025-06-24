@@ -12,8 +12,10 @@ import com.example.bodybalance.core.util.FileDownloaderError
 import com.example.bodybalance.core.util.NetworkError
 import com.example.bodybalance.core.util.SnackbarEventParams
 import com.example.bodybalance.core.util.api.FileDownloader
+import com.example.bodybalance.core.util.convertToFileSize
 import com.example.bodybalance.core.util.debounce
 import com.example.bodybalance.core.util.getConnected
+import com.example.bodybalance.settings.domain.usecase.GetFileCacheSizeUseCase
 import com.example.bodybalance.settings.domain.usecase.SettingsToolsUseCase
 import com.example.bodybalance.videoplayer.domain.usecase.AddPlaylistVideoUseCase
 import com.example.bodybalance.videoplayer.domain.usecase.DeletePlaylistVideoUseCase
@@ -47,6 +49,7 @@ internal class VideoPlayerViewModel @Inject constructor(
     private val settingsToolsUseCase: SettingsToolsUseCase,
     private val getAllSavedVideoUseCase: GetAllSavedVideoUseCase,
     private val deleteSavedVideoUseCase: DeleteSavedVideoUseCase,
+    private val getFileCacheSizeUseCase: GetFileCacheSizeUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(VideoPlayerState.emptyState())
@@ -324,14 +327,23 @@ internal class VideoPlayerViewModel @Inject constructor(
     }
 
     private fun removeVideoFromCache(video: Video) {
+        getCacheSize(fileName = video.id.toString())
+        val cacheSize = uiState.value.cacheSize.convertToFileSize()
         deleteJob = viewModelScope.launch {
             delay(3000L)
             fileDownloader.deleteFile(fileName = video.id.toString()).let {
                 deleteSavedVideoUseCase(video)
                 setButtonsState()
             }
+            _snackBarEvent.emit(
+                SnackbarEventParams(message = ACTION_CLEAN_CACHE + cacheSize)
+            )
             deleteJob.cancel()
         }
+    }
+
+    private fun getCacheSize(fileName: String) {
+        _uiState.update { it.copy(cacheSize = getFileCacheSizeUseCase(fileName = fileName)) }
     }
 
     private suspend fun setButtonsState() {
@@ -375,5 +387,6 @@ internal class VideoPlayerViewModel @Inject constructor(
         private const val VIDEOS_IS_EMPTY = "Видео пока недоступно, загляните позже"
         private const val NO_INTERNET = "Нет интернета"
         private const val UPDATE = "Обновить"
+        private const val ACTION_CLEAN_CACHE = "На устройстве освободилось "
     }
 }

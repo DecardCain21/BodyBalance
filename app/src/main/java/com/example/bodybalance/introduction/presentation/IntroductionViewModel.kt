@@ -2,6 +2,7 @@ package com.example.bodybalance.introduction.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.bodybalance.home.presentation.state.SupportTextHome
 import com.example.bodybalance.introduction.domain.usecase.GetIntroductionCodeUseCase
 import com.example.bodybalance.introduction.domain.usecase.GetIntroductionVideoUseCase
 import com.example.bodybalance.introduction.domain.usecase.SetIntroductionCodeUseCase
@@ -74,6 +75,8 @@ internal class IntroductionViewModel @Inject constructor(
                 second = false,
                 third = false
             )
+
+            //input.length < 3 -> Triple(first = , second = , third = true to SupportTextHome.LOGIN_MIN_LENGTH)
 
             else -> Triple(
                 first = SupportTextIntroduction.INVALID_LOGIN.message,

@@ -3,6 +3,7 @@ package com.example.bodybalance.videoplayer.presentation.state
 import com.example.bodybalance.core.domain.models.Video
 
 internal data class VideoPlayerState(
+    val cacheSize: Long = 0L,
     val videoState: VideoState,
     val videoListState: VideoListState,
     val videoInCache: DownloadButtonState = DownloadButtonState.Download, //пока что поставлю дефолтное значение

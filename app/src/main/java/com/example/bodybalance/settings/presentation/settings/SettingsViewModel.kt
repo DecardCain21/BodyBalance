@@ -113,6 +113,6 @@ internal class SettingsViewModel @Inject constructor(
     }
 
     companion object {
-        private const val ACTION_CLEAN_CACHE = "На устройстве освободилось"
+        private const val ACTION_CLEAN_CACHE = "На устройстве освободилось "
     }
 }

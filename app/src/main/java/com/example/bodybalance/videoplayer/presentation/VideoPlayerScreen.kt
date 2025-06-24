@@ -216,7 +216,7 @@ private fun BodyVideoPlayerScreen(
             BodyBalanceActionButton(
                 modifier = modifier.weight(0.5f),
                 onClick = { onClickRemoveFromPlaylist() },
-                text = stringResource(R.string.button_playlist),
+                text = stringResource(R.string.button_playlist_saved),
                 imageVector = Icons.Default.Bookmark
             )
         } else {
