@@ -63,6 +63,7 @@
     <string name="download">Скачать</string>
     <string name="button_playlist">Сохранить</string>
     <string name="button_playlist_saved">Сохранено</string>
+    <string name="video_player_empty">Видео пока недоступны, загляните позже</string>
 
 
     <!--Developers-->

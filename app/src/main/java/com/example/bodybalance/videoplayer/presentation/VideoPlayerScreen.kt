@@ -49,6 +49,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -63,6 +64,7 @@ import com.example.bodybalance.core.composable.snackbar.CustomSnackbarHost
 import com.example.bodybalance.core.domain.models.Video
 import com.example.bodybalance.core.util.nonScaledSp
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
+import com.example.bodybalance.ui.theme.White
 import com.example.bodybalance.videoplayer.presentation.state.VideoPlayerState
 
 @OptIn(UnstableApi::class)
@@ -150,6 +152,21 @@ private fun VideoListLoading(modifier: Modifier = Modifier) {
 @Composable
 private fun VideoListEmpty(emptyEvent: () -> Unit) {
     LaunchedEffect(Unit) { emptyEvent() }
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            modifier = Modifier.padding(40.dp),
+            text = stringResource(id = R.string.video_player_empty),
+            fontSize = 22.sp,
+            fontWeight = FontWeight.W400,
+            color = White,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+    }
 }
 
 @Composable
