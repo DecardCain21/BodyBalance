@@ -15,7 +15,7 @@ internal interface PlaylistVideoDao {
     @Query("SELECT * FROM playlist_video ORDER BY `order` ASC, timeOfAddition DESC")
     fun getAllPlaylistVideoFlow(): Flow<List<PlaylistVideoEntity>>
 
-    @Query("SELECT * FROM playlist_video")
+    @Query("SELECT * FROM playlist_video ORDER BY `order` ASC, timeOfAddition DESC")
     suspend fun getAllPlaylistVideo():List<PlaylistVideoEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
