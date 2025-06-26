@@ -105,11 +105,6 @@ internal fun VideoPlayerScreenRoute(
         },
         videoInCache = currentState.videoInCache,
         videoInPlaylist = currentState.videoInPlaylist,
-        emptyEvent = {
-            viewModel.handleEvent(
-                VideoPlayerScreenUiEvent.EmptyEvent
-            )
-        },
         noInternetPlayerSnackBar = {
             viewModel.handleEvent(
                 VideoPlayerScreenUiEvent.NothingToPlayNoInternet

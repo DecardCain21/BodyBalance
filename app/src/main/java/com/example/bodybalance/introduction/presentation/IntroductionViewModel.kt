@@ -37,6 +37,7 @@ internal class IntroductionViewModel @Inject constructor(
         when (event) {
             is IntroductionScreenUiEvent.Continue -> eventContinue()
             is IntroductionScreenUiEvent.InputLogin -> enterCodeWord(event.text)
+            is IntroductionScreenUiEvent.ClearAll -> clearAll()
         }
     }
 
@@ -60,6 +61,10 @@ internal class IntroductionViewModel @Inject constructor(
     private fun eventContinue() {
         val code = (_uiState.value.inputValue as Input.Text).value
         setIntroductionCodeUseCase(code)
+    }
+
+    private fun clearAll() {
+        _uiState.value = uiState.value.copy(inputValue = Input.Empty)
     }
 
     private fun enterCodeWord(input: String) {

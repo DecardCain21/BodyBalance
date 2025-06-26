@@ -103,10 +103,6 @@ internal class VideoPlayerViewModel @Inject constructor(
                 canselDownloadVideo(event.videoId)
             }
 
-            is VideoPlayerScreenUiEvent.EmptyEvent -> {
-                emptyEvent()
-            }
-
             is VideoPlayerScreenUiEvent.NothingToPlayNoInternet -> {
                 nothingToPlayNoInternet()
             }
@@ -203,12 +199,6 @@ internal class VideoPlayerViewModel @Inject constructor(
                     }
                 }
             }
-        }
-    }
-
-    private fun emptyEvent() {
-        viewModelScope.launch {
-            _snackBarEvent.emit(SnackbarEventParams(message = VIDEOS_IS_EMPTY))
         }
     }
 

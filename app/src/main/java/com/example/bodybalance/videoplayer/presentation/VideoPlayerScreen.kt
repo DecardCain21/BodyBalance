@@ -83,7 +83,6 @@ internal fun VideoPlayerScreen(
     onClickCancelDownload: () -> Unit,
     videoInCache: VideoPlayerState.DownloadButtonState,
     videoInPlaylist: Boolean,
-    emptyEvent: () -> Unit,
     noInternetPlayerSnackBar: () -> Unit
 ) {
     val configuration = LocalConfiguration.current
@@ -132,7 +131,7 @@ internal fun VideoPlayerScreen(
                 }
 
                 is VideoPlayerState.VideoListState.Loading -> VideoListLoading()
-                VideoPlayerState.VideoListState.Empty -> VideoListEmpty(emptyEvent = emptyEvent)
+                VideoPlayerState.VideoListState.Empty -> VideoListEmpty()
             }
         }
     }
@@ -150,8 +149,7 @@ private fun VideoListLoading(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun VideoListEmpty(emptyEvent: () -> Unit) {
-    LaunchedEffect(Unit) { emptyEvent() }
+private fun VideoListEmpty() {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -365,7 +363,6 @@ private fun IntroductionPreview() {
                     Video.emptyVideo(2)
                 )
             ),
-            emptyEvent = {},
             noInternetPlayerSnackBar = {}
         )
     }

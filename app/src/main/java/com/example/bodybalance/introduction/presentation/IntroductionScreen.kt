@@ -14,8 +14,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.HighlightOff
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -60,6 +63,7 @@ internal fun IntroductionScreen(
     inputCodeWord: (String) -> Unit,
     navToPlaylist: () -> Unit,
     eventContinue: () -> Unit,
+    clearAll: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val focusManager = LocalFocusManager.current
@@ -91,7 +95,8 @@ internal fun IntroductionScreen(
                         inputCodeWord = { inputCodeWord(it) },
                         isEnabledButton = uiState.buttonIsEnabled,
                         supportText = uiState.supportText,
-                        validateLogin = uiState.validateLogin
+                        validateLogin = uiState.validateLogin,
+                        clearAll = clearAll
 
                     )
                 }
@@ -110,7 +115,8 @@ private fun IntroductionScreenContent(
     navToPlaylist: () -> Unit,
     eventContinue: () -> Unit,
     inputCodeWord: (String) -> Unit,
-    validateLogin: Boolean
+    validateLogin: Boolean,
+    clearAll: () -> Unit
 ) {
 
     var shouldRequestFocus by rememberSaveable { mutableStateOf(false) }
@@ -212,6 +218,15 @@ private fun IntroductionScreenContent(
                         Unit
                     }
 
+                    isFocused && inputValue.length > 2 && !validateLogin -> {
+                        IconButton(onClick = clearAll) {
+                            Icon(
+                                imageVector = Icons.Default.HighlightOff,
+                                contentDescription = stringResource(R.string.clear)
+                            )
+                        }
+                    }
+
                     isFocused && !validateLogin -> {
                         Icon(
                             imageVector = Icons.Default.Error,
@@ -284,7 +299,8 @@ private fun IntroductionPreview() {
             isEnabledButton = true,
             eventContinue = {},
             supportText = "Неверное кодовое слово",
-            validateLogin = false
+            validateLogin = false,
+            clearAll = {}
         )
     }
 }

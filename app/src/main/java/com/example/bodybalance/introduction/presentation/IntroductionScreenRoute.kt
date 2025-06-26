@@ -21,6 +21,7 @@ internal fun IntroductionScreenRoute(
         uiState = uiState,
         inputCodeWord = { viewModel.handleEvent(IntroductionScreenUiEvent.InputLogin(it)) },
         navToPlaylist = navToPlaylist,
-        eventContinue = {viewModel.handleEvent(IntroductionScreenUiEvent.Continue)},
+        eventContinue = { viewModel.handleEvent(IntroductionScreenUiEvent.Continue) },
+        clearAll = { viewModel.handleEvent(IntroductionScreenUiEvent.ClearAll) }
     )
 }

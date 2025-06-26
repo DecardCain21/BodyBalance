@@ -16,7 +16,5 @@ internal interface VideoPlayerScreenUiEvent {
 
     data class CanselDownloadVideo(val videoId: Int): VideoPlayerScreenUiEvent
 
-    data object EmptyEvent : VideoPlayerScreenUiEvent
-
     data object NothingToPlayNoInternet : VideoPlayerScreenUiEvent
 }
