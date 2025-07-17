@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -20,9 +21,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Popup
+import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
+import coil.decode.SvgDecoder
 import coil.request.ImageRequest
+import coil.size.Scale
 import com.example.bodybalance.R
 import com.example.bodybalance.core.util.nonScaledSp
 import com.example.bodybalance.ui.theme.BodyBalanceTheme
@@ -46,6 +49,14 @@ public fun ExerciseItem(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            val context = LocalContext.current
+            val imageLoader = remember {
+                ImageLoader.Builder(context)
+                    .components {
+                        add(SvgDecoder.Factory()) // Подключаем SVG-декодер
+                    }
+                    .build()
+            }
             Image(
                 modifier = Modifier
                     .size(100.dp),
@@ -55,10 +66,11 @@ public fun ExerciseItem(
                         .placeholder(R.drawable.ic_launcher_background)
                         .error(R.drawable.ic_launcher_background)
                         .crossfade(false)
-                        .build()
+                        .build(),
+                    imageLoader = imageLoader
                 ),
                 contentDescription = "Изображение курса",
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Fit
             )
             Text(
                 modifier = Modifier

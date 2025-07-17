@@ -73,6 +73,7 @@ dependencies {
     implementation(libs.androidx.foundation)
     implementation(libs.reorderable)
     implementation(libs.coil.compose)
+    implementation("io.coil-kt:coil-svg:2.4.0")
     implementation(libs.accompanist.systemuicontroller)
 
     // Material Icons

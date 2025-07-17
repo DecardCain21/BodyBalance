@@ -67,7 +67,8 @@ public fun VideoItem(
                         .then(reorderState?.let { Modifier.detectReorder(it) }
                             ?: Modifier),
                     painter = painterResource(R.drawable.ic_drag),
-                    contentDescription = "Icon drag"
+                    contentDescription = "Icon drag",
+                    contentScale = ContentScale.Fit
                 )
             }
             Image(
@@ -83,7 +84,7 @@ public fun VideoItem(
                         .build()
                 ),
                 contentDescription = "Image course",
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Fit
             )
             VideoTextContent(title = title, category = category)
         }
