@@ -22,4 +22,13 @@ internal class UserAccountRepositoryImpl @Inject constructor(
     override suspend fun activateAccount(account: Account) {
         userAccountLocalSource.activateAccount(account.convertToEntity())
     }
+
+    override suspend fun getActiveAccount(): Account {
+        val account = userAccountLocalSource.getActiveAccount()
+        return if (account != null) {
+            return account.convertToAccount()
+        } else {
+            Account.empty()
+        }
+    }
 }

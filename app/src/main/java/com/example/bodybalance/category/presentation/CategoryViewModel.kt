@@ -83,20 +83,19 @@ internal class CategoryViewModel @Inject constructor(
     private fun loadInformation() {
         viewModelScope.launch {
             try {
-                val accounts = getAllAccountsUseCase()
-                val categories = getCategoryUseCase().getOrNull()
-
-                val categoryState = if (categories.isNullOrEmpty()) {
-                    CategoryScreenState.CategoryState.Empty
-                } else {
-                    CategoryScreenState.CategoryState.Content(categories)
-                }
-
                 // Комбинируем два Flow без вложенных collect
                 combine(
                     getAllPlaylistVideoFlowUseCase(),
-                    getAllSavedVideoFlowUseCase()
+                    getAllSavedVideoFlowUseCase(),
                 ) { playlistVideo, savedVideo ->
+                    val accounts = getAllAccountsUseCase()
+                    val categories = getCategoryUseCase().getOrNull()
+                    val categoryState = if (categories.isNullOrEmpty()) {
+                        CategoryScreenState.CategoryState.Empty
+                    } else {
+                        CategoryScreenState.CategoryState.Content(categories)
+                    }
+
                     val playlistState = if (playlistVideo.isEmpty()) {
                         CategoryScreenState.PlaylistState.Empty
                     } else {
@@ -108,7 +107,6 @@ internal class CategoryViewModel @Inject constructor(
                     } else {
                         CategoryScreenState.DownloadedState.Content(savedVideo)
                     }
-
                     val activeAccount = accounts.find { it.isActive } ?: accounts.first()
                     CategoryScreenState(
                         activeAccount = activeAccount,

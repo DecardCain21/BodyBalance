@@ -12,4 +12,8 @@ public class GetAllAccountsUseCaseImpl @Inject constructor(
     override suspend fun invoke(): List<Account> {
         return userAccountRepository.getAllAccounts()
     }
+
+    override suspend fun testGetActiveAccount():Account{
+        return userAccountRepository.getActiveAccount()
+    }
 }
