@@ -31,8 +31,10 @@ internal object NetworkModuleProvider {
     @Singleton
     fun provideHeadHunterApiService(
     ): BodyBalanceApiService {
-        return Retrofit.Builder().baseUrl(BODY_BALANCE_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create()).build()
+        return Retrofit.Builder()
+            .baseUrl(BODY_BALANCE_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
             .create(BodyBalanceApiService::class.java)
     }
 

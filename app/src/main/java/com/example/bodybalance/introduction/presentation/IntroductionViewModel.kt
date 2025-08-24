@@ -69,7 +69,7 @@ internal class IntroductionViewModel @Inject constructor(
 
     private fun enterCodeWord(input: String) {
         val (supportText, validateLogin, isEnabled) = when {
-            input == KOD_WORD -> Triple(
+            input .equals(KOD_WORD,ignoreCase = true) -> Triple(
                 first = SupportTextIntroduction.VALID_LOGIN.message,
                 second = true,
                 third = true
@@ -99,6 +99,6 @@ internal class IntroductionViewModel @Inject constructor(
     }
 
     companion object {
-        private const val KOD_WORD = "Test"
+        private const val KOD_WORD = "ознакомлен"
     }
 }
